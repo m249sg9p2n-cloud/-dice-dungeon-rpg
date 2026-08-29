@@ -94,3 +94,110 @@ save();
   mo.observe(document.body,{subtree:true,childList:true,attributes:true,characterData:true});
   markMultiplier();
 })();
+
+
+// ===== v0.4.2 visual feedback layer =====
+(() => {
+  const $=s=>document.querySelector(s);
+  let lastThird="?";
+  let lastEnemyHp=null;
+
+  function num(txt){
+    const m=String(txt||"").match(/\d+/);
+    return m ? Number(m[0]) : null;
+  }
+  function diceValues(){
+    return [...document.querySelectorAll(".die")].slice(0,3).map(d=>{
+      const s=d.querySelector("span");
+      const v=num(s?.textContent);
+      return v>=1&&v<=6?v:null;
+    });
+  }
+  function getEnemy(){
+    const hpText=$("#enemyHpText");
+    const fill=document.querySelector("#battle .hp-line.enemy .bar > i");
+    if(!hpText||!fill)return {};
+    const txt=hpText.textContent;
+    const mm=txt.match(/(\d+)\s*\/\s*(\d+)/);
+    return {hp:mm?+mm[1]:num(txt), max:mm?+mm[2]:null, hpText, fill};
+  }
+  function currentAtk(){
+    const el=$("#playerAtk") || document.querySelector("#battle .mini-stat");
+    const m=(el?.textContent||"").match(/ATK\s*(\d+)/i);
+    return m?+m[1]:0;
+  }
+  function ensureForecast(){
+    let f=$("#v042forecast");
+    if(!f){
+      f=document.createElement("div"); f.id="v042forecast";
+      const damage=document.querySelector("#battle .damage");
+      (damage?.parentElement||document.querySelector("#battle .dice-panel"))?.appendChild(f);
+    }
+    return f;
+  }
+  function hpColor(){
+    const e=getEnemy(); if(e.hp==null||!e.max)return;
+    const p=e.hp/e.max;
+    e.fill.classList.remove("hp-green","hp-yellow","hp-orange","hp-red");
+    e.hpText.classList.remove("hp-mid","hp-low","hp-critical");
+    if(p>.5)e.fill.classList.add("hp-green");
+    else if(p>.25){e.fill.classList.add("hp-yellow");e.hpText.classList.add("hp-mid")}
+    else if(p>.10){e.fill.classList.add("hp-orange");e.hpText.classList.add("hp-low")}
+    else {e.fill.classList.add("hp-red");e.hpText.classList.add("hp-critical")}
+  }
+  function forecast(){
+    const f=ensureForecast(), vals=diceValues(), e=getEnemy();
+    if(!f||e.hp==null)return;
+    f.className="";
+    if(vals.every(Boolean)){
+      const dmg=(vals[0]+vals[1])*vals[2]+currentAtk();
+      if(dmg>=e.hp){
+        f.textContent=`⚔ KILL!!  ${dmg} DAMAGE`;
+        f.classList.add("kill");
+      } else {
+        const remain=e.hp-dmg;
+        f.textContent=`予測 ${dmg} DAMAGE  →  残り ${remain} HP`;
+        if(remain<=Math.max(8,e.max*.1)) f.classList.add("close");
+      }
+    } else f.textContent="";
+  }
+  function multiplierMoment(){
+    const vals=diceValues(), third=vals[2];
+    if(third && String(third)!==lastThird){
+      const o=$("#v042mult");
+      if(o){
+        o.textContent="×"+third;
+        o.className="show"+(third===6?" x6":"");
+        document.body.classList.add(third>=5?"v042-bigshake":"v042-shake");
+        setTimeout(()=>{o.className="";document.body.classList.remove("v042-shake","v042-bigshake")},560);
+      }
+    }
+    lastThird=third?String(third):"?";
+  }
+  function hitMoment(){
+    const e=getEnemy();
+    if(lastEnemyHp!==null && e.hp!==null && e.hp<lastEnemyHp){
+      const dmg=lastEnemyHp-e.hp;
+      const art=document.querySelector("#battle .enemy-emoji");
+      art?.classList.remove("v042-hit"); void art?.offsetWidth; art?.classList.add("v042-hit");
+      document.body.classList.add(dmg>=40?"v042-bigshake":"v042-shake");
+      if(e.hp<=0){
+        const k=$("#v042kill"); if(k){k.classList.remove("show");void k.offsetWidth;k.classList.add("show")}
+      }
+      setTimeout(()=>document.body.classList.remove("v042-shake","v042-bigshake"),450);
+    }
+    lastEnemyHp=e.hp;
+  }
+  function dimForMultiplier(){
+    const dice=[...document.querySelectorAll(".die")].slice(0,3);
+    if(dice.length<3)return;
+    const vals=diceValues();
+    const thirdReady=vals[0]&&vals[1]&&!vals[2]&&!dice[2].classList.contains("locked");
+    document.body.classList.toggle("v042-dim",!!thirdReady);
+  }
+  function scan(){
+    hpColor(); forecast(); multiplierMoment(); hitMoment(); dimForMultiplier();
+  }
+  new MutationObserver(scan).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});
+  scan();
+})();
