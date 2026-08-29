@@ -1,13 +1,14 @@
-const CACHE = "dice-dungeon-v0-2";
+const CACHE = "dice-dungeon-v0-3";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
   "./game.js",
+  "./effects.js",
   "./manifest.webmanifest",
-  "./icon-180.png",
-  "./icon-192.png",
-  "./icon-512.png"
+  "./icons/icon-180.png",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {

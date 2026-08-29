@@ -17,3 +17,6 @@ Dice Dungeon RPG PWA v0.2
 
 ※ PWAのService Workerは https または localhost で動作します。
 ※ GitHub Pagesはhttpsなのでそのまま使えます。
+
+
+v0.3: ダイス効果音/倍率ダイス強調音/攻撃音/666専用音、ダイス回転、斬撃、ダメージ表示、666演出、サウンド切替を追加。
