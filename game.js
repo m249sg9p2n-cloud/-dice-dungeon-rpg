@@ -16,6 +16,19 @@
     def:{baseCost:150, growth:1.45, maxLv:15, perLv:1}
   };
 
+  const EQUIPMENT = {
+    weapon:{
+      training_sword:{id:"training_sword",name:"訓練用の剣",rarity:"NORMAL",atk:0,def:0,desc:"冒険者が最初に持つ剣。"},
+      iron_sword:{id:"iron_sword",name:"鉄の剣",rarity:"NORMAL",atk:3,def:0,desc:"扱いやすい鉄製の剣。"},
+      hunter_blade:{id:"hunter_blade",name:"狩人の刃",rarity:"RARE",atk:6,def:0,desc:"軽く鋭い実戦向けの刃。"}
+    },
+    armor:{
+      traveler_clothes:{id:"traveler_clothes",name:"旅人の服",rarity:"NORMAL",atk:0,def:0,desc:"動きやすい旅装。"},
+      leather_armor:{id:"leather_armor",name:"革の鎧",rarity:"NORMAL",atk:0,def:2,desc:"軽量な革製防具。"},
+      guard_mail:{id:"guard_mail",name:"守備隊の鎧",rarity:"RARE",atk:0,def:4,desc:"守備隊で使われる堅牢な鎧。"}
+    }
+  };
+
   const DUNGEONS = {
     "1-1": {
       id:"1-1",
@@ -42,6 +55,11 @@
       gold:Number.isFinite(legacyGold) ? legacyGold : 0,
       base:{...BASE_STATS},
       upgrades:{hp:0,atk:0,def:0},
+      inventory:{
+        weapon:["training_sword","iron_sword","hunter_blade"],
+        armor:["traveler_clothes","leather_armor","guard_mail"]
+      },
+      equipped:{weapon:"training_sword",armor:"traveler_clothes"},
       clears:{"1-1":0},
       records:{"1-1":{bestRunGold:0}},
       unlocked:["1-1"]
@@ -58,6 +76,12 @@
         ...parsed,
         base:{...BASE_STATS,...(parsed.base||{})},
         upgrades:{hp:0,atk:0,def:0,...(parsed.upgrades||{})},
+        inventory:{
+          weapon:["training_sword","iron_sword","hunter_blade"],
+          armor:["traveler_clothes","leather_armor","guard_mail"],
+          ...(parsed.inventory||{})
+        },
+        equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
         clears:{"1-1":0,...(parsed.clears||{})},
         records:{"1-1":{bestRunGold:0},...(parsed.records||{})},
         unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
@@ -81,6 +105,71 @@
   function show(id){
     $$(".screen").forEach(s => s.classList.toggle("active", s.id===id));
     window.scrollTo(0,0);
+  }
+
+  function equippedItem(slot){
+    const id=save.equipped?.[slot];
+    return EQUIPMENT[slot]?.[id] || Object.values(EQUIPMENT[slot])[0];
+  }
+
+  function totalStats(){
+    const weapon=equippedItem("weapon");
+    const armor=equippedItem("armor");
+    return {
+      maxHp:save.base.maxHp,
+      atk:save.base.atk + (weapon?.atk||0) + (armor?.atk||0),
+      def:save.base.def + (weapon?.def||0) + (armor?.def||0)
+    };
+  }
+
+  function rarityClass(rarity){
+    return `rarity-${String(rarity||"NORMAL").toLowerCase()}`;
+  }
+
+  function openEquipment(slot){
+    const title=slot==="weapon" ? "武器を選択" : "防具を選択";
+    $("#equipmentTitle").textContent=title;
+    $("#equipment").dataset.slot=slot;
+    $("#equipmentGold").textContent=save.gold;
+
+    const totals=totalStats();
+    $("#equipTotalHp").textContent=totals.maxHp;
+    $("#equipTotalAtk").textContent=totals.atk;
+    $("#equipTotalDef").textContent=totals.def;
+
+    const list=$("#equipmentList");
+    list.innerHTML="";
+    const owned=save.inventory?.[slot] || [];
+    for(const id of owned){
+      const item=EQUIPMENT[slot]?.[id];
+      if(!item) continue;
+      const equipped=save.equipped?.[slot]===id;
+      const btn=document.createElement("button");
+      btn.className=`inventory-item ${rarityClass(item.rarity)} ${equipped?"equipped":""}`;
+      btn.innerHTML=`
+        <div class="inv-top">
+          <span class="rarity-label">${item.rarity}</span>
+          <b>${item.name}</b>
+          ${equipped?'<em>装備中</em>':""}
+        </div>
+        <div class="inv-stats">
+          ${slot==="weapon"?`ATK +${item.atk}`:`DEF +${item.def}`}
+        </div>
+        <small>${item.desc}</small>
+      `;
+      btn.addEventListener("click",()=>equipItem(slot,id));
+      list.appendChild(btn);
+    }
+    show("equipment");
+  }
+
+  function equipItem(slot,id){
+    if(!(save.inventory?.[slot]||[]).includes(id)) return;
+    if(!EQUIPMENT[slot]?.[id]) return;
+    save.equipped[slot]=id;
+    persist();
+    renderHome();
+    openEquipment(slot);
   }
 
   function upgradeCost(type){
@@ -116,9 +205,17 @@
 
   function renderHome(){
     $("#bankGold").textContent=save.gold;
-    $("#homeHp").textContent=save.base.maxHp;
-    $("#homeAtk").textContent=save.base.atk;
-    $("#homeDef").textContent=save.base.def;
+    const totals=totalStats();
+    $("#homeHp").textContent=totals.maxHp;
+    $("#homeAtk").textContent=totals.atk;
+    $("#homeDef").textContent=totals.def;
+
+    const weapon=equippedItem("weapon");
+    const armor=equippedItem("armor");
+    $("#weaponName").textContent=weapon.name;
+    $("#weaponBonus").textContent=`ATK +${weapon.atk}`;
+    $("#armorName").textContent=armor.name;
+    $("#armorBonus").textContent=`DEF +${armor.def}`;
 
     for(const type of ["hp","atk","def"]){
       const cfg=UPGRADES[type];
@@ -260,7 +357,7 @@
   }
 
   function startRun(){
-    const base=save.base;
+    const base=totalStats();
     state={
       dungeonId:selectedDungeonId,
       hp:base.maxHp,
@@ -500,6 +597,8 @@
   }
 
   $$(".upgrade-card").forEach(b=>b.addEventListener("click",()=>buyUpgrade(b.dataset.upgrade)));
+  $$(".equip-button").forEach(b=>b.addEventListener("click",()=>openEquipment(b.dataset.slot)));
+  $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#startBtn").addEventListener("click",startRun);
   $$(".die").forEach((b,i)=>b.addEventListener("click",()=>rollDie(i,b)));
   $("#attackBtn").addEventListener("click",attack);

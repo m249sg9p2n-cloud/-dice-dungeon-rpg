@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=061">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=061">
-  <link rel="stylesheet" href="./style.css?v=061">
-  <title>Dice Dungeon RPG v0.6.1</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=062">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=062">
+  <link rel="stylesheet" href="./style.css?v=062">
+  <title>Dice Dungeon RPG v0.6.2</title>
 </head>
 <body>
 <main id="app">
@@ -61,8 +61,16 @@
 
     <div class="home-section-title">装備</div>
     <div class="equipment-row">
-      <div class="equip-card"><span>武器</span><b>訓練用の剣</b><small>ATK +0</small></div>
-      <div class="equip-card"><span>防具</span><b>旅人の服</b><small>DEF +0</small></div>
+      <button id="weaponEquipBtn" class="equip-card equip-button" data-slot="weapon">
+        <span>武器</span>
+        <b id="weaponName">訓練用の剣</b>
+        <small id="weaponBonus">ATK +0</small>
+      </button>
+      <button id="armorEquipBtn" class="equip-card equip-button" data-slot="armor">
+        <span>防具</span>
+        <b id="armorName">旅人の服</b>
+        <small id="armorBonus">DEF +0</small>
+      </button>
     </div>
 
     <div class="home-section-title">ダンジョン</div>
@@ -85,7 +93,28 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.6.1 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.6.2 — 正式実装用のゲームループ基盤</p>
+  </section>
+
+  <section id="equipment" class="screen">
+    <header class="topbar">
+      <button id="equipmentBack" class="back-btn">←</button>
+      <div>
+        <div class="eyebrow">EQUIPMENT</div>
+        <h1 id="equipmentTitle">武器を選択</h1>
+      </div>
+      <div class="gold">🪙 <span id="equipmentGold">0</span>G</div>
+    </header>
+
+    <div class="equip-total">
+      <div><span>HP</span><b id="equipTotalHp">75</b></div>
+      <div><span>ATK</span><b id="equipTotalAtk">12</b></div>
+      <div><span>DEF</span><b id="equipTotalDef">4</b></div>
+    </div>
+
+    <div id="equipmentList" class="equipment-list"></div>
+
+    <p class="note">タップすると装備。装備効果は次の出撃から反映。</p>
   </section>
 
   <section id="battle" class="screen battle-screen">
@@ -206,11 +235,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=061"></script>
-<script src="./game.js?v=061"></script>
+<script src="./effects.js?v=062"></script>
+<script src="./game.js?v=062"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=061").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=062").catch(console.error));
 }
 </script>
 </body>

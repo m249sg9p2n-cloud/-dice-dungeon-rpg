@@ -491,3 +491,105 @@
   #home .upgrade-grid{gap:5px}
   #home .upgrade-card{min-height:47px;padding:6px 9px}
 }
+
+
+/* ===== v0.6.2 equipment system ===== */
+.equip-button{
+  appearance:none;
+  width:100%;
+  cursor:pointer;
+  color:inherit;
+  text-align:left;
+}
+.equip-button:active{transform:scale(.985)}
+.back-btn{
+  width:38px;height:38px;
+  border:1px solid #3a3f49;
+  border-radius:12px;
+  background:#11141a;color:#e9e9e9;
+  font-size:20px;font-weight:900;
+}
+.equip-total{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin:18px 0 14px;
+}
+.equip-total>div{
+  padding:10px;
+  border:1px solid #383d48;
+  border-radius:14px;
+  background:#0f1218;
+  text-align:center;
+}
+.equip-total span{
+  display:block;
+  color:#7e8797;
+  font-size:8px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.equip-total b{
+  display:block;
+  margin-top:3px;
+  font-size:19px;
+}
+.equipment-list{
+  display:grid;
+  gap:9px;
+  overflow:auto;
+  min-height:0;
+  padding-bottom:12px;
+}
+.inventory-item{
+  width:100%;
+  padding:13px 14px;
+  border:1px solid #333845;
+  border-radius:15px;
+  background:linear-gradient(145deg,#12161e,#0c0f14);
+  color:#f0f0f0;
+  text-align:left;
+  box-shadow:0 8px 20px #0005;
+}
+.inventory-item.equipped{
+  border-color:#d8ad45;
+  box-shadow:0 0 0 1px #d8ad4530,inset 0 0 26px #c4911910;
+}
+.inv-top{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.inv-top b{font-size:13px}
+.inv-top em{
+  margin-left:auto;
+  color:#ffd66d;
+  font-size:9px;
+  font-style:normal;
+  font-weight:1000;
+}
+.rarity-label{
+  padding:3px 6px;
+  border-radius:6px;
+  background:#252a33;
+  color:#bcc2ce;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.rarity-rare .rarity-label{
+  background:#172d49;
+  color:#7ec2ff;
+}
+.inv-stats{
+  margin-top:8px;
+  color:#f4ca67;
+  font-size:15px;
+  font-weight:1000;
+}
+.inventory-item small{
+  display:block;
+  margin-top:4px;
+  color:#838b99;
+  font-size:9px;
+}

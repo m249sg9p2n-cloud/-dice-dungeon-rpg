@@ -1,9 +1,9 @@
-const CACHE = "dice-dungeon-v0-6-1-061";
+const CACHE = "dice-dungeon-v0-6-2-062";
 const CORE = [
-  "./style.css?v=061",
-  "./game.js?v=061",
-  "./effects.js?v=061",
-  "./manifest.webmanifest?v=061",
+  "./style.css?v=062",
+  "./game.js?v=062",
+  "./effects.js?v=062",
+  "./manifest.webmanifest?v=062",
   "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png"
