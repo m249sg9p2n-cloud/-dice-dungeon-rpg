@@ -5,11 +5,11 @@
 
   const base = { maxHp:75, atk:12, def:4 };
   const enemies = [
-    {name:"ゴブリン",art:"👺",hp:48,attacks:[8,10,12],gold:25,lv:1},
-    {name:"ゴブリン弓兵",art:"🏹",hp:58,attacks:[8,8,16],gold:35,lv:2},
-    {name:"ゴブリン戦士",art:"👹",hp:82,attacks:[12,14,14],gold:45,lv:3},
-    {name:"ゴブリン隊長",art:"🪓",hp:105,attacks:[12,16,24],gold:60,lv:4},
-    {name:"ゴブリンキング",art:"👑",hp:155,attacks:[12,18,12,35],gold:120,lv:5,boss:true}
+    {name:"ゴブリン", image:"enemy_01_goblin.png",art:"👺",hp:48,attacks:[8,10,12],gold:25,lv:1},
+    {name:"ゴブリン弓兵", image:"enemy_02_goblin_archer.png",art:"🏹",hp:58,attacks:[8,8,16],gold:35,lv:2},
+    {name:"ゴブリン戦士", image:"enemy_03_goblin_warrior.png",art:"👹",hp:82,attacks:[12,14,14],gold:45,lv:3},
+    {name:"ゴブリン隊長", image:"enemy_04_goblin_captain.png",art:"🪓",hp:105,attacks:[12,16,24],gold:60,lv:4},
+    {name:"ゴブリンキング", image:"enemy_05_goblin_king.png",art:"👑",hp:155,attacks:[12,18,12,35],gold:120,lv:5,boss:true}
   ];
 
   const pipPositions = {
@@ -140,7 +140,7 @@
   async function rollDie(index, btn){
     if(busy || index!==state.nextDie) return;
     busy=true; renderBattle();
-    const mult=index===2, duration=mult?700:540;
+    const mult=index===2, duration=mult?820:620;
     btn.classList.remove("land"); void btn.offsetWidth; btn.classList.add("rolling");
     FX.rollDie(mult);
 

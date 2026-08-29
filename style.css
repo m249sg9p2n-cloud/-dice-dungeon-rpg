@@ -263,3 +263,52 @@
   opacity:.45;
 }
 .die-slot .die{z-index:2}
+
+/* ===== v0.5.4 rolling finish =====
+   Visible travel + diminishing bounces while keeping a square die silhouette. */
+.die.rolling .die-body{
+  animation:v054Roll .62s cubic-bezier(.16,.72,.18,1)!important;
+}
+.die-mult.rolling .die-body{
+  animation:v054RollGold .82s cubic-bezier(.14,.68,.16,1)!important;
+}
+@keyframes v054Roll{
+  0%   {transform:translateX(-18px) translateY(0) rotate(-18deg) scale(1)}
+  12%  {transform:translateX(-10px) translateY(-12px) rotate(12deg) scale(1)}
+  25%  {transform:translateX(0) translateY(1px) rotate(30deg) scale(1.03,.97)}
+  38%  {transform:translateX(9px) translateY(-9px) rotate(48deg) scale(1)}
+  51%  {transform:translateX(16px) translateY(1px) rotate(61deg) scale(1.025,.975)}
+  64%  {transform:translateX(11px) translateY(-5px) rotate(72deg) scale(1)}
+  76%  {transform:translateX(6px) translateY(1px) rotate(82deg) scale(1.018,.982)}
+  87%  {transform:translateX(3px) translateY(-2px) rotate(87deg) scale(1)}
+  95%  {transform:translateX(1px) translateY(2px) rotate(89deg) scale(1.035,.965)}
+  100% {transform:translateX(0) translateY(0) rotate(90deg) scale(1)}
+}
+@keyframes v054RollGold{
+  0%   {transform:translateX(-22px) translateY(0) rotate(-22deg) scale(1)}
+  11%  {transform:translateX(-14px) translateY(-14px) rotate(10deg) scale(1)}
+  23%  {transform:translateX(-3px) translateY(1px) rotate(35deg) scale(1.035,.965)}
+  35%  {transform:translateX(9px) translateY(-11px) rotate(56deg) scale(1)}
+  47%  {transform:translateX(19px) translateY(1px) rotate(73deg) scale(1.03,.97)}
+  59%  {transform:translateX(14px) translateY(-7px) rotate(86deg) scale(1)}
+  70%  {transform:translateX(9px) translateY(1px) rotate(96deg) scale(1.022,.978)}
+  80%  {transform:translateX(5px) translateY(-4px) rotate(103deg) scale(1)}
+  89%  {transform:translateX(2px) translateY(1px) rotate(108deg) scale(1.016,.984)}
+  96%  {transform:translateX(1px) translateY(2px) rotate(109deg) scale(1.04,.96)}
+  100% {transform:translateX(0) translateY(0) rotate(110deg) scale(1)}
+}
+.die:not(.rolling) .die-body{transform:rotate(0deg)!important}
+
+/* v0.5.4 goblin art integration */
+.enemy-img{
+  display:block;
+  width:min(48vw,220px);
+  height:min(25vh,190px);
+  object-fit:cover;
+  object-position:70% 42%;
+  margin:0 auto;
+  border-radius:18px;
+  filter:drop-shadow(0 12px 18px rgba(0,0,0,.55));
+  -webkit-mask-image:radial-gradient(ellipse 78% 72% at 58% 48%,#000 55%,transparent 100%);
+  mask-image:radial-gradient(ellipse 78% 72% at 58% 48%,#000 55%,transparent 100%);
+}

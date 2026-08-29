@@ -1,0 +1,25 @@
+【1-1 敵画像 差し替え用】
+
+この版は5戦それぞれに別の画像ファイル名を割り当て済みです。
+新しいイラストを用意したら、同じファイル名で上書きするだけで差し替えできます。
+
+BATTLE 1 ゴブリン
+enemy_01_goblin.png
+
+BATTLE 2 ゴブリン弓兵
+enemy_02_goblin_archer.png
+
+BATTLE 3 ゴブリン戦士
+enemy_03_goblin_warrior.png
+
+BATTLE 4 ゴブリン隊長
+enemy_04_goblin_captain.png
+
+BATTLE 5 ゴブリンキング
+enemy_05_goblin_king.png
+
+※今回は新しいイラスト生成はしていません。
+※5つの画像枠には確認用として既存の goblin.png をコピーしています。
+※後から5枚を同名で置き換えれば、コード変更なしで各BATTLEの絵が切り替わります。
+
+【v0.5.5】5体すべて清書版ゴブリン画像に差し替え済み。
