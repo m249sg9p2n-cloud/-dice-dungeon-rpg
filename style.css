@@ -334,3 +334,15 @@
   user-select:none;
   pointer-events:none;
 }
+
+/* v0.5.6 lightweight pixel-art enemies */
+#enemyArt .enemy-img,
+.enemy-img{
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width:min(34vw, 150px);
+  height:auto;
+  max-height:min(22vh, 160px);
+  object-fit:contain;
+  filter:drop-shadow(0 8px 8px rgba(0,0,0,.48));
+}

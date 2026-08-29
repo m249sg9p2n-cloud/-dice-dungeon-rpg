@@ -59,4 +59,6 @@ GitHubへアップロードするファイルはZIP内の全ファイルです�
 
 【v0.5.5】5体すべて清書版ゴブリン画像に差し替え済み。
 
-【v0.5.5.1】敵表示の修正：emoji/textContentではなく、各BATTLEのimage PNGをenemyArt内にimgとして描画するよう修正。
+【v0.5.6】敵表示の修正：emoji/textContentではなく、各BATTLEのimage PNGをenemyArt内にimgとして描画するよう修正。
+
+【v0.5.6】敵5体を軽量ドット絵へ変更。各128×128 PNG、pixelated表示。戦闘ロジックは変更なし。
