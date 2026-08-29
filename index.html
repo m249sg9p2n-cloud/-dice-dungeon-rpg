@@ -9,12 +9,12 @@
 <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<title>Dice Dungeon RPG v0.3</title>
+<title>Dice Dungeon RPG v0.4</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main id="app">
-  <section id="home" class="screen active">
+  <section id="home" class="app-screen home-screen" class="screen active">
     <header class="topbar">
       <div>
         <div class="eyebrow">DICE DUNGEON</div>
@@ -47,7 +47,7 @@
     <p class="note">v0.1：まず「1-1」の戦闘ループを遊べる形にしています。</p>
   </section>
 
-  <section id="battle" class="screen">
+  <section id="battle" class="app-screen battle-screen" class="screen">
     <header class="battle-head">
       <div><b id="battleNo">BATTLE 1/5</b><small>1-1 ゴブリンの森</small></div>
       <div class="run-gold">🪙 <span id="runGold">0</span>G</div>
@@ -89,7 +89,7 @@
     </div>
   </section>
 
-  <section id="reward" class="screen">
+  <section id="reward" class="app-screen reward-screen" class="screen">
     <div class="center-title">
       <div class="eyebrow">BATTLE CLEAR</div>
       <h2>報酬を1つ選択</h2>

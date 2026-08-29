@@ -80,3 +80,17 @@ $$('.box').forEach(b=>b.addEventListener('click',()=>chooseBox(b)));
 $('#deathHome').addEventListener('click',()=>show('home'));
 save();
 })();
+// v0.4 multiplier emphasis helper
+(() => {
+  const refreshMultiplierState = () => {
+    const dice = [...document.querySelectorAll('.die')];
+    if (dice.length < 3) return;
+    const third = dice[2];
+    const firstDone = dice[0].textContent.trim() !== '?' && !dice[0].disabled;
+    const secondDone = dice[1].textContent.trim() !== '?' && !dice[1].disabled;
+    const thirdReady = !third.disabled && third.textContent.trim() === '?';
+    third.classList.toggle('mult-ready', thirdReady);
+  };
+  new MutationObserver(refreshMultiplierState).observe(document.body,{subtree:true,childList:true,attributes:true,characterData:true});
+  refreshMultiplierState();
+})();

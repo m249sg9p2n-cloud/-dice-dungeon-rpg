@@ -11,3 +11,151 @@
 #v03crit{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.9);color:#f4d36c;font-size:42px;font-weight:1000;letter-spacing:.12em;text-shadow:0 0 18px #ff8a00;opacity:0}
 #v03crit strong{font-size:90px}#v03crit.show{animation:v03crit 1s ease}@keyframes v03crit{10%,80%{opacity:1}35%{transform:scale(1.08)}100%{opacity:0}}
 #v03sound{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:10000;width:48px;height:48px;border-radius:50%;border:1px solid #a98237;background:#101319;color:white;font-size:21px}
+
+
+/* ===== v0.4 iPhone app-fit layout ===== */
+html, body {
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  overscroll-behavior:none;
+  background:#07090d;
+}
+body {
+  min-height:100dvh;
+  max-height:100dvh;
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+  box-sizing:border-box;
+}
+#app {
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+.screen, .app-screen {
+  height:100%;
+  min-height:0;
+  overflow:hidden !important;
+  box-sizing:border-box;
+}
+.battle-screen.active, #battle.active {
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) auto auto;
+  gap:6px;
+  padding:7px 10px 8px;
+}
+#battle .topbar { padding:6px 8px; }
+#battle .battle-card, #battle .enemy-card, #battle .panel {
+  padding:8px 10px !important;
+  margin:0 !important;
+}
+#battle .enemy-area, #battle .enemy-wrap, #battle .enemy-card {
+  min-height:0;
+}
+#battle .enemy, #battle .enemy-art, #battle #enemyEmoji {
+  max-height:18dvh;
+  font-size:clamp(44px,10dvh,88px) !important;
+}
+#battle h1,#battle h2,#battle h3 { margin:2px 0 !important; }
+#battle .hpbar, #battle .bar { height:8px !important; }
+#battle .next-attack {
+  margin:2px 0 !important;
+}
+#battle .dice-area, #battle .dice-row {
+  display:grid !important;
+  grid-template-columns:1fr 1fr 1.18fr !important;
+  gap:7px !important;
+  align-items:end;
+}
+#battle .die {
+  min-height:64px !important;
+  height:clamp(64px,10.5dvh,88px) !important;
+  font-size:clamp(28px,5.5dvh,46px) !important;
+  padding:0 !important;
+}
+#battle .die:nth-of-type(3),
+#battle .die[data-die="2"] {
+  min-height:76px !important;
+  height:clamp(76px,12dvh,98px) !important;
+  border:2px solid #e3b54c !important;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,230,154,.22), transparent 45%),
+    linear-gradient(#2b2111,#17120b) !important;
+  color:#ffe29a !important;
+  box-shadow:0 0 0 2px rgba(227,181,76,.16),0 0 22px rgba(227,181,76,.32),0 6px 0 #4a3514 !important;
+  position:relative;
+}
+#battle .die:nth-of-type(3)::before,
+#battle .die[data-die="2"]::before {
+  content:"× MULTIPLIER";
+  position:absolute;
+  left:50%;
+  top:-20px;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-size:9px;
+  letter-spacing:.11em;
+  font-weight:900;
+  color:#e8bd59;
+  text-shadow:0 0 8px rgba(232,189,89,.45);
+}
+#battle .die.mult-ready {
+  animation:v04pulse 1s ease-in-out infinite;
+}
+@keyframes v04pulse {
+  50% { box-shadow:0 0 0 3px rgba(227,181,76,.25),0 0 32px rgba(255,196,58,.68),0 6px 0 #4a3514; }
+}
+#battle .formula, #battle #formula {
+  font-size:clamp(13px,2.1dvh,18px) !important;
+  margin:3px 0 !important;
+}
+#battle #damagePreview {
+  font-size:clamp(22px,4.2dvh,36px) !important;
+  line-height:1 !important;
+  margin:2px 0 !important;
+}
+#battle button.primary, #battle #attackBtn {
+  min-height:46px !important;
+  height:clamp(46px,7dvh,58px) !important;
+  margin-top:4px !important;
+  font-size:17px !important;
+  position:sticky;
+  bottom:0;
+}
+#battle #battleLog {
+  min-height:18px !important;
+  font-size:11px !important;
+  line-height:1.2 !important;
+}
+#v03sound {
+  width:42px !important;
+  height:42px !important;
+  right:10px !important;
+  bottom:calc(8px + env(safe-area-inset-bottom)) !important;
+}
+
+/* app-like screens */
+.home-screen.active, #home.active,
+.reward-screen.active, #reward.active,
+.boss-screen.active, #boss.active,
+.dead-screen.active, #dead.active {
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* hide page bounce / browser-like whitespace in standalone */
+@media (display-mode: standalone) {
+  html,body,#app { height:100%; min-height:100%; }
+}
+
+/* compact fallback for very short iPhones */
+@media (max-height: 700px) {
+  #battle .enemy, #battle .enemy-art, #battle #enemyEmoji { max-height:14dvh; font-size:52px !important; }
+  #battle .die { height:62px !important; min-height:62px !important; }
+  #battle .die:nth-of-type(3),#battle .die[data-die="2"] { height:72px !important; min-height:72px !important; }
+}

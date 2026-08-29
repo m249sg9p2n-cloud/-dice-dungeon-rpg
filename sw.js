@@ -1,4 +1,4 @@
-const CACHE = "dice-dungeon-v0-3";
+const CACHE = "dice-dungeon-v0-4";
 const ASSETS = [
   "./",
   "./index.html",
