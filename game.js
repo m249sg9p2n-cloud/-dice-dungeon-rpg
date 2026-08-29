@@ -140,7 +140,7 @@
   async function rollDie(index, btn){
     if(busy || index!==state.nextDie) return;
     busy=true; renderBattle();
-    const mult=index===2, duration=mult?660:500;
+    const mult=index===2, duration=mult?700:540;
     btn.classList.remove("land"); void btn.offsetWidth; btn.classList.add("rolling");
     FX.rollDie(mult);
 

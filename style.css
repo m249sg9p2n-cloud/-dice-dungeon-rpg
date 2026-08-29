@@ -193,3 +193,73 @@
   .die-slot{height:101px}
   .roll-number{font-size:28px}
 }
+
+/* ===== v0.5.3 always-cube dice roll =====
+   Keep the die face visually square at every frame. Depth comes from
+   highlights, side lips, squash/bounce and shadow—not perspective flattening. */
+.dice-row{perspective:none!important}
+.die,.die-body{transform-style:flat!important}
+.die.rolling,.die-mult.rolling{
+  animation:none!important;
+}
+.die.rolling .die-body{
+  animation:v053CubeRoll .54s cubic-bezier(.18,.72,.2,1)!important;
+}
+.die-mult.rolling .die-body{
+  animation:v053CubeRollGold .70s cubic-bezier(.18,.72,.18,1)!important;
+}
+@keyframes v053CubeRoll{
+  0%   {transform:translate(0,0) rotate(0deg) scale(1,1)}
+  14%  {transform:translate(-9px,-7px) rotate(-14deg) scale(.98,1.02)}
+  28%  {transform:translate(-3px,-12px) rotate(7deg) scale(1.02,.98)}
+  43%  {transform:translate(9px,-6px) rotate(17deg) scale(.99,1.01)}
+  58%  {transform:translate(5px,-11px) rotate(-9deg) scale(1.015,.985)}
+  73%  {transform:translate(-5px,-4px) rotate(-13deg) scale(.99,1.01)}
+  86%  {transform:translate(3px,-6px) rotate(5deg) scale(1.01,.99)}
+  94%  {transform:translate(1px,2px) rotate(-2deg) scale(1.035,.965)}
+  100% {transform:translate(0,0) rotate(0deg) scale(1,1)}
+}
+@keyframes v053CubeRollGold{
+  0%   {transform:translate(0,0) rotate(0deg) scale(1,1)}
+  12%  {transform:translate(-10px,-8px) rotate(-15deg) scale(.98,1.02)}
+  25%  {transform:translate(-4px,-13px) rotate(8deg) scale(1.02,.98)}
+  39%  {transform:translate(10px,-7px) rotate(18deg) scale(.99,1.01)}
+  53%  {transform:translate(6px,-12px) rotate(-10deg) scale(1.015,.985)}
+  67%  {transform:translate(-6px,-5px) rotate(-14deg) scale(.99,1.01)}
+  80%  {transform:translate(4px,-7px) rotate(6deg) scale(1.01,.99)}
+  91%  {transform:translate(1px,2px) rotate(-2deg) scale(1.04,.96)}
+  100% {transform:translate(0,0) rotate(0deg) scale(1,1)}
+}
+/* Stronger rounded cube silhouette */
+.die-body{
+  border-radius:18px!important;
+  overflow:visible;
+}
+.die-body::before{
+  left:10px!important;right:5px!important;top:-5px!important;height:8px!important;
+  transform:skewX(-25deg)!important;
+  border-radius:12px 12px 3px 3px!important;
+}
+.die-body::after{
+  top:8px!important;bottom:4px!important;right:-5px!important;width:8px!important;
+  transform:skewY(-25deg)!important;
+  border-radius:2px 9px 9px 2px!important;
+}
+/* Contact shadow moves independently and makes the object feel grounded */
+.die-slot::after{
+  content:"";
+  position:absolute;
+  left:50%;bottom:5px;
+  width:56px;height:10px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(0,0,0,.48);
+  filter:blur(4px);
+  transition:transform .12s,opacity .12s;
+  z-index:0;
+}
+.die-slot:has(.die.rolling)::after{
+  transform:translateX(-50%) scale(.72);
+  opacity:.45;
+}
+.die-slot .die{z-index:2}
