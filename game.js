@@ -1,36 +1,100 @@
 (() => {
+  "use strict";
+
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
   const wait = ms => new Promise(r => setTimeout(r, ms));
 
-  const base = { maxHp:75, atk:12, def:4 };
-  const enemies = [
-    {name:"ゴブリン", image:"enemy_01_goblin.png",art:"👺",hp:48,attacks:[8,10,12],gold:25,lv:1},
-    {name:"ゴブリン弓兵", image:"enemy_02_goblin_archer.png",art:"🏹",hp:58,attacks:[8,8,16],gold:35,lv:2},
-    {name:"ゴブリン戦士", image:"enemy_03_goblin_warrior.png",art:"👹",hp:82,attacks:[12,14,14],gold:45,lv:3},
-    {name:"ゴブリン隊長", image:"enemy_04_goblin_captain.png",art:"🪓",hp:105,attacks:[12,16,24],gold:60,lv:4},
-    {name:"ゴブリンキング", image:"enemy_05_goblin_king.png",art:"👑",hp:155,attacks:[12,18,12,35],gold:120,lv:5,boss:true}
-  ];
+  const SAVE_KEY = "diceRpgSaveV1";
+  const LEGACY_GOLD_KEY = "diceRpgGold";
+
+  const BASE_STATS = { maxHp:75, atk:12, def:4 };
+
+  const DUNGEONS = {
+    "1-1": {
+      id:"1-1",
+      name:"ゴブリンの森",
+      enemies:[
+        {name:"ゴブリン", image:"enemy_01_goblin.png", hp:48, attacks:[8,10,12], gold:25, lv:1},
+        {name:"ゴブリン弓兵", image:"enemy_02_goblin_archer.png", hp:58, attacks:[8,8,16], gold:35, lv:2},
+        {name:"ゴブリン戦士", image:"enemy_03_goblin_warrior.png", hp:82, attacks:[12,14,14], gold:45, lv:3},
+        {name:"ゴブリン隊長", image:"enemy_04_goblin_captain.png", hp:105, attacks:[12,16,24], gold:60, lv:4},
+        {name:"ゴブリンキング", image:"enemy_05_goblin_king.png", hp:155, attacks:[12,18,12,35], gold:120, lv:5, boss:true}
+      ]
+    }
+  };
 
   const pipPositions = {
     1:[5], 2:[1,9], 3:[1,5,9], 4:[1,3,7,9],
     5:[1,3,5,7,9], 6:[1,3,4,6,7,9]
   };
 
-  let bank = Number(localStorage.getItem("diceRpgGold") || 0);
-  let state = {};
+  function defaultSave(){
+    const legacyGold = Number(localStorage.getItem(LEGACY_GOLD_KEY) || 0);
+    return {
+      version:1,
+      gold:Number.isFinite(legacyGold) ? legacyGold : 0,
+      base:{...BASE_STATS},
+      clears:{"1-1":0},
+      records:{"1-1":{bestRunGold:0}},
+      unlocked:["1-1"]
+    };
+  }
+
+  function loadSave(){
+    try{
+      const raw=localStorage.getItem(SAVE_KEY);
+      if(!raw) return defaultSave();
+      const parsed=JSON.parse(raw);
+      return {
+        ...defaultSave(),
+        ...parsed,
+        base:{...BASE_STATS,...(parsed.base||{})},
+        clears:{"1-1":0,...(parsed.clears||{})},
+        records:{"1-1":{bestRunGold:0},...(parsed.records||{})},
+        unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
+      };
+    }catch{
+      return defaultSave();
+    }
+  }
+
+  let save = loadSave();
+  let selectedDungeonId = "1-1";
+  let state = null;
   let busy = false;
+  let lastClear = null;
+
+  function persist(){
+    localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+    localStorage.setItem(LEGACY_GOLD_KEY, String(save.gold));
+  }
 
   function show(id){
-    $$(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+    $$(".screen").forEach(s => s.classList.toggle("active", s.id===id));
     window.scrollTo(0,0);
   }
-  function saveBank(){
-    localStorage.setItem("diceRpgGold", String(bank));
-    $("#bankGold").textContent = bank;
+
+  function renderHome(){
+    $("#bankGold").textContent=save.gold;
+    $("#homeHp").textContent=save.base.maxHp;
+    $("#homeAtk").textContent=save.base.atk;
+    $("#homeDef").textContent=save.base.def;
+    const clears=save.clears["1-1"]||0;
+    $("#clearCount").textContent=clears;
+    $("#bestRunGold").textContent=`${save.records["1-1"]?.bestRunGold||0}G`;
+    const badge=$("#clearBadge");
+    badge.textContent=clears>0 ? `CLEAR ×${clears}` : "未CLEAR";
+    badge.classList.toggle("cleared",clears>0);
   }
-  function currentEnemy(){ return enemies[state.battle]; }
-  function currentAttack(){ const e=currentEnemy(); return e.attacks[state.turn % e.attacks.length]; }
+
+  function currentDungeon(){ return DUNGEONS[state.dungeonId]; }
+  function currentEnemy(){ return currentDungeon().enemies[state.battle]; }
+  function currentAttack(){
+    const e=currentEnemy();
+    return e.attacks[state.turn % e.attacks.length];
+  }
+
   function calcDamage(){
     const [a,b,c]=state.dice;
     if(!a || !b || !c) return null;
@@ -38,6 +102,7 @@
     if(a===6 && b===6 && c===6) dmg=Math.round(dmg*1.5);
     return dmg;
   }
+
   function hpColor(p){
     if(p<=.10) return "#e23b35";
     if(p<=.25) return "#f08b2f";
@@ -45,7 +110,7 @@
     return "#39cf73";
   }
 
-  function drawFace(faceEl, value){
+  function drawFace(faceEl,value){
     faceEl.dataset.face=String(value||0);
     faceEl.innerHTML="";
     if(!value) return;
@@ -59,31 +124,36 @@
   function renderDice(){
     $$(".die").forEach((d,i)=>{
       const value=state.dice[i];
-      drawFace(d.querySelector(".die-face"), value);
+      drawFace(d.querySelector(".die-face"),value);
       const label=document.querySelector(`.roll-number[data-result="${i}"]`);
       if(label){
-        label.textContent=value || "";
-        label.classList.toggle("visible", Boolean(value));
-        label.classList.toggle("six", i===2 && value===6);
+        label.textContent=value||"";
+        label.classList.toggle("visible",Boolean(value));
+        label.classList.toggle("six",i===2 && value===6);
       }
-      const isNext = state.nextDie===i && !busy;
-      d.classList.toggle("locked", !isNext);
-      d.classList.toggle("ready", isNext);
-      d.disabled = !isNext;
+      const isNext=state.nextDie===i && !busy;
+      d.classList.toggle("locked",!isNext);
+      d.classList.toggle("ready",isNext);
+      d.disabled=!isNext;
     });
-    document.body.classList.toggle("mult-dim", state.nextDie===2 && !busy);
+    document.body.classList.toggle("mult-dim",state.nextDie===2 && !busy);
+  }
+
+  function renderEnemyArt(enemy){
+    const art=$("#enemyArt");
+    art.innerHTML=enemy.image
+      ? `<img class="enemy-img" src="${enemy.image}" alt="${enemy.name}">`
+      : "";
   }
 
   function renderBattle(){
     const e=currentEnemy();
+    const dungeon=currentDungeon();
+
     $("#battleNo").textContent=`BATTLE ${state.battle+1}/5`;
+    $(".battle-head small").textContent=`${dungeon.id} ${dungeon.name}`;
     $("#runGold").textContent=state.runGold;
-    const enemyArt=$("#enemyArt");
-  if(e.image){
-    enemyArt.innerHTML=`<img class="enemy-img" src="${e.image}" alt="${e.name}">`;
-  }else{
-    enemyArt.textContent=e.art||e.emoji||"";
-  }
+    renderEnemyArt(e);
     $("#enemyName").textContent=e.name;
     $("#enemyLv").textContent=`Lv.${e.lv}`;
     $("#nextAttack").textContent=currentAttack();
@@ -99,29 +169,32 @@
 
     $("#runAtk").textContent=state.atk;
     $("#runDef").textContent=state.def;
-
     renderDice();
 
     const [a,b,c]=state.dice;
     $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${c??"?"} + ATK ${state.atk}`;
 
     const dmg=calcDamage();
-    const forecast=$("#forecast"), ghost=$("#enemyHpForecast"), hpbar=$(".enemy-hp-bar");
+    const forecast=$("#forecast");
+    const ghost=$("#enemyHpForecast");
+    const hpbar=$(".enemy-hp-bar");
+
     if(dmg!==null){
       const remain=Math.max(0,state.enemyHp-dmg);
-      forecast.textContent = remain===0 ? `⚔ KILL!!  ${dmg} DAMAGE` : `予測 ${dmg} DAMAGE → 残り ${remain} HP`;
-      forecast.className = remain===0 ? "forecast kill" : "forecast";
+      forecast.textContent=remain===0 ? `⚔ KILL!!  ${dmg} DAMAGE` : `予測 ${dmg} DAMAGE → 残り ${remain} HP`;
+      forecast.className=remain===0 ? "forecast kill" : "forecast";
       const curPct=Math.max(0,state.enemyHp/e.hp*100);
       const remPct=Math.max(0,remain/e.hp*100);
       ghost.style.left=`${remPct}%`;
       ghost.style.width=`${Math.max(0,curPct-remPct)}%`;
-      hpbar.classList.toggle("kill-preview", remain===0);
+      hpbar.classList.toggle("kill-preview",remain===0);
       $("#attackBtn").disabled=busy;
       $("#instruction").textContent="ダメージ確定！攻撃！";
     }else{
       forecast.textContent="";
       forecast.className="forecast";
-      ghost.style.left="100%"; ghost.style.width="0";
+      ghost.style.left="100%";
+      ghost.style.width="0";
       hpbar.classList.remove("kill-preview");
       $("#attackBtn").disabled=true;
       const labels=["①","②","③ 倍率"];
@@ -130,48 +203,74 @@
     $("#critical").classList.add("hidden");
   }
 
-  function newRun(){
-    state={hp:base.maxHp,maxHp:base.maxHp,atk:base.atk,def:base.def,runGold:0,battle:0,turn:0,dice:[null,null,null],nextDie:0,enemyHp:0};
+  function startRun(){
+    const base=save.base;
+    state={
+      dungeonId:selectedDungeonId,
+      hp:base.maxHp,
+      maxHp:base.maxHp,
+      atk:base.atk,
+      def:base.def,
+      runGold:0,
+      battle:0,
+      turn:0,
+      dice:[null,null,null],
+      nextDie:0,
+      enemyHp:0
+    };
     loadEnemy();
     show("battle");
   }
+
   function loadEnemy(){
     const e=currentEnemy();
-    state.turn=0; state.enemyHp=e.hp; state.dice=[null,null,null]; state.nextDie=0; busy=false;
+    state.turn=0;
+    state.enemyHp=e.hp;
+    state.dice=[null,null,null];
+    state.nextDie=0;
+    busy=false;
     $("#enemyArt").classList.remove("dead","hit");
     renderBattle();
   }
 
-  async function rollDie(index, btn){
+  async function rollDie(index,btn){
     if(busy || index!==state.nextDie) return;
-    busy=true; renderBattle();
-    const mult=index===2, duration=mult?820:620;
-    btn.classList.remove("land"); void btn.offsetWidth; btn.classList.add("rolling");
+    busy=true;
+    renderBattle();
+
+    const mult=index===2;
+    const duration=mult?820:620;
+    btn.classList.remove("land");
+    void btn.offsetWidth;
+    btn.classList.add("rolling");
     FX.rollDie(mult);
 
     const face=btn.querySelector(".die-face");
     const resultLabel=document.querySelector(`.roll-number[data-result="${index}"]`);
-    if(resultLabel){ resultLabel.textContent=""; resultLabel.classList.remove("visible","six"); }
-    // First visible pip appears immediately, then slows slightly toward landing.
+    if(resultLabel){
+      resultLabel.textContent="";
+      resultLabel.classList.remove("visible","six");
+    }
+
     const start=performance.now();
     let step=0;
     while(performance.now()-start < duration-55){
       drawFace(face,1+Math.floor(Math.random()*6));
       step++;
-      await wait(Math.min(82, 42 + step*4));
+      await wait(Math.min(82,42+step*4));
     }
 
     const value=1+Math.floor(Math.random()*6);
     state.dice[index]=value;
     state.nextDie++;
-    // Draw the final result BEFORE ending the tumble so iPhone/Safari never
-    // briefly returns to "?" or misses the settled face.
     drawFace(face,value);
+
     if(resultLabel){
       resultLabel.textContent=value;
       resultLabel.classList.add("visible");
       if(mult && value===6) resultLabel.classList.add("six");
     }
+
     await wait(45);
     btn.classList.remove("rolling");
     btn.classList.add("land");
@@ -188,7 +287,10 @@
       multFx.className=`show-mult${value===6?" x6":""}`;
       FX.multiplier(value);
       document.body.classList.add(value>=5?"big-shake":"shake");
-      setTimeout(()=>{ multFx.className=""; document.body.classList.remove("shake","big-shake"); },560);
+      setTimeout(()=>{
+        multFx.className="";
+        document.body.classList.remove("shake","big-shake");
+      },560);
 
       if(state.dice.every(v=>v===6)){
         await wait(220);
@@ -203,11 +305,12 @@
   async function attack(){
     const dmg=calcDamage();
     if(busy || dmg===null) return;
-    busy=true; renderBattle();
+    busy=true;
+    renderBattle();
 
-    const e=currentEnemy();
     const before=state.enemyHp;
-    const after=Math.max(0,before-dmg);
+    state.enemyHp=Math.max(0,before-dmg);
+
     $("#damageFx").textContent=dmg;
     $("#damageFx").className="show-damage";
     $("#slashFx").className="show-slash";
@@ -215,12 +318,14 @@
     FX.attack(dmg>=45);
 
     const art=$("#enemyArt");
-    art.classList.remove("hit"); void art.offsetWidth; art.classList.add("hit");
-    state.enemyHp=after;
+    art.classList.remove("hit");
+    void art.offsetWidth;
+    art.classList.add("hit");
     renderBattle();
 
     await wait(520);
-    $("#damageFx").className=""; $("#slashFx").className="";
+    $("#damageFx").className="";
+    $("#slashFx").className="";
     document.body.classList.remove("shake","big-shake");
 
     if(state.enemyHp<=0){
@@ -244,59 +349,108 @@
     state.turn++;
 
     if(state.hp<=0){
-      bank+=state.runGold; saveBank();
-      $("#deathGold").textContent=`${state.runGold}G`;
-      show("gameover");
+      finishDefeat();
       busy=false;
       return;
     }
 
-    state.dice=[null,null,null]; state.nextDie=0; busy=false; renderBattle();
+    state.dice=[null,null,null];
+    state.nextDie=0;
+    busy=false;
+    renderBattle();
   }
 
   async function winBattle(){
     const e=currentEnemy();
-    state.runGold += e.gold;
+    state.runGold+=e.gold;
+
     if(e.boss){
       showBossBoxes();
-    }else{
-      FX.reward();
-      show("reward");
+      return;
     }
+
+    $("#rewardBattleText").textContent=`BATTLE ${state.battle+1} CLEAR`;
+    $("#rewardGoldText").textContent=`+${e.gold}G`;
+    FX.reward();
+    show("reward");
   }
 
   function chooseReward(kind){
-    if(kind==="heal") state.hp=Math.min(state.maxHp, state.hp+Math.ceil(state.maxHp*.3));
+    if(kind==="heal") state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.3));
     if(kind==="gold") state.runGold+=40;
     if(kind==="atk") state.atk+=3;
-    state.battle++; loadEnemy(); show("battle");
+
+    state.battle++;
+    loadEnemy();
+    show("battle");
   }
 
   function showBossBoxes(){
-    show("bossReward");
+    $("#bossBaseGold").textContent=`${state.runGold}G`;
     $("#bossResult").innerHTML="";
-    $$(".box").forEach(b=>{b.disabled=false;b.classList.remove("opened");b.innerHTML="🎁<span>BOX</span>";});
+    $$(".box").forEach(b=>{
+      b.disabled=false;
+      b.classList.remove("opened");
+      b.innerHTML="🎁<span>BOX</span>";
+    });
+    show("bossReward");
   }
+
   function chooseBox(btn){
+    if(!state) return;
+
+    // provisional equal rates; isolated here so probabilities can be tuned later.
     const mult=[1,2,3][Math.floor(Math.random()*3)];
+
     btn.classList.add("opened");
     btn.innerHTML=`×${mult}<span>BONUS</span>`;
     $$(".box").forEach(b=>b.disabled=true);
-    const total=state.runGold*mult;
-    bank+=total; saveBank();
-    $("#bossResult").innerHTML=`獲得 ${state.runGold}G × ${mult}<br><strong>${total}G</strong><br><button id="bossHome" class="primary" style="margin-top:22px;padding:15px 34px">ホームへ</button>`;
-    $("#bossHome").addEventListener("click",()=>show("home"));
+
+    const runGold=state.runGold;
+    const total=runGold*mult;
+
+    save.gold+=total;
+    save.clears[state.dungeonId]=(save.clears[state.dungeonId]||0)+1;
+    const record=save.records[state.dungeonId] || {bestRunGold:0};
+    record.bestRunGold=Math.max(record.bestRunGold,total);
+    save.records[state.dungeonId]=record;
+    persist();
+
+    lastClear={runGold,mult,total,dungeonId:state.dungeonId};
+    $("#bossResult").innerHTML=`<strong>×${mult}</strong><span>${total}G GET!</span>`;
+
+    setTimeout(()=>{
+      $("#resultRunGold").textContent=`${runGold}G`;
+      $("#resultMultiplier").textContent=`×${mult}`;
+      $("#resultTotalGold").textContent=`${total}G`;
+      show("runResult");
+    },850);
   }
 
-  $("#startBtn").addEventListener("click",newRun);
+  function finishDefeat(){
+    const earned=state.runGold;
+    save.gold+=earned;
+    persist();
+    $("#deathGold").textContent=`${earned}G`;
+    show("gameover");
+  }
+
+  function returnHome(){
+    state=null;
+    busy=false;
+    document.body.classList.remove("mult-dim","shake","big-shake");
+    renderHome();
+    show("home");
+  }
+
+  $("#startBtn").addEventListener("click",startRun);
   $$(".die").forEach((b,i)=>b.addEventListener("click",()=>rollDie(i,b)));
   $("#attackBtn").addEventListener("click",attack);
   $$(".reward").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));
-  $("#deathHome").addEventListener("click",()=>show("home"));
+  $("#deathHome").addEventListener("click",returnHome);
+  $("#resultHome").addEventListener("click",returnHome);
 
-  $("#homeHp").textContent=base.maxHp;
-  $("#homeAtk").textContent=base.atk;
-  $("#homeDef").textContent=base.def;
-  saveBank();
+  persist();
+  renderHome();
 })();

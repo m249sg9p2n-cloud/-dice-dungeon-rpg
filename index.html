@@ -7,44 +7,66 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=056">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=056">
-  <link rel="stylesheet" href="./style.css?v=056">
-  <title>Dice Dungeon RPG v0.5.4</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=060">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=060">
+  <link rel="stylesheet" href="./style.css?v=060">
+  <title>Dice Dungeon RPG v0.6.0</title>
 </head>
 <body>
 <main id="app">
+
   <section id="home" class="screen active">
     <header class="topbar">
       <div>
-        <div class="eyebrow">DICE DUNGEON</div>
-        <h1>冒険者 Lv.1</h1>
+        <div class="eyebrow">DICE DUNGEON RPG</div>
+        <h1>冒険者</h1>
       </div>
       <div class="gold">🪙 <span id="bankGold">0</span>G</div>
     </header>
 
     <article class="hero-card">
-      <div class="crest">⚔️</div>
+      <div class="crest">🎲</div>
       <div>
-        <div class="eyebrow">NEXT DUNGEON</div>
+        <div class="eyebrow">CURRENT MISSION</div>
         <h2>1-1 ゴブリンの森</h2>
-        <p>全5戦。最後にゴブリンキングが待つ。</p>
+        <p>4戦を突破し、5戦目のゴブリンキングを倒せ。</p>
       </div>
     </article>
 
+    <div class="home-section-title">基礎ステータス</div>
     <div class="stats-grid">
       <div class="stat"><span>HP</span><b id="homeHp">75</b></div>
       <div class="stat"><span>ATK</span><b id="homeAtk">12</b></div>
       <div class="stat"><span>DEF</span><b id="homeDef">4</b></div>
     </div>
 
+    <div class="home-section-title">装備</div>
     <div class="equipment-row">
       <div class="equip-card"><span>武器</span><b>訓練用の剣</b><small>ATK +0</small></div>
       <div class="equip-card"><span>防具</span><b>旅人の服</b><small>DEF +0</small></div>
     </div>
 
-    <button id="startBtn" class="primary">ダンジョンに挑戦</button>
-    <p class="note">v0.5.4 — 戦闘UI・ダイス・演出処理を一から整理。</p>
+    <div class="home-section-title">ダンジョン</div>
+    <div class="dungeon-list">
+      <button class="dungeon-card selected" data-dungeon="1-1">
+        <span class="dungeon-code">1-1</span>
+        <span class="dungeon-info"><b>ゴブリンの森</b><small>全5戦 / BOSS ゴブリンキング</small></span>
+        <span id="clearBadge" class="clear-badge">未CLEAR</span>
+      </button>
+      <button class="dungeon-card locked" disabled>
+        <span class="dungeon-code">1-2</span>
+        <span class="dungeon-info"><b>毒蜘蛛の洞窟</b><small>COMING SOON</small></span>
+        <span class="lock-mark">🔒</span>
+      </button>
+    </div>
+
+    <div class="record-row">
+      <div><span>CLEAR</span><b id="clearCount">0</b></div>
+      <div><span>BEST RUN GOLD</span><b id="bestRunGold">0G</b></div>
+    </div>
+
+    <button id="startBtn" class="primary home-start">1-1へ出撃</button>
+    <p class="note">v0.6.0 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="battle" class="screen battle-screen">
@@ -55,7 +77,7 @@
 
     <section class="enemy-stage">
       <div class="enemy-aura"></div>
-      <div id="enemyArt" class="enemy-art" aria-hidden="true">👺</div>
+      <div id="enemyArt" class="enemy-art" aria-hidden="true"></div>
       <div class="enemy-name"><b id="enemyName">ゴブリン</b><span id="enemyLv">Lv.1</span></div>
 
       <div class="enemy-hp-block">
@@ -107,8 +129,9 @@
     <div class="center-title">
       <div class="eyebrow">BATTLE CLEAR</div>
       <h2>報酬を1つ選択</h2>
-      <p>基本GOLDは獲得済み。</p>
+      <p>基本GOLDはすでに獲得済み。</p>
     </div>
+    <div class="reward-progress"><span id="rewardBattleText">BATTLE 1 CLEAR</span><b id="rewardGoldText">+25G</b></div>
     <div class="reward-grid">
       <button class="reward" data-reward="heal"><b>❤️ HP回復</b><span>最大HPの30%回復</span></button>
       <button class="reward" data-reward="gold"><b>🪙 GOLD</b><span>追加で40G獲得</span></button>
@@ -119,9 +142,10 @@
   <section id="bossReward" class="screen">
     <div class="center-title">
       <div class="eyebrow">BOSS CLEAR!</div>
-      <h2>ランダムボーナスBOX</h2>
-      <p>ランで獲得したGOLDに倍率がかかる。</p>
+      <h2>GOLD BONUS BOX</h2>
+      <p>3つから1つ。ラン獲得GOLDの倍率が決まる。</p>
     </div>
+    <div class="boss-base-gold">RUN GOLD <b id="bossBaseGold">0G</b></div>
     <div class="boxes">
       <button class="box">🎁<span>BOX</span></button>
       <button class="box">🎁<span>BOX</span></button>
@@ -130,11 +154,25 @@
     <div id="bossResult" class="boss-result"></div>
   </section>
 
+  <section id="runResult" class="screen">
+    <div class="center-title">
+      <div class="eyebrow">DUNGEON CLEAR</div>
+      <h2>1-1 ゴブリンの森 CLEAR!</h2>
+      <p>獲得したGOLDを持ち帰った。</p>
+    </div>
+    <div class="run-result-card">
+      <div><span>RUN GOLD</span><b id="resultRunGold">0G</b></div>
+      <div><span>BONUS</span><b id="resultMultiplier">×1</b></div>
+      <div class="total"><span>GET GOLD</span><b id="resultTotalGold">0G</b></div>
+    </div>
+    <button id="resultHome" class="primary">ホームへ</button>
+  </section>
+
   <section id="gameover" class="screen">
     <div class="center-title">
       <div class="eyebrow danger">DEFEATED</div>
       <h2>ダンジョン失敗</h2>
-      <p>ランで獲得したGOLDはすべて持ち帰る。</p>
+      <p>倒れても、このランで獲得したGOLDはすべて持ち帰る。</p>
     </div>
     <div class="result-card">獲得GOLD <b id="deathGold">0G</b></div>
     <button id="deathHome" class="primary">ホームへ</button>
@@ -149,11 +187,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=056"></script>
-<script src="./game.js?v=056"></script>
+<script src="./effects.js?v=060"></script>
+<script src="./game.js?v=060"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=056").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=060").catch(console.error));
 }
 </script>
 </body>

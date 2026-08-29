@@ -346,3 +346,93 @@
   object-fit:contain;
   filter:drop-shadow(0 8px 8px rgba(0,0,0,.48));
 }
+
+
+/* ===== v0.6.0 formal game-loop foundation ===== */
+.home-section-title{
+  margin:16px 2px 7px;
+  color:#d8b557;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.13em;
+}
+.dungeon-list{display:grid;gap:8px}
+.dungeon-card{
+  width:100%;
+  min-height:63px;
+  display:grid;
+  grid-template-columns:50px 1fr auto;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid #3a3f4c;
+  border-radius:15px;
+  background:linear-gradient(145deg,#11141b,#0c0e13);
+  text-align:left;
+}
+.dungeon-card.selected{
+  border-color:#9a762d;
+  box-shadow:inset 0 0 20px #c5962310,0 5px 18px #0006;
+}
+.dungeon-card.locked{opacity:.43}
+.dungeon-code{
+  display:grid;place-items:center;
+  width:45px;height:38px;
+  border:1px solid #8d6b2c;border-radius:10px;
+  color:#f2ce6f;font-weight:1000;
+}
+.dungeon-info b,.dungeon-info small{display:block}
+.dungeon-info b{font-size:13px}
+.dungeon-info small{margin-top:4px;color:#8e94a2;font-size:9px}
+.clear-badge,.lock-mark{
+  font-size:9px;font-weight:1000;color:#8e94a2;
+}
+.clear-badge.cleared{color:#69e49a}
+.record-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px
+}
+.record-row>div{
+  padding:10px;border:1px solid #303540;border-radius:13px;
+  background:#0d1016;text-align:center
+}
+.record-row span,.run-result-card span{
+  display:block;color:#777f90;font-size:8px;font-weight:1000;letter-spacing:.08em
+}
+.record-row b{display:block;margin-top:3px;font-size:14px}
+.home-start{min-height:56px;margin-top:14px}
+.reward-progress,.boss-base-gold{
+  width:100%;margin:16px 0 10px;padding:12px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  border:1px solid #544422;border-radius:14px;background:#101218;
+  color:#aeb2bd;font-size:11px
+}
+.reward-progress b,.boss-base-gold b{color:#f2ca62;font-size:16px}
+.run-result-card{
+  margin-top:30px;padding:8px 18px;
+  border:1px solid #665022;border-radius:20px;
+  background:linear-gradient(145deg,#151821,#0d0f14);
+  box-shadow:0 18px 45px #0008,inset 0 0 30px #c28c1510
+}
+.run-result-card>div{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 2px;border-bottom:1px solid #2e3038
+}
+.run-result-card>div:last-child{border-bottom:0}
+.run-result-card b{font-size:20px}
+.run-result-card .total b{color:#ffd35f;font-size:28px}
+#resultHome{min-height:56px;margin-top:auto}
+#bossResult{
+  min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center
+}
+#bossResult strong{font-size:42px;color:#ffd45e;text-shadow:0 0 18px #ffb52d}
+#bossResult span{font-weight:1000;color:#f6e0a3}
+@media(max-height:760px){
+  #home.screen{padding-top:max(10px,env(safe-area-inset-top))}
+  #home .hero-card{margin-top:12px;padding:13px}
+  #home .home-section-title{margin-top:10px}
+  #home .stats-grid{margin-top:0}
+  #home .equipment-row{margin-top:6px}
+  #home .dungeon-card{min-height:55px}
+  #home .record-row{margin-top:7px}
+  #home .note{margin-top:8px}
+}
