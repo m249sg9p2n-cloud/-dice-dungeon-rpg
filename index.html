@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=060">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=060">
-  <link rel="stylesheet" href="./style.css?v=060">
-  <title>Dice Dungeon RPG v0.6.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=061">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=061">
+  <link rel="stylesheet" href="./style.css?v=061">
+  <title>Dice Dungeon RPG v0.6.1</title>
 </head>
 <body>
 <main id="app">
@@ -40,6 +40,25 @@
       <div class="stat"><span>DEF</span><b id="homeDef">4</b></div>
     </div>
 
+    <div class="home-section-title">永続強化</div>
+    <div class="upgrade-grid">
+      <button class="upgrade-card" data-upgrade="hp">
+        <span class="upgrade-icon">❤️</span>
+        <span class="upgrade-main"><b>HP強化</b><small>+5 HP / 1Lv</small></span>
+        <span class="upgrade-side"><em id="hpLv">Lv.0</em><strong id="hpCost">100G</strong></span>
+      </button>
+      <button class="upgrade-card" data-upgrade="atk">
+        <span class="upgrade-icon">⚔️</span>
+        <span class="upgrade-main"><b>ATK強化</b><small>+1 ATK / 1Lv</small></span>
+        <span class="upgrade-side"><em id="atkLv">Lv.0</em><strong id="atkCost">120G</strong></span>
+      </button>
+      <button class="upgrade-card" data-upgrade="def">
+        <span class="upgrade-icon">🛡️</span>
+        <span class="upgrade-main"><b>DEF強化</b><small>+1 DEF / 1Lv</small></span>
+        <span class="upgrade-side"><em id="defLv">Lv.0</em><strong id="defCost">150G</strong></span>
+      </button>
+    </div>
+
     <div class="home-section-title">装備</div>
     <div class="equipment-row">
       <div class="equip-card"><span>武器</span><b>訓練用の剣</b><small>ATK +0</small></div>
@@ -66,7 +85,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.6.0 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.6.1 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="battle" class="screen battle-screen">
@@ -187,11 +206,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=060"></script>
-<script src="./game.js?v=060"></script>
+<script src="./effects.js?v=061"></script>
+<script src="./game.js?v=061"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=060").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=061").catch(console.error));
 }
 </script>
 </body>

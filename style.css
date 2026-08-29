@@ -436,3 +436,58 @@
   #home .record-row{margin-top:7px}
   #home .note{margin-top:8px}
 }
+
+/* ===== v0.6.1 permanent upgrade system ===== */
+.upgrade-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+.upgrade-card{
+  width:100%;
+  min-height:54px;
+  display:grid;
+  grid-template-columns:38px 1fr auto;
+  align-items:center;
+  gap:9px;
+  padding:8px 10px;
+  border:1px solid #343945;
+  border-radius:14px;
+  background:linear-gradient(145deg,#11151d,#0b0e13);
+  color:#f1f1f1;
+  text-align:left;
+  transition:transform .12s,border-color .12s,box-shadow .12s,opacity .12s;
+}
+.upgrade-card:active{transform:scale(.985)}
+.upgrade-card.affordable{
+  border-color:#8d6a2e;
+  box-shadow:inset 0 0 18px #d4a33510;
+}
+.upgrade-card.maxed{opacity:.58}
+.upgrade-card.cant-buy{
+  animation:upgradeNo .38s ease;
+  border-color:#d04444;
+}
+@keyframes upgradeNo{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-5px)}
+  75%{transform:translateX(5px)}
+}
+.upgrade-icon{
+  display:grid;place-items:center;
+  width:34px;height:34px;
+  border-radius:10px;
+  background:#191e28;
+  font-size:18px;
+}
+.upgrade-main b,.upgrade-main small{display:block}
+.upgrade-main b{font-size:12px}
+.upgrade-main small{margin-top:3px;color:#858d9c;font-size:8px}
+.upgrade-side{text-align:right}
+.upgrade-side em,.upgrade-side strong{display:block;font-style:normal}
+.upgrade-side em{font-size:8px;color:#8b93a3}
+.upgrade-side strong{margin-top:2px;color:#f1c85c;font-size:11px}
+@media(max-height:760px){
+  #home .upgrade-grid{gap:5px}
+  #home .upgrade-card{min-height:47px;padding:6px 9px}
+}

@@ -10,6 +10,12 @@
 
   const BASE_STATS = { maxHp:75, atk:12, def:4 };
 
+  const UPGRADES = {
+    hp:{baseCost:100, growth:1.35, maxLv:20, perLv:5},
+    atk:{baseCost:120, growth:1.40, maxLv:20, perLv:1},
+    def:{baseCost:150, growth:1.45, maxLv:15, perLv:1}
+  };
+
   const DUNGEONS = {
     "1-1": {
       id:"1-1",
@@ -35,6 +41,7 @@
       version:1,
       gold:Number.isFinite(legacyGold) ? legacyGold : 0,
       base:{...BASE_STATS},
+      upgrades:{hp:0,atk:0,def:0},
       clears:{"1-1":0},
       records:{"1-1":{bestRunGold:0}},
       unlocked:["1-1"]
@@ -50,6 +57,7 @@
         ...defaultSave(),
         ...parsed,
         base:{...BASE_STATS,...(parsed.base||{})},
+        upgrades:{hp:0,atk:0,def:0,...(parsed.upgrades||{})},
         clears:{"1-1":0,...(parsed.clears||{})},
         records:{"1-1":{bestRunGold:0},...(parsed.records||{})},
         unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
@@ -75,11 +83,59 @@
     window.scrollTo(0,0);
   }
 
+  function upgradeCost(type){
+    const cfg=UPGRADES[type];
+    const lv=save.upgrades[type]||0;
+    if(lv>=cfg.maxLv) return null;
+    return Math.round(cfg.baseCost * Math.pow(cfg.growth, lv) / 10) * 10;
+  }
+
+  function recalcBase(){
+    save.base.maxHp=BASE_STATS.maxHp + save.upgrades.hp*UPGRADES.hp.perLv;
+    save.base.atk=BASE_STATS.atk + save.upgrades.atk*UPGRADES.atk.perLv;
+    save.base.def=BASE_STATS.def + save.upgrades.def*UPGRADES.def.perLv;
+  }
+
+  function buyUpgrade(type){
+    const cfg=UPGRADES[type];
+    const lv=save.upgrades[type]||0;
+    const cost=upgradeCost(type);
+    if(cost===null || lv>=cfg.maxLv) return;
+    if(save.gold<cost){
+      const card=document.querySelector(`.upgrade-card[data-upgrade="${type}"]`);
+      card?.classList.add("cant-buy");
+      setTimeout(()=>card?.classList.remove("cant-buy"),420);
+      return;
+    }
+    save.gold-=cost;
+    save.upgrades[type]=lv+1;
+    recalcBase();
+    persist();
+    renderHome();
+  }
+
   function renderHome(){
     $("#bankGold").textContent=save.gold;
     $("#homeHp").textContent=save.base.maxHp;
     $("#homeAtk").textContent=save.base.atk;
     $("#homeDef").textContent=save.base.def;
+
+    for(const type of ["hp","atk","def"]){
+      const cfg=UPGRADES[type];
+      const lv=save.upgrades[type]||0;
+      const cost=upgradeCost(type);
+      const lvEl=$(`#${type}Lv`);
+      const costEl=$(`#${type}Cost`);
+      const card=document.querySelector(`.upgrade-card[data-upgrade="${type}"]`);
+      if(lvEl) lvEl.textContent=`Lv.${lv}/${cfg.maxLv}`;
+      if(costEl) costEl.textContent=cost===null ? "MAX" : `${cost}G`;
+      if(card){
+        card.disabled=cost===null;
+        card.classList.toggle("maxed",cost===null);
+        card.classList.toggle("affordable",cost!==null && save.gold>=cost);
+      }
+    }
+
     const clears=save.clears["1-1"]||0;
     $("#clearCount").textContent=clears;
     $("#bestRunGold").textContent=`${save.records["1-1"]?.bestRunGold||0}G`;
@@ -443,6 +499,7 @@
     show("home");
   }
 
+  $$(".upgrade-card").forEach(b=>b.addEventListener("click",()=>buyUpgrade(b.dataset.upgrade)));
   $("#startBtn").addEventListener("click",startRun);
   $$(".die").forEach((b,i)=>b.addEventListener("click",()=>rollDie(i,b)));
   $("#attackBtn").addEventListener("click",attack);
@@ -451,6 +508,7 @@
   $("#deathHome").addEventListener("click",returnHome);
   $("#resultHome").addEventListener("click",returnHome);
 
+  recalcBase();
   persist();
   renderHome();
 })();
