@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dice Dungeon">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<title>Dice Dungeon RPG v0.1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="app">
+  <section id="home" class="screen active">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">DICE DUNGEON</div>
+        <h1>冒険者 Lv.1</h1>
+      </div>
+      <div class="gold">🪙 <span id="bankGold">0</span>G</div>
+    </header>
+
+    <div class="hero-card">
+      <div class="crest">⚔️</div>
+      <div>
+        <div class="eyebrow">NEXT DUNGEON</div>
+        <h2>1-1 ゴブリンの森</h2>
+        <p>全5戦。4戦を越え、ゴブリンキングを倒せ。</p>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat"><span>HP</span><b id="homeHp">75</b></div>
+      <div class="stat"><span>ATK</span><b id="homeAtk">12</b></div>
+      <div class="stat"><span>DEF</span><b id="homeDef">4</b></div>
+    </div>
+
+    <div class="equipment-row">
+      <div class="equip-card"><span>武器</span><b>訓練用の剣</b><small>ATK +0</small></div>
+      <div class="equip-card"><span>防具</span><b>旅人の服</b><small>DEF +0</small></div>
+    </div>
+
+    <button id="startBtn" class="primary">ダンジョンに挑戦</button>
+    <p class="note">v0.1：まず「1-1」の戦闘ループを遊べる形にしています。</p>
+  </section>
+
+  <section id="battle" class="screen">
+    <header class="battle-head">
+      <div><b id="battleNo">BATTLE 1/5</b><small>1-1 ゴブリンの森</small></div>
+      <div class="run-gold">🪙 <span id="runGold">0</span>G</div>
+    </header>
+
+    <div class="enemy-stage">
+      <div class="enemy-aura"></div>
+      <div id="enemyEmoji" class="enemy-emoji">👺</div>
+      <div class="enemy-name"><b id="enemyName">ゴブリン</b><span id="enemyLv">Lv.1</span></div>
+      <div class="hp-line enemy"><span>HP</span><div class="bar"><i id="enemyHpBar"></i></div><b id="enemyHpText"></b></div>
+      <div class="next">
+        <span>NEXT ATTACK</span>
+        <b id="nextAttack">10</b>
+      </div>
+    </div>
+
+    <div class="player-line">
+      <div class="hp-line"><span>HP</span><div class="bar"><i id="playerHpBar"></i></div><b id="playerHpText"></b></div>
+    </div>
+
+    <div class="dice-panel">
+      <div class="instruction" id="instruction">①のダイスをタップ！</div>
+      <div class="dice-row">
+        <button class="die blue" data-index="0"><span>?</span><small>①</small></button>
+        <div class="op">＋</div>
+        <button class="die red locked" data-index="1"><span>?</span><small>②</small></button>
+        <div class="op">×</div>
+        <button class="die gold locked" data-index="2"><span>?</span><small>③ 倍率</small></button>
+      </div>
+      <div id="formula" class="formula">( ? + ? ) × ? + ATK 12</div>
+      <div id="damage" class="damage">—</div>
+      <div id="critical" class="critical hidden">666 CRITICAL!!</div>
+    </div>
+
+    <div class="battle-foot">
+      <div class="mini-stat">ATK <b>12</b></div>
+      <div class="mini-stat">DEF <b>4</b></div>
+      <button id="attackBtn" class="primary attack" disabled>攻撃する！</button>
+    </div>
+  </section>
+
+  <section id="reward" class="screen">
+    <div class="center-title">
+      <div class="eyebrow">BATTLE CLEAR</div>
+      <h2>報酬を1つ選択</h2>
+      <p>基本GOLDはすでに獲得済みです。</p>
+    </div>
+    <div class="reward-grid">
+      <button class="reward" data-reward="heal"><b>❤️ HP回復</b><span>最大HPの30%回復</span></button>
+      <button class="reward" data-reward="gold"><b>🪙 GOLD</b><span>追加で40G獲得</span></button>
+      <button class="reward" data-reward="atk"><b>⚔️ 攻撃強化</b><span>このラン中 ATK +3</span></button>
+    </div>
+  </section>
+
+  <section id="bossReward" class="screen">
+    <div class="center-title">
+      <div class="eyebrow">BOSS CLEAR!</div>
+      <h2>ランダムボーナスBOX</h2>
+      <p>1つ選んで開ける。ラン獲得GOLDが倍率アップ。</p>
+    </div>
+    <div class="boxes">
+      <button class="box">🎁<span>BOX</span></button>
+      <button class="box">🎁<span>BOX</span></button>
+      <button class="box">🎁<span>BOX</span></button>
+    </div>
+    <div id="bossResult" class="boss-result"></div>
+  </section>
+
+  <section id="gameover" class="screen">
+    <div class="center-title">
+      <div class="eyebrow danger">DEFEATED</div>
+      <h2>ダンジョン失敗</h2>
+      <p>獲得したGOLDはすべて持ち帰ります。</p>
+    </div>
+    <div class="result-card">獲得GOLD <b id="deathGold">0G</b></div>
+    <button id="deathHome" class="primary">ホームへ</button>
+  </section>
+</main>
+<script src="game.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(console.error);
+  });
+}
+</script>
+</body>
+</html>
