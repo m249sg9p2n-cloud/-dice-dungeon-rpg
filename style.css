@@ -312,3 +312,25 @@
   -webkit-mask-image:radial-gradient(ellipse 78% 72% at 58% 48%,#000 55%,transparent 100%);
   mask-image:radial-gradient(ellipse 78% 72% at 58% 48%,#000 55%,transparent 100%);
 }
+
+/* v0.5.5.1 enemy image rendering fix */
+#enemyArt{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+}
+#enemyArt .enemy-img,
+.enemy-img{
+  display:block;
+  width:auto;
+  max-width:min(68vw, 320px);
+  height:auto;
+  max-height:min(29vh, 245px);
+  object-fit:contain;
+  margin:0 auto;
+  filter:drop-shadow(0 12px 18px rgba(0,0,0,.55));
+  -webkit-user-select:none;
+  user-select:none;
+  pointer-events:none;
+}

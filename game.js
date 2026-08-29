@@ -78,7 +78,12 @@
     const e=currentEnemy();
     $("#battleNo").textContent=`BATTLE ${state.battle+1}/5`;
     $("#runGold").textContent=state.runGold;
-    $("#enemyArt").textContent=e.art;
+    const enemyArt=$("#enemyArt");
+  if(e.image){
+    enemyArt.innerHTML=`<img class="enemy-img" src="${e.image}" alt="${e.name}">`;
+  }else{
+    enemyArt.textContent=e.art||e.emoji||"";
+  }
     $("#enemyName").textContent=e.name;
     $("#enemyLv").textContent=`Lv.${e.lv}`;
     $("#nextAttack").textContent=currentAttack();
