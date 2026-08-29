@@ -1,16 +1,16 @@
-const CACHE = "dice-dungeon-v0-5";
-const ASSETS = [
-  "./style.css?v=050",
-  "./game.js?v=050",
-  "./effects.js?v=050",
-  "./manifest.webmanifest",
+const CACHE = "dice-dungeon-v0-5-clean-050c";
+const CORE = [
+  "./style.css?v=050c",
+  "./game.js?v=050c",
+  "./effects.js?v=050c",
+  "./manifest.webmanifest?v=050c",
   "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)));
   self.skipWaiting();
 });
 
@@ -24,16 +24,9 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
-  // Always try network first for page navigations so GitHub updates appear.
   if (event.request.mode === "navigate") {
     event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put("./index.html", copy));
-          return response;
-        })
-        .catch(() => caches.match("./index.html"))
+      fetch(event.request, {cache:"no-store"}).catch(() => caches.match("./"))
     );
     return;
   }
@@ -41,10 +34,10 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const copy = response.clone();
-        caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(()=>caches.match(event.request))
   );
 });

@@ -1,121 +1,68 @@
+(() => {
+  let ctx = null;
+  let muted = localStorage.getItem("ddMuted") === "1";
+  const soundBtn = document.querySelector("#soundBtn");
 
-(()=> {
-  let ctx;
-  let muted = localStorage.getItem("ddMuted")==="1";
-  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-  const btn=$("#v03sound"), pop=$("#v03pop"), slash=$("#v03slash"), crit=$("#v03crit");
-
-  function ac(){
-    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
-    if(ctx.state==="suspended") ctx.resume();
+  function audio() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === "suspended") ctx.resume();
     return ctx;
   }
-  function tone(freq,dur=.08,type="sine",vol=.05,delay=0,end=freq){
-    if(muted) return;
-    const c=ac(),t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();
-    o.type=type;o.frequency.setValueAtTime(freq,t);
+  function tone(freq, dur=.06, type="sine", vol=.035, delay=0, end=freq) {
+    if (muted) return;
+    const c=audio(), t=c.currentTime+delay, o=c.createOscillator(), g=c.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,t);
     o.frequency.exponentialRampToValueAtTime(Math.max(30,end),t+dur);
-    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur);
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+.01);
   }
-  function noise(dur=.05,vol=.03,delay=0,hp=700){
-    if(muted) return;
-    const c=ac(),len=Math.floor(c.sampleRate*dur),b=c.createBuffer(1,len,c.sampleRate),a=b.getChannelData(0);
-    for(let i=0;i<len;i++) a[i]=(Math.random()*2-1)*(1-i/len*.2);
-    const n=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain(),t=c.currentTime+delay;
-    n.buffer=b;f.type="highpass";f.frequency.value=hp;
-    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    n.connect(f);f.connect(g);g.connect(c.destination);n.start(t);
+  function noise(dur=.04, vol=.02, delay=0, low=160, high=1200) {
+    if (muted) return;
+    const c=audio(), len=Math.floor(c.sampleRate*dur), b=c.createBuffer(1,len,c.sampleRate), a=b.getChannelData(0);
+    for(let i=0;i<len;i++) a[i]=(Math.random()*2-1)*(1-i/len*.5);
+    const n=c.createBufferSource(), hp=c.createBiquadFilter(), lp=c.createBiquadFilter(), g=c.createGain(), t=c.currentTime+delay;
+    n.buffer=b; hp.type="highpass"; hp.frequency.value=low; lp.type="lowpass"; lp.frequency.value=high;
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    n.connect(hp); hp.connect(lp); lp.connect(g); g.connect(c.destination); n.start(t);
   }
-  function replay(el,cls){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls)}
-
-  function diceRattle(mult=false){
-    if(muted)return;
-    // Softer rounded tabletop roll: コロコロコロ…コトン
-    const gaps=mult?[0,.07,.14,.215,.295,.38,.475,.58,.70]:[0,.065,.135,.21,.29,.38,.49];
-    gaps.forEach((t,i)=>{
-      tone(115+(i%3)*18,.055,"sine",.026,t,82);
-      noise(.032,.012,t,360);
-      if(i%2===1) tone(190,.025,"triangle",.012,t+.012,135);
+  function rollDie(mult=false) {
+    if (muted) return;
+    const hits = mult ? [0,.075,.15,.23,.32,.42,.53,.65,.78] : [0,.07,.145,.225,.315,.42,.54];
+    hits.forEach((t,i)=>{
+      tone(105+(i%3)*16,.045,"sine",.023,t,78);
+      noise(.035,.012,t,120,520);
     });
-    const t=gaps[gaps.length-1]+(mult?.105:.09);
-    noise(.055,.025,t,170);
-    tone(mult?72:84,mult?.18:.14,"sine",mult?.075:.06,t,48);
-    tone(mult?145:165,.07,"triangle",.028,t+.012,105);
+    const t=hits[hits.length-1]+(mult?.12:.095);
+    noise(.06,.03,t,70,330);
+    tone(mult?70:82,mult?.20:.15,"sine",mult?.075:.055,t,44);
+    tone(mult?145:165,.065,"triangle",.026,t+.01,105);
   }
-  function playerAttack(){
-    noise(.045,.05,0,1200);
-    tone(840,.055,"sawtooth",.035,0,240);
-    noise(.12,.11,.055,80);
-    tone(98,.17,"sine",.12,.055,48);
+  function land(mult=false) {
+    if (muted) return;
+    tone(mult?74:90,.11,"sine",mult?.05:.038,0,48);
+    noise(.045,.02,0,70,360);
   }
-  function enemyAttack(){
-    noise(.11,.09,0,80);
-    tone(82,.18,"square",.08,0,43);
+  function multiplier(v) {
+    if(muted) return;
+    if(v<=2){ tone(350,.06,"triangle",.025); return; }
+    if(v<=4){ tone(480,.07,"triangle",.04); tone(690,.08,"triangle",.035,.06); return; }
+    if(v===5){ tone(90,.16,"sine",.05); tone(620,.10,"triangle",.05,.12,900); return; }
+    tone(64,.25,"sine",.095,0,36); noise(.16,.07,.05,60,340); tone(420,.12,"square",.04,.2,760); tone(760,.18,"triangle",.065,.32,1320);
   }
-  function enemyDefeat(){
-    tone(420,.08,"triangle",.05,0,550);
-    tone(600,.10,"triangle",.06,.08,760);
-    tone(880,.18,"triangle",.075,.18,1150);
-  }
-  function rewardSound(){
-    tone(620,.07,"triangle",.045,0,760);
-    tone(820,.09,"triangle",.055,.08,980);
-  }
-  function criticalSound(){
-    tone(66,.25,"sawtooth",.12,0,38);
-    noise(.18,.12,.08,80);
-    tone(360,.15,"square",.07,.22,720);
-    tone(720,.20,"triangle",.09,.38,1440);
-  }
+  function attack(big=false){ noise(.08,big?.09:.06,0,80,850); tone(big?72:92,.18,"sine",big?.11:.075,0,42); tone(760,.055,"sawtooth",.03,0,230); }
+  function enemyAttack(){ noise(.10,.065,0,70,600); tone(82,.16,"square",.055,0,42); }
+  function defeat(){ tone(450,.07,"triangle",.04); tone(650,.09,"triangle",.045,.07); tone(920,.16,"triangle",.06,.16,1280); }
+  function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
+  function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  if(btn){
-    btn.textContent=muted?"🔇":"🔊";
-    btn.onclick=()=>{
-      muted=!muted;
-      localStorage.setItem("ddMuted",muted?"1":"0");
-      btn.textContent=muted?"🔇":"🔊";
-      if(!muted){ac();tone(520,.08,"triangle",.05,0,680)}
-    };
+  window.FX = { audio, rollDie, land, multiplier, attack, enemyAttack, defeat, critical666, reward };
+
+  if(soundBtn){
+    const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();
+    soundBtn.addEventListener("click",()=>{
+      muted=!muted; localStorage.setItem("ddMuted", muted?"1":"0"); paint();
+      if(!muted){ audio(); tone(520,.08,"triangle",.04,0,700); }
+    });
   }
-
-  document.addEventListener("pointerdown",e=>{
-    const d=e.target.closest(".die");
-    if(!d || d.classList.contains("locked")) return;
-    ac(); replay(d,"rolling");
-    const idx=$$(".die").indexOf(d);
-    diceRattle(idx===2);
-  },true);
-
-  // Watch state changes to trigger attack/defeat/reward sounds.
-  let prevEnemyHp=null, prevPlayerHp=null, prevScreen="";
-  const readNum = id => {
-    const el=$(id); if(!el)return null;
-    const m=el.textContent.match(/\d+/); return m?Number(m[0]):null;
-  };
-  const scan=()=>{
-    const enemyHp=readNum("#enemyHpText");
-    const playerHp=readNum("#playerHpText");
-    const active=document.querySelector(".screen.active")?.id||"";
-
-    if(prevEnemyHp!==null && enemyHp!==null && enemyHp<prevEnemyHp){
-      if(pop){pop.textContent=String(prevEnemyHp-enemyHp);replay(pop,"show")}
-      replay(slash,"show");playerAttack();
-    }
-    if(prevPlayerHp!==null && playerHp!==null && playerHp<prevPlayerHp) enemyAttack();
-    if(active!==prevScreen){
-      if(active==="reward") { enemyDefeat(); setTimeout(rewardSound,180); }
-      if(active==="bossReward") enemyDefeat();
-    }
-    prevEnemyHp=enemyHp;prevPlayerHp=playerHp;prevScreen=active;
-
-    const cr=$("#critical");
-    if(cr && !cr.classList.contains("hidden") && crit && !crit.classList.contains("show")){
-      replay(crit,"show");criticalSound();
-    }
-  };
-  new MutationObserver(scan).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});
-  scan();
-
-  document.addEventListener("pointerdown",ac,{once:true,capture:true});
+  document.addEventListener("pointerdown",audio,{once:true,capture:true});
 })();

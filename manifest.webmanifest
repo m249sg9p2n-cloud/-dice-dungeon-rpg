@@ -2,30 +2,15 @@
   "name": "Dice Dungeon RPG",
   "short_name": "Dice Dungeon",
   "description": "ダイスで戦うダンジョンRPG",
-  "start_url": "./",
+  "start_url": "./?v=050c",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#090909",
-  "theme_color": "#090909",
+  "background_color": "#08090d",
+  "theme_color": "#08090d",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    {"src":"./icon-180.png","sizes":"180x180","type":"image/png","purpose":"any"},
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
