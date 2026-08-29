@@ -12,3 +12,184 @@
 #soundBtn{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:80;width:38px;height:38px;border:1px solid #514523;border-radius:12px;background:#111217cc;font-size:16px}#fxLayer{pointer-events:none;position:fixed;inset:0;z-index:70;overflow:hidden}#multFx,#damageFx,#killFx,#slashFx{position:absolute;opacity:0}#multFx{left:50%;top:49%;transform:translate(-50%,-50%) scale(.6);font-size:64px;font-weight:1000;color:#ffd052;text-shadow:0 0 20px #ffab00,0 5px 0 #694000}.show-mult{animation:multBoom .55s ease}.show-mult.x6{font-size:82px;color:#fff3a9}@keyframes multBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}72%{opacity:1;transform:translate(-50%,-50%) scale(.98)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#damageFx{left:50%;top:29%;transform:translate(-50%,-50%);font-size:58px;font-weight:1000;color:#fff;text-shadow:0 0 13px #ff491f,0 5px 0 #5d1108}.show-damage{animation:dmgPop .65s ease}@keyframes dmgPop{0%{opacity:0;transform:translate(-50%,-40%) scale(.45)}24%{opacity:1;transform:translate(-50%,-55%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-52%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}}#killFx{left:50%;top:32%;transform:translate(-50%,-50%);font-size:72px;font-weight:1000;color:#ff443d;text-shadow:0 0 22px #ff1600,0 5px 0 #64100b}.show-kill{animation:killBoom .9s ease}@keyframes killBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.22)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#slashFx{left:-10%;top:32%;width:120%;height:5px;background:#fff;box-shadow:0 0 10px #ffec9c,0 0 28px #ff6b2d;transform:rotate(-12deg) scaleX(0)}.show-slash{animation:slash .3s ease}@keyframes slash{0%{opacity:0;transform:rotate(-12deg) scaleX(0)}35%{opacity:1;transform:rotate(-12deg) scaleX(1)}100%{opacity:0;transform:rotate(-12deg) translateX(25%) scaleX(1)}}body.shake{animation:shake .34s ease}body.big-shake{animation:bigShake .48s ease}@keyframes shake{0%,100%{transform:none}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,1px)}}@keyframes bigShake{0%,100%{transform:none}18%{transform:translate(-7px,3px)}38%{transform:translate(7px,-4px)}58%{transform:translate(-5px,4px)}78%{transform:translate(4px,-2px)}}body.mult-dim #app{filter:brightness(.65)}body.mult-dim .die-mult{filter:brightness(1.5) saturate(1.2);z-index:10}
 
 @media(max-height:720px){.battle-head{height:40px;flex-basis:40px}.enemy-art{width:78px;height:78px;font-size:58px}.enemy-hp-bar{height:17px}.dice-panel{flex-basis:221px}.die{width:68px}.die-mult{width:78px}.battle-foot{flex-basis:58px}.attack{height:46px}.formula{margin-top:25px}}
+
+
+/* ===== v0.5.1 physical dice refinement ===== */
+.dice-row{perspective:760px}
+.die{
+  width:72px!important;
+  aspect-ratio:1!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:15px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform-style:preserve-3d!important;
+  overflow:visible!important;
+}
+.die-mult{width:82px!important}
+.die-body{
+  position:absolute;
+  inset:0;
+  display:block;
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 28% 20%,rgba(255,255,255,.95),transparent 23%),
+    linear-gradient(145deg,#ffffff 0%,#f4f3ef 45%,#d4d2ca 73%,#aaa89f 100%);
+  border:1px solid rgba(255,255,255,.9);
+  box-shadow:
+    inset 5px 5px 9px rgba(255,255,255,.95),
+    inset -7px -7px 11px rgba(59,64,73,.26),
+    0 7px 0 #77786f,
+    0 10px 2px rgba(0,0,0,.28),
+    0 15px 22px rgba(0,0,0,.48);
+  transform-style:preserve-3d;
+}
+.die-body::before,
+.die-body::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  opacity:.8;
+}
+.die-body::before{
+  left:8px;right:3px;top:-6px;height:10px;
+  border-radius:12px 12px 4px 4px;
+  background:linear-gradient(#ffffff,#c7c5bd);
+  transform:skewX(-34deg);
+  transform-origin:bottom;
+}
+.die-body::after{
+  top:7px;bottom:2px;right:-7px;width:10px;
+  border-radius:3px 10px 10px 3px;
+  background:linear-gradient(90deg,#a7a69f,#6f716d);
+  transform:skewY(-34deg);
+  transform-origin:left;
+}
+.die-mult .die-body{
+  background:
+    radial-gradient(circle at 28% 20%,rgba(255,255,218,.9),transparent 23%),
+    linear-gradient(145deg,#fff4b2 0%,#f1ca54 46%,#c37b12 76%,#87500a 100%);
+  border-color:#fff0a0;
+  box-shadow:
+    inset 5px 5px 10px rgba(255,255,224,.85),
+    inset -7px -7px 11px rgba(100,53,0,.28),
+    0 7px 0 #7d4a09,
+    0 10px 2px rgba(0,0,0,.32),
+    0 0 25px rgba(255,190,49,.44),
+    0 15px 22px rgba(0,0,0,.52);
+}
+.die-mult .die-body::before{background:linear-gradient(#fff6c6,#d49a26)}
+.die-mult .die-body::after{background:linear-gradient(90deg,#b87513,#754004)}
+
+.die-face{inset:10px!important}
+.pip{
+  width:11px!important;height:11px!important;
+  background:radial-gradient(circle at 35% 30%,#2e3136,#0d0e10 68%)!important;
+  box-shadow:inset 1px 1px 2px #000b,0 1px 1px #fff7!important
+}
+.die-mult .pip{
+  background:radial-gradient(circle at 35% 30%,#5b3504,#261500 70%)!important;
+}
+.die-face[data-face="0"]::after{
+  font-size:30px!important;
+  color:#363941!important;
+}
+.die-mult .die-face[data-face="0"]::after{color:#5a3604!important}
+
+.die.ready:not(.locked) .die-body{
+  box-shadow:
+    inset 5px 5px 9px rgba(255,255,255,.95),
+    inset -7px -7px 11px rgba(59,64,73,.26),
+    0 7px 0 #77786f,0 10px 2px rgba(0,0,0,.28),
+    0 0 20px rgba(219,185,94,.36),0 15px 22px rgba(0,0,0,.48)!important;
+}
+.die-mult.ready:not(.locked) .die-body{
+  box-shadow:
+    inset 5px 5px 10px rgba(255,255,224,.85),
+    inset -7px -7px 11px rgba(100,53,0,.28),
+    0 7px 0 #7d4a09,0 10px 2px rgba(0,0,0,.32),
+    0 0 34px rgba(255,190,49,.75),0 15px 22px rgba(0,0,0,.52)!important;
+}
+
+/* Roll should look like a die tumbling, not a card spinning. */
+.die.rolling{
+  animation:v051Tumble .50s cubic-bezier(.18,.68,.2,1)!important;
+}
+.die-mult.rolling{
+  animation:v051TumbleMult .66s cubic-bezier(.18,.68,.18,1)!important;
+}
+@keyframes v051Tumble{
+  0%{transform:translate3d(0,0,0) rotateX(0) rotateY(0) rotateZ(0) scale(1)}
+  20%{transform:translate3d(-10px,-8px,18px) rotateX(68deg) rotateY(-52deg) rotateZ(-16deg) scale(.97)}
+  40%{transform:translate3d(9px,-2px,8px) rotateX(142deg) rotateY(83deg) rotateZ(24deg) scale(1.03)}
+  62%{transform:translate3d(-6px,-9px,16px) rotateX(218deg) rotateY(164deg) rotateZ(-18deg) scale(.98)}
+  82%{transform:translate3d(4px,-2px,4px) rotateX(305deg) rotateY(260deg) rotateZ(8deg) scale(1.01)}
+  100%{transform:translate3d(0,0,0) rotateX(360deg) rotateY(360deg) rotateZ(0) scale(1)}
+}
+@keyframes v051TumbleMult{
+  0%{transform:translate3d(0,0,0) rotateX(0) rotateY(0) rotateZ(0) scale(1)}
+  18%{transform:translate3d(-11px,-11px,20px) rotateX(72deg) rotateY(-58deg) rotateZ(-18deg) scale(.96)}
+  36%{transform:translate3d(10px,-3px,8px) rotateX(148deg) rotateY(88deg) rotateZ(25deg) scale(1.04)}
+  55%{transform:translate3d(-7px,-12px,19px) rotateX(225deg) rotateY(170deg) rotateZ(-20deg) scale(.98)}
+  73%{transform:translate3d(7px,-3px,7px) rotateX(295deg) rotateY(250deg) rotateZ(14deg) scale(1.02)}
+  88%{transform:translate3d(-2px,-6px,10px) rotateX(337deg) rotateY(319deg) rotateZ(-5deg) scale(.99)}
+  100%{transform:translate3d(0,0,0) rotateX(360deg) rotateY(360deg) rotateZ(0) scale(1)}
+}
+
+/* ===== v0.5.2 dice result labels ===== */
+.die-slot{
+  position:relative;
+  width:72px;
+  height:110px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.die-slot.mult-slot{width:82px}
+.roll-number{
+  position:absolute;
+  top:-1px;
+  left:50%;
+  transform:translateX(-50%) translateY(5px) scale(.72);
+  min-width:44px;
+  height:35px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:31px;
+  line-height:1;
+  font-weight:1000;
+  color:#f5f8ff;
+  opacity:0;
+  text-shadow:0 0 8px #3a9cff,0 2px 3px #000;
+  transition:opacity .12s,transform .16s;
+  z-index:5;
+}
+.roll-number.visible{
+  opacity:1;
+  transform:translateX(-50%) translateY(0) scale(1);
+}
+.roll-number.mult-number{
+  color:#ffd85a;
+  text-shadow:0 0 9px #ffad18,0 2px 3px #000;
+}
+.roll-number.mult-number.six{
+  animation:resultSix .58s ease;
+  font-size:36px;
+}
+@keyframes resultSix{
+  0%{opacity:0;transform:translateX(-50%) translateY(6px) scale(.4)}
+  35%{opacity:1;transform:translateX(-50%) translateY(-2px) scale(1.38)}
+  70%{transform:translateX(-50%) translateY(0) scale(.96)}
+  100%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+}
+/* Keep physical dice below the number and preserve one-screen layout */
+.dice-row{align-items:flex-end!important}
+.dice-panel{flex-basis:250px!important}
+.die-slot .die{position:absolute;bottom:13px}
+@media(max-height:720px){
+  .dice-panel{flex-basis:232px!important}
+  .die-slot{height:101px}
+  .roll-number{font-size:28px}
+}

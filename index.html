@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=050c">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=050c">
-  <link rel="stylesheet" href="./style.css?v=050c">
-  <title>Dice Dungeon RPG v0.5 CLEAN</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=052">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=052">
+  <link rel="stylesheet" href="./style.css?v=052">
+  <title>Dice Dungeon RPG v0.5.2</title>
 </head>
 <body>
 <main id="app">
@@ -44,7 +44,7 @@
     </div>
 
     <button id="startBtn" class="primary">ダンジョンに挑戦</button>
-    <p class="note">v0.5 CLEAN — 戦闘UI・ダイス・演出処理を一から整理。</p>
+    <p class="note">v0.5.2 — 戦闘UI・ダイス・演出処理を一から整理。</p>
   </section>
 
   <section id="battle" class="screen battle-screen">
@@ -81,17 +81,14 @@
       <div id="instruction" class="instruction">①のダイスをタップ！</div>
 
       <div class="dice-row">
-        <button class="die die-normal" data-index="0" aria-label="ダイス1">
-          <span class="die-face" data-face="0"></span><small>①</small>
-        </button>
+        <div class="die-slot"><div class="roll-number" data-result="0"></div><button class="die die-normal" data-index="0" aria-label="ダイス1">
+          <span class="die-body"><span class="die-face" data-face="0"></span></span><small>①</small></button></div>
         <div class="op">＋</div>
-        <button class="die die-normal locked" data-index="1" aria-label="ダイス2">
-          <span class="die-face" data-face="0"></span><small>②</small>
-        </button>
+        <div class="die-slot"><div class="roll-number" data-result="1"></div><button class="die die-normal locked" data-index="1" aria-label="ダイス2">
+          <span class="die-body"><span class="die-face" data-face="0"></span></span><small>②</small></button></div>
         <div class="op">×</div>
-        <button class="die die-mult locked" data-index="2" aria-label="倍率ダイス">
-          <span class="die-face" data-face="0"></span><small>③ MULTIPLIER</small>
-        </button>
+        <div class="die-slot mult-slot"><div class="roll-number mult-number" data-result="2"></div><button class="die die-mult locked" data-index="2" aria-label="倍率ダイス">
+          <span class="die-body"><span class="die-face" data-face="0"></span></span><small>③ MULTIPLIER</small></button></div>
       </div>
 
       <div id="formula" class="formula">( ? + ? ) × ? + ATK 12</div>
@@ -152,11 +149,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=050c"></script>
-<script src="./game.js?v=050c"></script>
+<script src="./effects.js?v=052"></script>
+<script src="./game.js?v=052"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=050c").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=052").catch(console.error));
 }
 </script>
 </body>

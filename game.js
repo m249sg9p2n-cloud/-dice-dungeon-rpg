@@ -58,7 +58,14 @@
 
   function renderDice(){
     $$(".die").forEach((d,i)=>{
-      drawFace(d.querySelector(".die-face"), state.dice[i]);
+      const value=state.dice[i];
+      drawFace(d.querySelector(".die-face"), value);
+      const label=document.querySelector(`.roll-number[data-result="${i}"]`);
+      if(label){
+        label.textContent=value || "";
+        label.classList.toggle("visible", Boolean(value));
+        label.classList.toggle("six", i===2 && value===6);
+      }
       const isNext = state.nextDie===i && !busy;
       d.classList.toggle("locked", !isNext);
       d.classList.toggle("ready", isNext);
@@ -133,24 +140,42 @@
   async function rollDie(index, btn){
     if(busy || index!==state.nextDie) return;
     busy=true; renderBattle();
-    const mult=index===2, duration=mult?920:660;
+    const mult=index===2, duration=mult?660:500;
     btn.classList.remove("land"); void btn.offsetWidth; btn.classList.add("rolling");
     FX.rollDie(mult);
 
     const face=btn.querySelector(".die-face");
+    const resultLabel=document.querySelector(`.roll-number[data-result="${index}"]`);
+    if(resultLabel){ resultLabel.textContent=""; resultLabel.classList.remove("visible","six"); }
+    // First visible pip appears immediately, then slows slightly toward landing.
     const start=performance.now();
-    while(performance.now()-start < duration-90){
+    let step=0;
+    while(performance.now()-start < duration-55){
       drawFace(face,1+Math.floor(Math.random()*6));
-      await wait(58 + Math.floor((performance.now()-start)/8));
+      step++;
+      await wait(Math.min(82, 42 + step*4));
     }
+
     const value=1+Math.floor(Math.random()*6);
     state.dice[index]=value;
     state.nextDie++;
+    // Draw the final result BEFORE ending the tumble so iPhone/Safari never
+    // briefly returns to "?" or misses the settled face.
+    drawFace(face,value);
+    if(resultLabel){
+      resultLabel.textContent=value;
+      resultLabel.classList.add("visible");
+      if(mult && value===6) resultLabel.classList.add("six");
+    }
+    await wait(45);
     btn.classList.remove("rolling");
-    btn.classList.add("land"); FX.land(mult);
-    setTimeout(()=>btn.classList.remove("land"),220);
+    btn.classList.add("land");
+    FX.land(mult);
+    await wait(90);
 
-    busy=false; renderBattle();
+    busy=false;
+    renderBattle();
+    setTimeout(()=>btn.classList.remove("land"),150);
 
     if(mult){
       const multFx=$("#multFx");
