@@ -114,6 +114,7 @@ save();
     return {hp:m?+m[1]:num(hpText.textContent),max:m?+m[2]:null,hpText,fill};
   }
   function atk(){
+    if (typeof state !== "undefined" && Number.isFinite(state.atk)) return state.atk;
     const txt=[...document.querySelectorAll("#battle .mini-stat")].map(x=>x.textContent).join(" ");
     const m=txt.match(/ATK\s*(\d+)/i); return m?+m[1]:0;
   }
@@ -192,4 +193,19 @@ save();
   // Important: don't observe attributes; our own class animations would recursively retrigger the observer.
   new MutationObserver(queue).observe(document.body,{subtree:true,childList:true,characterData:true});
   queue();
+})();
+
+// v0.5 physical dice motion layer
+(() => {
+  document.addEventListener("pointerdown", e => {
+    const d=e.target.closest(".die");
+    if(!d || d.classList.contains("locked")) return;
+    d.classList.remove("v05-roll","v05-land"); void d.offsetWidth;
+    d.classList.add("v05-roll");
+    const isMult=d.dataset.index==="2";
+    setTimeout(()=>{
+      d.classList.remove("v05-roll"); d.classList.add("v05-land");
+      setTimeout(()=>d.classList.remove("v05-land"),220);
+    },isMult?880:620);
+  },true);
 })();

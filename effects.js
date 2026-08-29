@@ -31,17 +31,17 @@
 
   function diceRattle(mult=false){
     if(muted)return;
-    // "カラカラカラ..." — little hard clicks, slightly slowing down.
-    const gaps = mult ? [0,.045,.093,.145,.202,.264,.333,.410,.500,.605] : [0,.045,.095,.151,.214,.286,.370];
+    // Softer rounded tabletop roll: コロコロコロ…コトン
+    const gaps=mult?[0,.07,.14,.215,.295,.38,.475,.58,.70]:[0,.065,.135,.21,.29,.38,.49];
     gaps.forEach((t,i)=>{
-      noise(.024, .032, t, 950);
-      tone(210 + (i%3)*55, .028, "square", .018, t, 120);
+      tone(115+(i%3)*18,.055,"sine",.026,t,82);
+      noise(.032,.012,t,360);
+      if(i%2===1) tone(190,.025,"triangle",.012,t+.012,135);
     });
-    // "デン!" — low body + impact
-    const t = gaps[gaps.length-1] + (mult?.095:.08);
-    noise(.09, mult?.11:.085, t, 80);
-    tone(mult?72:92, mult?.22:.18, "sine", mult?.14:.11, t, 42);
-    tone(mult?185:220, .10, "triangle", .055, t+.015, mult?115:145);
+    const t=gaps[gaps.length-1]+(mult?.105:.09);
+    noise(.055,.025,t,170);
+    tone(mult?72:84,mult?.18:.14,"sine",mult?.075:.06,t,48);
+    tone(mult?145:165,.07,"triangle",.028,t+.012,105);
   }
   function playerAttack(){
     noise(.045,.05,0,1200);
