@@ -225,3 +225,134 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+
+/* ===== v0.4.2 JUICE PASS ===== */
+#battle .hp-line.enemy .bar {
+  position:relative;
+  overflow:visible;
+  height:12px !important;
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 0 10px rgba(0,0,0,.7);
+}
+#battle .hp-line.enemy b {
+  font-size:14px;
+  min-width:74px;
+  text-align:right;
+}
+#enemyHpText.hp-mid { color:#ffe36d; }
+#enemyHpText.hp-low { color:#ff9d3d; }
+#enemyHpText.hp-critical {
+  color:#ff4d4d;
+  animation:hpTextPulse .55s infinite alternate;
+}
+@keyframes hpTextPulse { to { text-shadow:0 0 12px currentColor; transform:scale(1.06); } }
+
+#battle .bar > i.hp-green { background:linear-gradient(90deg,#3de06d,#8dff75) !important; }
+#battle .bar > i.hp-yellow { background:linear-gradient(90deg,#d6a915,#fff36a) !important; }
+#battle .bar > i.hp-orange { background:linear-gradient(90deg,#e86716,#ffb347) !important; }
+#battle .bar > i.hp-red {
+  background:linear-gradient(90deg,#a90000,#ff4040) !important;
+  box-shadow:0 0 14px rgba(255,30,30,.85);
+  animation:dangerBar .48s infinite alternate;
+}
+@keyframes dangerBar { to { filter:brightness(1.5); } }
+
+#v042forecast {
+  min-height:18px;
+  margin-top:2px;
+  text-align:center;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.04em;
+}
+#v042forecast.kill {
+  color:#ffd45e;
+  font-size:17px;
+  text-shadow:0 0 6px #ff4b00,0 0 18px #ffb300;
+  animation:killPulse .48s infinite alternate;
+}
+#v042forecast.close { color:#ff765e; }
+@keyframes killPulse { to { transform:scale(1.08); filter:brightness(1.35); } }
+
+body.v042-dim #battle .enemy-stage,
+body.v042-dim #battle .battle-head,
+body.v042-dim #battle .player-line {
+  filter:brightness(.42);
+  transition:filter .15s;
+}
+#battle .die.gold[data-index="2"].mult-ready {
+  z-index:20;
+  transform-origin:center;
+  box-shadow:0 0 0 2px rgba(255,214,91,.28),0 0 42px rgba(255,187,30,.75),0 7px 0 #432c0b !important;
+}
+
+#v042mult {
+  position:fixed;
+  inset:0;
+  z-index:15000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  font-weight:1000;
+  font-size:clamp(74px,25vw,128px);
+  color:#ffe27b;
+  text-shadow:0 3px 0 #7c3f00,0 0 15px #ffae00,0 0 45px #ff6a00;
+}
+#v042mult.show { display:flex; animation:multSmash .52s cubic-bezier(.1,.8,.2,1); }
+#v042mult.x6 { font-size:clamp(92px,30vw,150px); }
+@keyframes multSmash {
+  0% { opacity:0; transform:scale(2.6) rotate(-4deg); }
+  38% { opacity:1; transform:scale(.88) rotate(1deg); }
+  58% { transform:scale(1.12); }
+  100% { opacity:0; transform:scale(1); }
+}
+
+#v042kill {
+  position:fixed;
+  left:0; right:0; top:30%;
+  z-index:16000;
+  display:none;
+  text-align:center;
+  pointer-events:none;
+  color:#ffe278;
+  font-weight:1000;
+  font-size:clamp(54px,18vw,96px);
+  font-style:italic;
+  letter-spacing:.04em;
+  text-shadow:0 4px 0 #771100,0 0 12px #ff2400,0 0 40px #ff9d00;
+}
+#v042kill.show { display:block; animation:killSmash .7s ease-out; }
+@keyframes killSmash {
+  0% {opacity:0;transform:scale(3)}
+  35% {opacity:1;transform:scale(.9)}
+  55% {transform:scale(1.12)}
+  100% {opacity:0;transform:scale(1)}
+}
+
+body.v042-shake #app { animation:v042shake .28s linear; }
+body.v042-bigshake #app { animation:v042bigshake .42s linear; }
+@keyframes v042shake {
+  0%,100%{transform:translate(0)}
+  25%{transform:translate(-4px,2px)}
+  50%{transform:translate(4px,-2px)}
+  75%{transform:translate(-3px,-1px)}
+}
+@keyframes v042bigshake {
+  0%,100%{transform:translate(0)}
+  15%{transform:translate(-8px,3px)}
+  30%{transform:translate(7px,-4px)}
+  45%{transform:translate(-6px,-2px)}
+  60%{transform:translate(6px,3px)}
+  75%{transform:translate(-3px,1px)}
+}
+
+#battle .enemy-emoji.v042-hit { animation:enemySmack .34s ease-out; }
+@keyframes enemySmack {
+  0%{transform:translateX(0) scale(1);filter:brightness(1)}
+  18%{transform:translateX(10px) scale(1.12);filter:brightness(3)}
+  40%{transform:translateX(-8px) scale(.94)}
+  65%{transform:translateX(4px)}
+  100%{transform:translateX(0) scale(1);filter:brightness(1)}
+}
