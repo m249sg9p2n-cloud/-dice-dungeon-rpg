@@ -62,32 +62,31 @@
   };
 
   const DUNGEONS = {
-    "1-1": {
-      id:"1-1",
-      name:"ゴブリンの森",
-      mission:"4戦を突破し、5戦目のゴブリンキングを倒せ。",
-      enemies:[
-        {name:"ゴブリン", image:"enemy_01_goblin.png", hp:48, attacks:[8,10,12], gold:25, lv:1},
-        {name:"ゴブリン弓兵", image:"enemy_02_goblin_archer.png", hp:58, attacks:[8,8,16], gold:35, lv:2},
-        {name:"ゴブリン戦士", image:"enemy_03_goblin_warrior.png", hp:82, attacks:[12,14,14], gold:45, lv:3},
-        {name:"ゴブリン隊長", image:"enemy_04_goblin_captain.png", hp:105, attacks:[12,16,24], gold:60, lv:4},
-        {name:"ゴブリンキング", image:"enemy_05_goblin_king.png", hp:155, attacks:[12,18,12,35], gold:120, lv:5, boss:true}
-      ]
-    },
-    "1-2": {
-      id:"1-2",
-      name:"毒蜘蛛の洞窟",
-      mission:"毒の洞窟を進み、最深部の大毒蜘蛛を倒せ。",
-      enemies:[
-        {name:"洞窟コウモリ", image:"enemy_06_cave_bat.png", hp:72, attacks:[10,12,14], gold:40, lv:6},
-        {name:"子蜘蛛", image:"enemy_07_baby_spider.png", hp:88, attacks:[10,14,16], gold:50, lv:7},
-        {name:"毒蜘蛛", image:"enemy_08_poison_spider.png", hp:110, attacks:[12,16,20], gold:65, lv:8},
-        {name:"大蜘蛛", image:"enemy_09_giant_spider.png", hp:138, attacks:[14,18,26], gold:85, lv:9},
-        {name:"大毒蜘蛛", image:"enemy_10_queen_spider.png", hp:205, attacks:[14,20,16,38], gold:165, lv:10, boss:true}
-      ]
-    }
+    "1-1":{id:"1-1",name:"ゴブリンの森",mission:"序章から容赦なし。ゴブリンキングを撃破せよ。",enemies:[
+      {name:"ゴブリン",image:"enemy_01_goblin.png",hp:125,attacks:[18,24,32],gold:45,lv:1},
+      {name:"ゴブリン弓兵",image:"enemy_02_goblin_archer.png",hp:155,attacks:[20,20,38],gold:60,lv:2},
+      {name:"ゴブリン戦士",image:"enemy_03_goblin_warrior.png",hp:210,attacks:[28,34,42],gold:80,lv:3},
+      {name:"ゴブリン隊長",image:"enemy_04_goblin_captain.png",hp:285,attacks:[30,44,62],gold:110,lv:4},
+      {name:"ゴブリンキング",image:"enemy_05_goblin_king.png",hp:450,attacks:[36,52,42,86],gold:220,lv:5,boss:true}]},
+    "1-2":{id:"1-2",name:"毒蜘蛛の洞窟",mission:"毒と高火力の連戦。強化と装備なしでは突破困難。",enemies:[
+      {name:"洞窟コウモリ",image:"enemy_06_cave_bat.png",hp:230,attacks:[28,34,42],gold:80,lv:6},
+      {name:"子蜘蛛",image:"enemy_07_baby_spider.png",hp:280,attacks:[32,42,48],gold:100,lv:7},
+      {name:"毒蜘蛛",image:"enemy_08_poison_spider.png",hp:345,attacks:[38,48,58],gold:125,lv:8},
+      {name:"大蜘蛛",image:"enemy_09_giant_spider.png",hp:425,attacks:[42,58,76],gold:160,lv:9},
+      {name:"大毒蜘蛛",image:"enemy_10_queen_spider.png",hp:650,attacks:[50,66,54,105],gold:310,lv:10,boss:true}]},
+    "1-3":{id:"1-3",name:"呪われた墓地",mission:"亡者の群れを超え、スケルトンロードを撃破せよ。",enemies:[
+      {name:"スケルトン",image:"enemy_11_skeleton.png",hp:360,attacks:[40,52,62],gold:120,lv:11},
+      {name:"ゾンビ",image:"enemy_12_zombie.png",hp:430,attacks:[46,56,72],gold:145,lv:12},
+      {name:"スケルトン騎士",image:"enemy_13_skeleton_knight.png",hp:520,attacks:[50,68,82],gold:175,lv:13},
+      {name:"ネクロマンサー",image:"enemy_14_necromancer.png",hp:620,attacks:[56,74,96],gold:215,lv:14},
+      {name:"スケルトンロード",image:"enemy_15_skeleton_lord.png",hp:900,attacks:[62,82,68,132],gold:420,lv:15,boss:true}]},
+    "1-4":{id:"1-4",name:"灼熱の火山",mission:"極悪難度。火力と耐久を育て切って挑め。",enemies:[
+      {name:"ファイアスライム",image:"enemy_16_fire_slime.png",hp:520,attacks:[58,70,84],gold:170,lv:16},
+      {name:"ファイアリザード",image:"enemy_17_fire_lizard.png",hp:620,attacks:[64,78,94],gold:205,lv:17},
+      {name:"炎戦士",image:"enemy_18_flame_warrior.png",hp:750,attacks:[70,88,108],gold:250,lv:18},
+      {name:"マグマゴーレム",image:"enemy_19_magma_golem.png",hp:920,attacks:[78,102,126],gold:320,lv:19},
+      {name:"火山の暴君",image:"enemy_20_volcano_tyrant.png",hp:1350,attacks:[90,118,96,165],gold:600,lv:20,boss:true}]}
   };
-
   const pipPositions = {
     1:[5], 2:[1,9], 3:[1,5,9], 4:[1,3,7,9],
     5:[1,3,5,7,9], 6:[1,3,4,6,7,9]
@@ -106,8 +105,8 @@
       },
       duplicates:{},
       equipped:{weapon:"training_sword",armor:"traveler_clothes"},
-      clears:{"1-1":0,"1-2":0},
-      records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0}},
+      clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0},
+      records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0}},
       unlocked:["1-1"]
     };
   }
@@ -129,8 +128,8 @@
         },
         duplicates:{...(parsed.duplicates||{})},
         equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
-        clears:{"1-1":0,"1-2":0,...(parsed.clears||{})},
-        records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},...(parsed.records||{})},
+        clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0,...(parsed.clears||{})},
+        records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0},...(parsed.records||{})},
         unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
       };
     }catch{
@@ -278,18 +277,15 @@
 
   async function playGachaPuchun(nextRarity){
     document.querySelector("#gachaPuchun")?.remove();
-    const layer=document.createElement("div");
-    layer.id="gachaPuchun";
-    layer.className=`puchun-${nextRarity.toLowerCase()}`;
-    layer.innerHTML=`<div class="crt-line"></div><div class="grade-ripple"></div><div class="grade-copy"><small>GRADE UP</small><strong>${nextRarity}</strong></div>`;
-    document.body.appendChild(layer);
-    FX.puchun();
-    await wait(300);
-    layer.classList.add("grade-on");
-    FX.gradeUp();
-    try{if(navigator.vibrate) navigator.vibrate([22,32,52])}catch(_){}
-    await wait(620);
-    layer.remove();
+    const layer=document.createElement("div"); layer.id="gachaPuchun"; layer.className=`puchun-${nextRarity.toLowerCase()}`;
+    layer.innerHTML=`<div class="puchun-black"></div><div class="crt-dot"></div><div class="crt-line"></div>
+      <div class="grade-ripple ripple2"></div><div class="grade-ripple"></div>
+      <div class="grade-copy"><small>GRADE UP</small><strong>${nextRarity}</strong><em>昇格</em></div>`;
+    document.body.appendChild(layer); FX.puchun();
+    try{if(navigator.vibrate) navigator.vibrate([18,35,18])}catch(_){}
+    await wait(430); layer.classList.add("grade-on"); FX.gradeUp();
+    try{if(navigator.vibrate) navigator.vibrate([24,25,62])}catch(_){}
+    await wait(nextRarity==="GOD"?930:760); layer.classList.add("grade-out"); await wait(180); layer.remove();
   }
 
   async function revealGachaResult(){
@@ -1146,9 +1142,8 @@
 
     save.gold+=total;
     save.clears[state.dungeonId]=(save.clears[state.dungeonId]||0)+1;
-    if(state.dungeonId==="1-1" && !save.unlocked.includes("1-2")){
-      save.unlocked.push("1-2");
-    }
+    const nextUnlock={"1-1":"1-2","1-2":"1-3","1-3":"1-4"}[state.dungeonId];
+    if(nextUnlock && !save.unlocked.includes(nextUnlock)) save.unlocked.push(nextUnlock);
     const record=save.records[state.dungeonId] || {bestRunGold:0};
     record.bestRunGold=Math.max(record.bestRunGold,total);
     save.records[state.dungeonId]=record;
@@ -1181,6 +1176,35 @@
     show("home");
   }
 
+  let devTapCount=0, devTapTimer=null;
+  function devTap(){
+    devTapCount++; clearTimeout(devTapTimer);
+    devTapTimer=setTimeout(()=>devTapCount=0,4000);
+    if(devTapCount>=10){ devTapCount=0; show("devMode"); }
+  }
+  function giveAllItems(){
+    for(const slot of ["weapon","armor"]){
+      Object.values(EQUIPMENT[slot]).forEach(item=>{
+        if(!save.inventory[slot].includes(item.id)) save.inventory[slot].push(item.id);
+        save.duplicates[item.id]=Math.max(save.duplicates[item.id]||0,1);
+      });
+    }
+  }
+  function devAction(type){
+    if(type==="gold") save.gold+=10000;
+    if(type==="unlock") save.unlocked=["1-1","1-2","1-3","1-4"];
+    if(type==="items") giveAllItems();
+    if(type==="god"){
+      save.gold+=10000; persist(); renderHome(); openGacha();
+      const gods=allEquipment().filter(x=>x.item.rarity==="GOD");
+      const result=gods[Math.floor(Math.random()*gods.length)];
+      pendingGacha={tier:"epic",result,finalRarity:"GOD",currentRarity:"EPIC"};
+      $("#gachaGold").textContent=save.gold; $("#gachaResult").classList.add("hidden"); $("#gachaTheater")?.classList.remove("hidden");
+      $("#gachaPrompt").textContent="DEV GOD TEST — CHESTをタップ"; setChestRarity("EPIC"); $("#gachaChest")?.classList.add("ready"); return;
+    }
+    persist(); renderHome();
+  }
+
   $$(".upgrade-card").forEach(b=>b.addEventListener("click",()=>buyUpgrade(b.dataset.upgrade)));
   $("#upgradeEntry").addEventListener("click",()=>{renderHome();show("upgrade");});
   $("#upgradeBack").addEventListener("click",()=>{renderHome();show("home");});
@@ -1188,6 +1212,8 @@
   $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
   $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
   $("#gachaChest")?.addEventListener("click",gachaChestTap);
+  $("#devTapTarget")?.addEventListener("click",devTap);
+  $$(".dev-action").forEach(b=>b.addEventListener("click",()=>devAction(b.dataset.dev)));
   $$(".dungeon-card[data-dungeon]").forEach(card=>card.addEventListener("click",()=>{
     const id=card.dataset.dungeon;
     if(!save.unlocked.includes(id)) return;

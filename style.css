@@ -2495,3 +2495,30 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 .dungeon-card.locked{opacity:.58}
 .dungeon-card:not(.locked){cursor:pointer}
+
+/* ===== v1.0.0 HARDCORE ===== */
+#gachaPuchun .puchun-black{position:absolute;inset:0;background:#000}
+#gachaPuchun .crt-dot{position:absolute;left:50%;top:50%;width:18px;height:18px;border-radius:50%;background:#d7c77b;transform:translate(-50%,-50%) scale(0);box-shadow:0 0 18px #ffdd57;animation:crtDot1 .42s ease-out forwards}
+#gachaPuchun .crt-line{height:4px!important;background:#d6c369!important;box-shadow:0 0 16px #ffda48,0 0 34px #ff9c22!important;animation:crtCollapse1 .42s cubic-bezier(.8,.05,.9,.2) forwards!important}
+#gachaPuchun .ripple2{animation-delay:90ms!important}
+#gachaPuchun .grade-copy em{display:block;margin-top:7px;font-style:normal;font-weight:1000;color:#f0d07d;letter-spacing:.28em}
+#gachaPuchun.grade-on .grade-copy{animation:gradeCopy1 .72s cubic-bezier(.06,.82,.1,1) forwards!important}
+#gachaPuchun.grade-out{animation:gradeOut1 .18s ease-in forwards}
+.gacha-chest.chest-god{animation:godChestPulse .72s ease-in-out infinite}
+@keyframes crtDot1{0%{opacity:0;transform:translate(-50%,-50%) scale(0)}65%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
+@keyframes crtCollapse1{0%{transform:scaleX(1);opacity:1}62%{transform:scaleX(.22);opacity:1}100%{transform:scaleX(0);opacity:0}}
+@keyframes gradeCopy1{0%{opacity:0;transform:scale(.38) rotate(-5deg)}22%{opacity:1;transform:scale(1.22) rotate(1deg)}46%{transform:scale(.93)}72%{opacity:1;transform:scale(1.04)}100%{opacity:0;transform:scale(1)}}
+@keyframes gradeOut1{to{opacity:0}}
+@keyframes godChestPulse{50%{filter:drop-shadow(0 0 24px #ffd838cc) drop-shadow(0 0 44px #ff7b24aa) drop-shadow(0 15px 14px #000a);transform:translate(-50%,-51%) scale(1.035)}}
+#battle[data-stage="1-3"] .enemy-stage{background:linear-gradient(180deg,#151923,#0b0e15 58%,#050609)!important}
+#battle[data-stage="1-3"] .stage-scenery::before{background:radial-gradient(circle at 50% 22%,#b8c1d91b,transparent 18%),linear-gradient(180deg,#191f2c,#0c1018 58%,#07080c)!important}
+#battle[data-stage="1-3"] .stage-moon{display:block!important;background:#c2c9d0!important;box-shadow:0 0 22px #c8d2dd55!important}
+#battle[data-stage="1-3"] .enemy-aura{border-color:#8e7da555!important;background:radial-gradient(ellipse,#76628e2d,transparent 68%)!important}
+#battle[data-stage="1-4"] .enemy-stage{background:linear-gradient(180deg,#30100c,#170907 58%,#080403)!important}
+#battle[data-stage="1-4"] .stage-scenery::before{background:radial-gradient(circle at 50% 35%,#ff7e1f22,transparent 20%),linear-gradient(180deg,#3c1008,#1b0905 58%,#080302)!important}
+#battle[data-stage="1-4"] .stage-moon{background:#db4d22!important;box-shadow:0 0 28px #ff5f23aa!important}
+#battle[data-stage="1-4"] .enemy-aura{border-color:#ff672d55!important;background:radial-gradient(ellipse,#ff4d242d,transparent 68%)!important;box-shadow:0 0 30px #ff512744!important}
+#devMode{background:radial-gradient(circle at 50% 0,#14283b,#070a0f 48%)}
+.dev-panel{display:grid;gap:10px;padding:12px}.dev-warning{padding:12px;border:1px solid #4aa7ff66;border-radius:12px;background:#12304c66;color:#75c5ff;font-weight:1000;text-align:center}
+.dev-action{min-height:52px;border:1px solid #4f7196;border-radius:12px;background:linear-gradient(180deg,#19314b,#0e1d2c);color:#dff2ff;font-weight:1000;font-size:15px}
+.dev-action:active{transform:scale(.98);filter:brightness(1.2)}
