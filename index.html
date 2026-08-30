@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=073">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=073">
-  <link rel="stylesheet" href="./style.css?v=073">
-  <title>Dice Dungeon RPG v0.7.3</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=074">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=074">
+  <link rel="stylesheet" href="./style.css?v=074">
+  <title>Dice Dungeon RPG v0.7.4</title>
 </head>
 <body>
 <main id="app">
@@ -100,7 +100,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.7.3 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.7.4 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="gacha" class="screen">
@@ -218,6 +218,10 @@
         <div id="equationText" class="equation-text"></div>
         <div id="equationSub" class="equation-sub"></div>
       </div>
+      <div id="attackCalcImpact" class="attack-calc-impact" aria-hidden="true">
+        <div id="attackCalcText" class="attack-calc-text"></div>
+        <div id="attackCalcLabel" class="attack-calc-label">ATK BONUS</div>
+      </div>
       <div id="rollImpact" class="roll-impact" aria-hidden="true">
         <div class="impact-ring ring-a"></div>
         <div class="impact-ring ring-b"></div>
@@ -226,6 +230,10 @@
       </div>
 
       <div id="formula" class="formula">( ? + ? ) × ? + ATK 12</div>
+      <div id="readyDamage" class="ready-damage" aria-live="polite">
+        <small>FINAL DAMAGE</small>
+        <strong id="readyDamageNumber">0</strong>
+      </div>
       <div id="forecast" class="forecast"></div>
       <div id="critical" class="critical hidden"><span>6・6・6</span><b>CRITICAL 666</b></div>
     </section>
@@ -299,11 +307,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=073"></script>
-<script src="./game.js?v=073"></script>
+<script src="./effects.js?v=074"></script>
+<script src="./game.js?v=074"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=073").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=074").catch(console.error));
 }
 </script>
 </body>

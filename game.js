@@ -361,6 +361,26 @@
     return dmg;
   }
 
+  function rawDiceDamage(){
+    const [a,b,c]=state.dice;
+    if(!a || !b || !c) return null;
+    return (a+b)*c;
+  }
+
+  function renderReadyDamage(){
+    const box=$("#readyDamage");
+    const num=$("#readyDamageNumber");
+    const dmg=calcDamage();
+    if(!box || !num) return;
+    if(dmg===null){
+      box.classList.remove("show","armed");
+      num.textContent="0";
+      return;
+    }
+    num.textContent=dmg;
+    box.classList.add("show","armed");
+  }
+
   function hpColor(p){
     if(p<=.10) return "#e23b35";
     if(p<=.25) return "#f08b2f";
@@ -427,6 +447,7 @@
     $("#runAtk").textContent=state.atk;
     $("#runDef").textContent=state.def;
     renderDice();
+    renderReadyDamage();
 
     const [a,b,c]=state.dice;
     $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${c??"?"} + ATK ${state.atk}`;
@@ -572,6 +593,72 @@
     document.body.classList.remove(`eq-hit-${step}`);
   }
 
+  async function showAttackAddition(raw, atk, total){
+    const box=$("#attackCalcImpact");
+    const text=$("#attackCalcText");
+    const label=$("#attackCalcLabel");
+
+    text.innerHTML=`
+      <span class="calc-raw">${raw}</span>
+      <span class="calc-plus">＋</span>
+      <span class="calc-atk">ATK ${atk}</span>
+    `;
+    label.textContent="ATTACK BONUS";
+    box.className="attack-calc-impact show add";
+    try{ if(navigator.vibrate) navigator.vibrate(22); }catch(_){}
+    await wait(520);
+
+    text.innerHTML=`
+      <span class="calc-eq">＝</span>
+      <span class="calc-total">${total}</span>
+    `;
+    label.textContent="FINAL DAMAGE";
+    box.className="attack-calc-impact show total";
+    try{ if(navigator.vibrate) navigator.vibrate([25,18,45]); }catch(_){}
+    await wait(650);
+
+    box.className="attack-calc-impact";
+  }
+
+  async function launchDamageToEnemy(dmg){
+    const source=$("#readyDamageNumber");
+    const enemy=$("#enemyArt");
+    if(!source || !enemy) return;
+
+    const sr=source.getBoundingClientRect();
+    const er=enemy.getBoundingClientRect();
+
+    const flyer=document.createElement("div");
+    flyer.className="damage-flyer";
+    flyer.textContent=dmg;
+    flyer.style.left=`${sr.left + sr.width/2}px`;
+    flyer.style.top=`${sr.top + sr.height/2}px`;
+    document.body.appendChild(flyer);
+
+    const dx=(er.left + er.width/2) - (sr.left + sr.width/2);
+    const dy=(er.top + er.height*.48) - (sr.top + sr.height/2);
+
+    $("#readyDamage")?.classList.add("launching");
+    await wait(35);
+    flyer.style.transform=`translate(${dx}px, ${dy}px) scale(.48)`;
+    flyer.style.opacity="1";
+
+    await wait(430);
+
+    enemy.classList.remove("damage-impact");
+    void enemy.offsetWidth;
+    enemy.classList.add("damage-impact");
+    document.body.classList.add("enemy-impact-flash");
+    try{ if(navigator.vibrate) navigator.vibrate([35,15,55]); }catch(_){}
+
+    flyer.classList.add("hit");
+    await wait(170);
+    flyer.remove();
+    document.body.classList.remove("enemy-impact-flash");
+    $("#readyDamage")?.classList.remove("launching");
+    setTimeout(()=>enemy.classList.remove("damage-impact"),260);
+  }
+
   function multiplierTone(value){
     return {
       1:{cls:"impact-1",label:"×1"},
@@ -657,9 +744,13 @@
     multFx.className=`show-mult${c===6?" x6":""}`;
     FX.multiplier(c);
 
-    // Build the entire formula full-screen as the final die locks.
+    // Final die: show the completed dice formula clearly once.
     await showEquationImpact(3,a,b,c);
-    await showRollImpact(c);
+
+    // Then explicitly add ATK and reveal the final damage.
+    const raw=(a+b)*c;
+    const total=calcDamage();
+    await showAttackAddition(raw,state.atk,total);
 
     if(state.dice.every(v=>v===6)){
       await wait(80);
@@ -683,11 +774,14 @@
     busy=true;
     renderBattle();
 
+    // Keep the confirmed damage on screen, then fire that exact number into the enemy.
+    await launchDamageToEnemy(dmg);
+
     const before=state.enemyHp;
     state.enemyHp=Math.max(0,before-dmg);
 
     $("#damageFx").textContent=dmg;
-    $("#damageFx").className="show-damage";
+    $("#damageFx").className="show-damage impact-only";
     $("#slashFx").className="show-slash";
     document.body.classList.add(dmg>=45?"big-shake":"shake");
     FX.attack(dmg>=45);
@@ -698,7 +792,7 @@
     art.classList.add("hit");
     renderBattle();
 
-    await wait(520);
+    await wait(460);
     $("#damageFx").className="";
     $("#slashFx").className="";
     document.body.classList.remove("shake","big-shake");

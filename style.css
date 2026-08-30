@@ -1038,3 +1038,219 @@ body.eq-hit-3 #battle{animation:eqHit3 .4s cubic-bezier(.2,.8,.2,1)}
   38%{transform:translate(5px,-2px) scale(1.012)}
   60%{transform:translate(-3px,1px)}
 }
+
+
+/* ===== v0.7.4 clear damage calculation + launch-to-enemy ===== */
+
+/* The confirmed result remains in the center until ATTACK is pressed. */
+.ready-damage{
+  display:none;
+  position:relative;
+  z-index:18;
+  margin:4px auto 7px;
+  width:min(76vw,330px);
+  min-height:78px;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  border-radius:18px;
+  border:1px solid #e6bf4d55;
+  background:
+    radial-gradient(circle at 50% 42%,#ffd85c18,transparent 52%),
+    linear-gradient(180deg,#171716,#0b0b0c);
+  box-shadow:inset 0 0 22px #f2c94c12,0 0 14px #0007;
+  overflow:hidden;
+}
+.ready-damage.show{display:flex;animation:readyAppear .35s cubic-bezier(.1,.9,.2,1.25) both}
+.ready-damage::before{
+  content:"";
+  position:absolute;inset:-40% -15%;
+  background:linear-gradient(110deg,transparent 35%,#fff1a52d 49%,transparent 62%);
+  transform:translateX(-65%);
+  animation:damageSheen 1.8s ease-in-out infinite;
+}
+.ready-damage small{
+  position:relative;
+  z-index:1;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.22em;
+  color:#d7b95f;
+}
+.ready-damage strong{
+  position:relative;
+  z-index:1;
+  margin-top:-1px;
+  font-size:56px;
+  line-height:1;
+  font-style:italic;
+  font-weight:1000;
+  color:#fff4bd;
+  -webkit-text-stroke:1.5px #ab6c12;
+  text-shadow:0 4px 0 #5e3200,0 0 15px #ffd147,0 0 35px #ff9e1e66;
+}
+.ready-damage.armed{
+  box-shadow:inset 0 0 24px #f2c94c18,0 0 18px #f0b52920;
+}
+.ready-damage.launching{animation:readyLaunchPulse .28s ease both}
+@keyframes readyAppear{
+  from{opacity:0;transform:scale(.72)}
+  65%{opacity:1;transform:scale(1.07)}
+  to{opacity:1;transform:scale(1)}
+}
+@keyframes damageSheen{
+  0%,45%{transform:translateX(-75%)}
+  75%,100%{transform:translateX(75%)}
+}
+@keyframes readyLaunchPulse{
+  0%{transform:scale(1)}
+  55%{transform:scale(1.1);filter:brightness(1.35)}
+  100%{transform:scale(.96);filter:brightness(.8)}
+}
+
+/* Dedicated ATK addition phase after the three dice are fixed. */
+.attack-calc-impact{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:89;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,#402800a8 0%,#090805db 48%,#020203f0 78%);
+  overflow:hidden;
+}
+.attack-calc-impact.show{display:flex}
+.attack-calc-text{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  max-width:96vw;
+  font-weight:1000;
+  font-style:italic;
+  white-space:nowrap;
+  text-shadow:0 5px 0 #000a;
+}
+.calc-raw{
+  font-size:clamp(78px,25vw,124px);
+  color:#fff;
+  -webkit-text-stroke:2px #8c96a4;
+  text-shadow:0 5px 0 #252933,0 0 22px #bfe8ff77;
+}
+.calc-plus,.calc-eq{
+  font-size:clamp(45px,13vw,70px);
+  color:#ffd65e;
+  text-shadow:0 3px 0 #684100,0 0 18px #ffca3f;
+}
+.calc-atk{
+  padding:.18em .28em;
+  border-radius:12px;
+  font-size:clamp(40px,12vw,62px);
+  color:#ffd55a;
+  -webkit-text-stroke:1px #7c4c00;
+  background:linear-gradient(180deg,#423005,#171003);
+  border:1px solid #e9ba3c88;
+  box-shadow:inset 0 0 14px #ffd95a22,0 0 22px #f5b32d33;
+}
+.calc-total{
+  font-size:clamp(118px,38vw,184px);
+  line-height:.82;
+  color:#fff0a5;
+  -webkit-text-stroke:3px #b66a00;
+  text-shadow:0 7px 0 #5b2d00,0 0 20px #fff3a3,0 0 58px #ffc02e,0 0 90px #ff7b0055;
+  animation:finalDamageDon .55s cubic-bezier(.08,.92,.16,1.35) both;
+}
+.attack-calc-label{
+  margin-top:24px;
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:.25em;
+  color:#edc753;
+  text-shadow:0 2px 0 #000,0 0 12px #dca82d;
+}
+.attack-calc-impact.add .attack-calc-text{animation:calcAddIn .4s cubic-bezier(.1,.9,.2,1.25) both}
+.attack-calc-impact.total{animation:finalBgPulse .65s ease both}
+@keyframes calcAddIn{
+  from{opacity:0;transform:scale(1.55)}
+  55%{opacity:1;transform:scale(.94)}
+  to{transform:scale(1)}
+}
+@keyframes finalDamageDon{
+  0%{opacity:0;transform:scale(2.3) rotate(-5deg)}
+  38%{opacity:1;transform:scale(.76) rotate(1deg)}
+  62%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+@keyframes finalBgPulse{
+  0%{filter:brightness(.75)}
+  30%{filter:brightness(1.45)}
+  100%{filter:brightness(1)}
+}
+
+/* The persistent damage number becomes a projectile. */
+.damage-flyer{
+  position:fixed;
+  z-index:120;
+  transform:translate(-50%,-50%) scale(1);
+  transform-origin:center;
+  opacity:1;
+  pointer-events:none;
+  font-size:64px;
+  line-height:1;
+  font-weight:1000;
+  font-style:italic;
+  color:#fff0a3;
+  -webkit-text-stroke:2px #a85c00;
+  text-shadow:0 5px 0 #5c2b00,0 0 18px #fff0a0,0 0 40px #ffad24;
+  transition:transform .43s cubic-bezier(.22,.72,.18,1), opacity .12s ease;
+  will-change:transform;
+}
+.damage-flyer::after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:120px;height:8px;
+  transform:translate(-108%,-50%);
+  background:linear-gradient(90deg,transparent,#ffc33d66,#fff3b5);
+  filter:blur(2px);
+}
+.damage-flyer.hit{
+  opacity:0;
+  filter:brightness(1.7);
+}
+#enemyArt.damage-impact{
+  animation:enemyDamageImpact .38s cubic-bezier(.1,.8,.2,1) both;
+}
+@keyframes enemyDamageImpact{
+  0%{transform:translate(0) scale(1);filter:brightness(1)}
+  20%{transform:translate(7px,-3px) scale(1.08);filter:brightness(2)}
+  43%{transform:translate(-8px,2px) scale(.94)}
+  68%{transform:translate(4px,0) scale(1.02)}
+  100%{transform:translate(0) scale(1);filter:brightness(1)}
+}
+body.enemy-impact-flash::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:115;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 32%,#fff7c899 0%,#ffc13a44 14%,transparent 42%);
+  animation:enemyImpactFlash .25s ease-out both;
+}
+@keyframes enemyImpactFlash{
+  from{opacity:1}
+  to{opacity:0}
+}
+
+/* Avoid a second huge number after the projectile lands; the impact itself is the focus. */
+#damageFx.impact-only.show-damage{
+  font-size:42px;
+  animation:damageImpactSmall .42s ease-out both;
+}
+@keyframes damageImpactSmall{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}
+  35%{opacity:1;transform:translate(-50%,-50%) scale(.9)}
+  100%{opacity:0;transform:translate(-50%,-64%) scale(1)}
+}
