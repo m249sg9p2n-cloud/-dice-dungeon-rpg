@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=075">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=075">
-  <link rel="stylesheet" href="./style.css?v=075">
-  <title>Dice Dungeon RPG v0.7.5</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=076">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=076">
+  <link rel="stylesheet" href="./style.css?v=076">
+  <title>Dice Dungeon RPG v0.7.6</title>
 </head>
 <body>
 <main id="app">
@@ -48,19 +48,19 @@
     <div class="home-menu">
       <button id="upgradeEntry" class="home-menu-card">
         <span class="menu-icon">⬆️</span>
-        <span class="menu-copy"><b>強化</b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
+        <span class="menu-copy"><b>強化 <em class="menu-tag">POWER UP</em></b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
         <span class="menu-arrow">›</span>
       </button>
 
       <button id="equipmentEntry" class="home-menu-card">
         <span class="menu-icon">⚔️</span>
-        <span class="menu-copy"><b>装備</b><small id="equipmentSummary">武器・防具を変更</small></span>
+        <span class="menu-copy"><b>装備 <em class="menu-tag">GEAR</em></b><small id="equipmentSummary">武器・防具を変更</small></span>
         <span class="menu-arrow">›</span>
       </button>
 
       <button id="gachaEntry" class="home-menu-card gacha-menu-card">
         <span class="menu-icon">🎁</span>
-        <span class="menu-copy"><b>装備ガチャ</b><small>GOLDで新しい装備を獲得</small></span>
+        <span class="menu-copy"><b>装備ガチャ <em class="menu-tag hot">GACHA</em></b><small>GOLDで新しい装備を獲得</small></span>
         <span class="menu-arrow">›</span>
       </button>
     </div>
@@ -85,7 +85,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.7.5 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.7.6 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -97,6 +97,7 @@
       </div>
       <div class="gold">🪙 <span id="upgradeGold">0</span>G</div>
     </header>
+    <div id="upgradeToast" class="upgrade-toast" aria-live="polite"></div>
 
     <div class="upgrade-intro">
       <b>冒険者を強化</b>
@@ -107,17 +108,17 @@
       <button class="upgrade-card" data-upgrade="hp">
         <span class="upgrade-icon">❤️</span>
         <span class="upgrade-main"><b>HP強化</b><small>+5 HP / 1Lv</small></span>
-        <span class="upgrade-side"><em id="hpLv">Lv.0</em><strong id="hpCost">100G</strong></span>
+        <span class="upgrade-side"><em id="hpLv">Lv.0</em><strong id="hpCost">100G</strong><small id="hpNeed"></small></span>
       </button>
       <button class="upgrade-card" data-upgrade="atk">
         <span class="upgrade-icon">⚔️</span>
         <span class="upgrade-main"><b>ATK強化</b><small>+1 ATK / 1Lv</small></span>
-        <span class="upgrade-side"><em id="atkLv">Lv.0</em><strong id="atkCost">120G</strong></span>
+        <span class="upgrade-side"><em id="atkLv">Lv.0</em><strong id="atkCost">120G</strong><small id="atkNeed"></small></span>
       </button>
       <button class="upgrade-card" data-upgrade="def">
         <span class="upgrade-icon">🛡️</span>
         <span class="upgrade-main"><b>DEF強化</b><small>+1 DEF / 1Lv</small></span>
-        <span class="upgrade-side"><em id="defLv">Lv.0</em><strong id="defCost">150G</strong></span>
+        <span class="upgrade-side"><em id="defLv">Lv.0</em><strong id="defCost">150G</strong><small id="defNeed"></small></span>
       </button>
     </div>
   </section>
@@ -331,11 +332,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=075"></script>
-<script src="./game.js?v=075"></script>
+<script src="./effects.js?v=076"></script>
+<script src="./game.js?v=076"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=075").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=076").catch(console.error));
 }
 </script>
 </body>

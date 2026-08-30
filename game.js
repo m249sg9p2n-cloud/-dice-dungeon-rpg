@@ -292,6 +292,15 @@
     save.base.def=BASE_STATS.def + save.upgrades.def*UPGRADES.def.perLv;
   }
 
+  function showUpgradeToast(message, good=false){
+    const el=$("#upgradeToast");
+    if(!el) return;
+    el.textContent=message;
+    el.className=`upgrade-toast show ${good?"good":"bad"}`;
+    clearTimeout(showUpgradeToast.timer);
+    showUpgradeToast.timer=setTimeout(()=>{ el.className="upgrade-toast"; },1500);
+  }
+
   function buyUpgrade(type){
     const cfg=UPGRADES[type];
     const lv=save.upgrades[type]||0;
@@ -299,12 +308,16 @@
     if(cost===null || lv>=cfg.maxLv) return;
     if(save.gold<cost){
       const card=document.querySelector(`.upgrade-card[data-upgrade="${type}"]`);
+      const need=cost-save.gold;
       card?.classList.add("cant-buy");
       setTimeout(()=>card?.classList.remove("cant-buy"),420);
+      showUpgradeToast(`GOLD不足！ あと ${need}G 必要`);
+      try{ if(navigator.vibrate) navigator.vibrate([18,30,18]); }catch(_){}
       return;
     }
     save.gold-=cost;
     save.upgrades[type]=lv+1;
+    showUpgradeToast(`${cfg.label||type.toUpperCase()} Lv.${lv+1}！`,true);
     recalcBase();
     persist();
     renderHome();
@@ -341,6 +354,13 @@
         card.disabled=cost===null;
         card.classList.toggle("maxed",cost===null);
         card.classList.toggle("affordable",cost!==null && save.gold>=cost);
+        card.classList.toggle("insufficient",cost!==null && save.gold<cost);
+      }
+      const needEl=$(`#${type}Need`);
+      if(needEl){
+        if(cost===null) needEl.textContent="MAX";
+        else if(save.gold>=cost) needEl.textContent="強化できます";
+        else needEl.textContent=`あと ${cost-save.gold}G`;
       }
     }
 
