@@ -2241,3 +2241,153 @@ body.enemy-impact-flash::after{
 @keyframes atkDark12{0%{opacity:.62}100%{opacity:0}}
 @keyframes atkCore12{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(5.5)}}
 @keyframes spark12{0%{opacity:0;transform:rotate(var(--a)) translateY(-8px) scaleY(.15)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(-92px) scaleY(1)}}
+
+
+/* =================================================================
+   v0.8.0 MAX IMPACT
+   High-impact attack direction: anticipation -> launch -> hit-stop ->
+   local gold/red explosion -> reward tail. No white full-screen flash.
+   ================================================================= */
+
+#attackJuice{
+  position:fixed; inset:0; z-index:980; pointer-events:none; overflow:hidden;
+  contain:layout paint;
+}
+#attackJuice .impact-vignette{
+  position:absolute; inset:0;
+  background:radial-gradient(circle at 50% 36%,transparent 0 16%,rgba(25,7,3,.10) 30%,rgba(0,0,0,.58) 100%);
+  animation:v8Vignette .72s ease-out both;
+}
+#attackJuice .impact-aura{
+  position:absolute; left:50%; top:36%; width:52px; height:52px; border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);
+  background:radial-gradient(circle,#ffe79a 0 7%,#ffb323 15%,#ef5624 31%,rgba(154,25,24,.46) 50%,transparent 72%);
+  box-shadow:0 0 26px #ffb42d,0 0 62px rgba(255,73,26,.75);
+  animation:v8Aura .56s cubic-bezier(.08,.75,.18,1) both;
+}
+#attackJuice.tier-strong .impact-aura{width:64px;height:64px}
+#attackJuice.tier-critical .impact-aura,#attackJuice.lethal .impact-aura{width:78px;height:78px}
+
+#attackJuice .impact-cross{
+  position:absolute; left:50%; top:36%; width:145vw; height:7px;
+  transform-origin:center;
+  background:linear-gradient(90deg,transparent 7%,rgba(204,47,20,.12) 25%,#ff7c21 43%,#ffd75a 49%,#ff9c2c 55%,rgba(185,34,21,.12) 75%,transparent 93%);
+  filter:drop-shadow(0 0 8px #ef5e25);
+  opacity:0;
+  animation:v8Cross .46s cubic-bezier(.1,.7,.2,1) both;
+}
+#attackJuice .cross-a{transform:translate(-50%,-50%) rotate(-23deg)}
+#attackJuice .cross-b{transform:translate(-50%,-50%) rotate(31deg);animation-delay:22ms}
+#attackJuice.tier-critical .impact-cross,#attackJuice.lethal .impact-cross{height:10px}
+
+#attackJuice .impact-ring{
+  position:absolute; left:50%; top:36%; width:34px; height:34px;
+  border:4px solid #ffca45; border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);
+  box-shadow:0 0 16px #ffbb29, inset 0 0 12px #e94725;
+  animation:v8Ring .54s cubic-bezier(.05,.78,.16,1) both;
+}
+#attackJuice .ring-b{border-width:2px;animation-delay:70ms;animation-duration:.66s}
+
+#attackJuice .impact-sparks{position:absolute;left:50%;top:36%;width:1px;height:1px}
+#attackJuice .impact-sparks i{
+  position:absolute; left:0; top:0; width:4px; height:var(--len);
+  border-radius:8px;
+  background:linear-gradient(to top,transparent,#e34a24 28%,#ffb62c 67%,#ffe984);
+  transform-origin:50% 100%;
+  transform:rotate(var(--a)) translateY(-10px) scaleY(.08);
+  opacity:0;
+  animation:v8Spark .58s ease-out var(--d) both;
+  filter:drop-shadow(0 0 4px #ff8a28);
+}
+
+#attackJuice .impact-number{
+  position:absolute; left:50%; top:35%;
+  transform:translate(-50%,-50%);
+  font-size:88px; line-height:.9; font-weight:1000; font-style:italic;
+  color:#ffd75a; -webkit-text-stroke:2px #7f260d;
+  text-shadow:0 5px 0 #601b0d,0 0 13px #ffb42c,0 0 28px rgba(239,64,29,.82);
+  animation:v8Number .62s cubic-bezier(.08,.82,.12,1) both;
+}
+#attackJuice.tier-strong .impact-number{font-size:108px}
+#attackJuice.tier-critical .impact-number,#attackJuice.lethal .impact-number{
+  font-size:128px;
+  color:#ffe97c;
+  text-shadow:0 7px 0 #66190c,0 0 18px #ffc52d,0 0 40px rgba(239,50,26,.95);
+}
+#attackJuice .impact-word{
+  position:absolute; left:50%; top:46%; transform:translateX(-50%);
+  font-weight:1000; font-style:italic; letter-spacing:.16em; font-size:18px;
+  color:#ffc443; -webkit-text-stroke:1px #6b210d;
+  text-shadow:0 2px 0 #45130a,0 0 12px #ee5826;
+  animation:v8Word .62s ease-out both;
+}
+#attackJuice.tier-strong .impact-word{font-size:22px}
+#attackJuice.tier-critical .impact-word,#attackJuice.lethal .impact-word{font-size:27px;color:#ffda53}
+
+.ready-damage.attack-primed{
+  animation:v8Prime .16s ease-in-out infinite alternate;
+  box-shadow:0 0 15px rgba(255,180,37,.45), inset 0 0 26px rgba(255,126,22,.09)!important;
+}
+.ready-damage.attack-primed strong{filter:drop-shadow(0 0 10px #ffbd2c)}
+.ready-damage.attack-primed.tier-critical strong{transform:scale(1.07)}
+
+.damage-flyer-v8{
+  position:fixed; z-index:970; pointer-events:none;
+  transform:translate(-50%,-50%) scale(1);
+  transform-origin:center;
+  transition:transform .105s cubic-bezier(.18,.8,.24,1),filter .10s ease;
+  will-change:transform;
+}
+.damage-flyer-v8.dash{transition:transform .22s cubic-bezier(.72,.02,.86,.42),filter .12s ease;filter:brightness(1.22)}
+.damage-flyer-v8 span{
+  position:relative; z-index:2; display:block;
+  font-size:72px; line-height:1; font-weight:1000; font-style:italic;
+  color:#ffe473; -webkit-text-stroke:2px #8e370b;
+  text-shadow:0 5px 0 #572008,0 0 16px #ffbb2b,0 0 31px #e34d22;
+}
+.damage-flyer-v8.tier-strong span{font-size:82px}
+.damage-flyer-v8.tier-critical span,.damage-flyer-v8.lethal span{font-size:94px}
+.damage-flyer-v8 b{
+  position:absolute; right:54%; top:50%; width:160px; height:16px;
+  transform:translateY(-50%);
+  background:linear-gradient(90deg,transparent,rgba(205,42,21,.15),rgba(255,126,31,.70),#ffd55b);
+  clip-path:polygon(0 42%,100% 0,100% 100%,0 58%);
+  filter:blur(.4px) drop-shadow(0 0 6px #eb5624);
+}
+.damage-flyer-v8::after{
+  content:"";position:absolute;right:60%;top:50%;width:76px;height:76px;border-radius:50%;
+  transform:translateY(-50%) scaleX(1.8);
+  background:radial-gradient(circle,#ffcc4344,transparent 68%);
+}
+.damage-flyer-v8.contact{opacity:.18;filter:brightness(1.45)}
+
+.enemy-stage.attack-hit-v8{animation:v8StageHit .36s cubic-bezier(.16,.8,.2,1)}
+#enemyArt.attack-knock-v8{animation:v8EnemyKnock .48s cubic-bezier(.12,.82,.18,1)!important}
+#battle.attack-screen-v8{animation:v8ScreenKick .36s cubic-bezier(.18,.8,.2,1)}
+body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
+
+#killFx.show-kill{
+  color:#ffcb42!important;
+  -webkit-text-stroke:3px #6d150d;
+  text-shadow:0 7px 0 #4c1009,0 0 16px #ff9c24,0 0 38px #d92c20!important;
+  animation:v8Kill .92s cubic-bezier(.08,.82,.12,1) both!important;
+}
+
+@keyframes v8Vignette{0%{opacity:.15}20%{opacity:1}100%{opacity:0}}
+@keyframes v8Aura{0%{opacity:0;transform:translate(-50%,-50%) scale(.18)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}58%{opacity:.82}100%{opacity:0;transform:translate(-50%,-50%) scale(6.2)}}
+@keyframes v8Cross{0%{opacity:0;scale:.14 1}16%{opacity:1}100%{opacity:0;scale:1 1}}
+@keyframes v8Ring{0%{opacity:1;transform:translate(-50%,-50%) scale(.15)}100%{opacity:0;transform:translate(-50%,-50%) scale(9)}}
+@keyframes v8Spark{0%{opacity:0;transform:rotate(var(--a)) translateY(-8px) scaleY(.06)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(calc(-1 * var(--len) - 58px)) scaleY(1)}}
+@keyframes v8Number{0%{opacity:0;transform:translate(-50%,-50%) scale(.22) rotate(-7deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.22) rotate(2deg)}42%{transform:translate(-50%,-50%) scale(.94)}70%{transform:translate(-50%,-50%) scale(1.03)}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+@keyframes v8Word{0%,14%{opacity:0;transform:translate(-50%,10px) scale(.72)}30%{opacity:1;transform:translate(-50%,0) scale(1.12)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-12px) scale(1)}}
+@keyframes v8Prime{from{transform:scale(.995)}to{transform:scale(1.012)}}
+@keyframes v8StageHit{0%{transform:translate(0)}12%{transform:translate(-8px,2px)}24%{transform:translate(9px,-3px)}39%{transform:translate(-6px,2px)}56%{transform:translate(5px,-1px)}75%{transform:translate(-2px)}100%{transform:translate(0)}}
+@keyframes v8EnemyKnock{0%{transform:translate(0) scale(1)}18%{transform:translate(9px,-7px) scale(1.13)}42%{transform:translate(-8px,3px) scale(.90)}64%{transform:translate(5px,-1px) scale(1.04)}100%{transform:translate(0) scale(1)}}
+@keyframes v8ScreenKick{0%{transform:translate(0)}17%{transform:translate(-4px,2px)}32%{transform:translate(5px,-2px)}49%{transform:translate(-3px,1px)}66%{transform:translate(2px)}100%{transform:translate(0)}}
+@keyframes v8Kill{0%{opacity:0;transform:translate(-50%,-50%) scale(2.8) rotate(-6deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(.78) rotate(1deg)}35%{transform:translate(-50%,-50%) scale(1.16)}58%{transform:translate(-50%,-50%) scale(.98)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-57%) scale(1.04)}}
+
+@media (prefers-reduced-motion:reduce){
+  #attackJuice .impact-sparks i,#attackJuice .impact-cross{display:none}
+  #battle.attack-screen-v8,.enemy-stage.attack-hit-v8,#enemyArt.attack-knock-v8{animation:none!important}
+}

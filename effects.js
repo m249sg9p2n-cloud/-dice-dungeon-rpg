@@ -49,13 +49,80 @@
     if(v===5){ tone(90,.16,"sine",.05); tone(620,.10,"triangle",.05,.12,900); return; }
     tone(64,.25,"sine",.095,0,36); noise(.16,.07,.05,60,340); tone(420,.12,"square",.04,.2,760); tone(760,.18,"triangle",.065,.32,1320);
   }
-  function attack(big=false){ noise(.08,big?.09:.06,0,80,850); tone(big?72:92,.18,"sine",big?.11:.075,0,42); tone(760,.055,"sawtooth",.03,0,230); }
+  function hitBus(){
+    const c=audio(), comp=c.createDynamicsCompressor(), master=c.createGain();
+    comp.threshold.value=-12; comp.knee.value=16; comp.ratio.value=5; comp.attack.value=.003; comp.release.value=.18;
+    master.gain.value=.9;
+    master.connect(comp); comp.connect(c.destination);
+    return {c,master};
+  }
+  function oscTo(bus, type, f0, f1, dur, vol, delay=0){
+    if(muted) return;
+    const {c,master}=bus, t=c.currentTime+delay, o=c.createOscillator(), g=c.createGain();
+    o.type=type; o.frequency.setValueAtTime(Math.max(25,f0),t);
+    o.frequency.exponentialRampToValueAtTime(Math.max(25,f1),t+dur);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+.006);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+dur+.02);
+  }
+  function noiseTo(bus, dur, vol, delay=0, low=70, high=1800){
+    if(muted) return;
+    const {c,master}=bus, len=Math.max(1,Math.floor(c.sampleRate*dur)), b=c.createBuffer(1,len,c.sampleRate), a=b.getChannelData(0);
+    for(let i=0;i<len;i++){ const x=1-i/len; a[i]=(Math.random()*2-1)*x*x; }
+    const n=c.createBufferSource(), hp=c.createBiquadFilter(), lp=c.createBiquadFilter(), g=c.createGain(), t=c.currentTime+delay;
+    n.buffer=b; hp.type="highpass"; hp.frequency.value=low; lp.type="lowpass"; lp.frequency.value=high;
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    n.connect(hp); hp.connect(lp); lp.connect(g); g.connect(master); n.start(t);
+  }
+  function attackCharge(dmg=0){
+    if(muted) return;
+    const b=hitBus(), strong=dmg>=55, critical=dmg>=90;
+    // restrained rising tension; the reward is saved for the hit
+    oscTo(b,"sine",72,strong?128:112,.18,.07,0);
+    oscTo(b,"triangle",190,critical?520:strong?410:330,.21,.035,.015);
+    noiseTo(b,.19,.025,0,280,1500);
+  }
+  function playerImpact(dmg=0, lethal=false){
+    if(muted) return;
+    const b=hitBus(), strong=dmg>=55, critical=dmg>=90;
+    // 1. sub-bass body
+    oscTo(b,"sine",critical?118:strong?108:98,34,critical?.48:strong?.40:.33,critical?.34:strong?.28:.23,0);
+    // 2. punch in the chest
+    oscTo(b,"triangle",critical?245:210,58,.16,critical?.22:strong?.18:.14,0);
+    // 3. sharp transient / metal crack
+    noiseTo(b,.105,critical?.18:strong?.15:.11,0,420,critical?3600:2800);
+    oscTo(b,"square",critical?1680:strong?1420:1180,620,.075,critical?.045:.035,.008);
+    // 4. a second low "DON" makes big hits feel expensive
+    if(strong){
+      oscTo(b,"sine",78,38,.30,critical?.20:.14,.075);
+      noiseTo(b,.085,critical?.10:.075,.065,110,880);
+    }
+    // 5. jackpot-like reward tail, musical rather than a beep
+    if(strong){
+      const chord=critical?[392,523.25,659.25,783.99]:[329.63,440,523.25];
+      chord.forEach((f,i)=>oscTo(b,"sine",f,f*.985,critical?.42:.30,critical?.055:.043,.105+i*.026));
+      oscTo(b,"triangle",critical?660:520,critical?1320:920,.24,critical?.045:.032,.16);
+    }
+    if(lethal){
+      // finish accent: heavy low stop + short ascending resolution
+      oscTo(b,"sine",62,30,.52,.24,.16);
+      [523.25,659.25,783.99,1046.5].forEach((f,i)=>oscTo(b,"triangle",f,f*1.01,.19,.035,.20+i*.055));
+    }
+  }
+  function killStinger(){
+    if(muted) return;
+    const b=hitBus();
+    noiseTo(b,.17,.12,0,120,1700);
+    oscTo(b,"sine",76,31,.48,.24,0);
+    [392,523.25,659.25,783.99].forEach((f,i)=>oscTo(b,"triangle",f,f,.22,.04,.10+i*.06));
+  }
+  function attack(big=false){ noise(.06,big?.055:.04,0,100,760); tone(big?78:94,.13,"sine",big?.065:.045,0,46); }
   function enemyAttack(){ noise(.10,.065,0,70,600); tone(82,.16,"square",.055,0,42); }
   function defeat(){ tone(450,.07,"triangle",.04); tone(650,.09,"triangle",.045,.07); tone(920,.16,"triangle",.06,.16,1280); }
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, playerImpact, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();

@@ -653,68 +653,70 @@
     box.className="attack-calc-impact";
   }
 
-  function playJuicyHitSound(dmg){
-    try{
-      const AC=window.AudioContext||window.webkitAudioContext;
-      if(!AC) return;
-      const ac=window.__diceAudioCtx||(window.__diceAudioCtx=new AC());
-      if(ac.state==="suspended") ac.resume();
-      const t=ac.currentTime, strong=dmg>=55, critical=dmg>=90;
-      const master=ac.createGain(); master.gain.setValueAtTime(.0001,t); master.gain.exponentialRampToValueAtTime(.48,t+.008); master.gain.exponentialRampToValueAtTime(.0001,t+(critical?.72:strong?.55:.42)); master.connect(ac.destination);
-
-      // Deep body: fast pitch dive = "ドン" rather than a cheap beep.
-      const sub=ac.createOscillator(), sg=ac.createGain();
-      sub.type="sine"; sub.frequency.setValueAtTime(critical?115:strong?105:96,t); sub.frequency.exponentialRampToValueAtTime(42,t+.22);
-      sg.gain.setValueAtTime(.75,t); sg.gain.exponentialRampToValueAtTime(.0001,t+.34);
-      sub.connect(sg); sg.connect(master); sub.start(t); sub.stop(t+.36);
-
-      // Punch layer.
-      const punch=ac.createOscillator(), pg=ac.createGain();
-      punch.type="triangle"; punch.frequency.setValueAtTime(220,t); punch.frequency.exponentialRampToValueAtTime(72,t+.11);
-      pg.gain.setValueAtTime(.42,t); pg.gain.exponentialRampToValueAtTime(.0001,t+.16);
-      punch.connect(pg); pg.connect(master); punch.start(t); punch.stop(t+.18);
-
-      // Short filtered noise = impact/crack.
-      const len=Math.floor(ac.sampleRate*.14), buf=ac.createBuffer(1,len,ac.sampleRate), data=buf.getChannelData(0);
-      for(let i=0;i<len;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
-      const noise=ac.createBufferSource(), bp=ac.createBiquadFilter(), ng=ac.createGain();
-      noise.buffer=buf; bp.type="bandpass"; bp.frequency.value=strong?950:760; bp.Q.value=.75;
-      ng.gain.setValueAtTime(.34,t); ng.gain.exponentialRampToValueAtTime(.0001,t+.13);
-      noise.connect(bp); bp.connect(ng); ng.connect(master); noise.start(t);
-
-      // Rewarding high shimmer for stronger hits.
-      if(strong){
-        [523.25,659.25,783.99].forEach((f,i)=>{
-          const o=ac.createOscillator(), g=ac.createGain();
-          o.type="sine"; o.frequency.value=f*(critical?1.25:1);
-          const st=t+.045+i*.025; g.gain.setValueAtTime(.0001,st); g.gain.exponentialRampToValueAtTime(.12,st+.012); g.gain.exponentialRampToValueAtTime(.0001,st+.22);
-          o.connect(g); g.connect(master); o.start(st); o.stop(st+.24);
-        });
-      }
-      if(critical){
-        const o=ac.createOscillator(), g=ac.createGain();
-        o.type="sine"; o.frequency.setValueAtTime(62,t+.08); o.frequency.exponentialRampToValueAtTime(31,t+.55);
-        g.gain.setValueAtTime(.28,t+.08); g.gain.exponentialRampToValueAtTime(.0001,t+.62);
-        o.connect(g); g.connect(master); o.start(t+.08); o.stop(t+.64);
-      }
-    }catch(_){}
+  function attackTier(dmg){
+    if(dmg>=90) return "critical";
+    if(dmg>=55) return "strong";
+    return "normal";
   }
 
-  function playAttackJuice(dmg){
+  async function playAttackJuice(dmg, lethal=false){
     document.querySelector("#attackJuice")?.remove();
-    const layer=document.createElement("div"); layer.id="attackJuice";
-    const strong=dmg>=55, critical=dmg>=90;
-    layer.innerHTML=`<div class="attack-dark"></div><div class="attack-core"></div><div class="attack-sparks"><i style="--a:0deg"></i><i style="--a:30deg"></i><i style="--a:60deg"></i><i style="--a:90deg"></i><i style="--a:120deg"></i><i style="--a:150deg"></i><i style="--a:180deg"></i><i style="--a:210deg"></i><i style="--a:240deg"></i><i style="--a:270deg"></i><i style="--a:300deg"></i><i style="--a:330deg"></i></div>
-    <div class="attack-ray" style="--r:-18deg"></div><div class="attack-ray" style="--r:21deg"></div><div class="attack-ray" style="--r:62deg"></div>
-    <div class="attack-ring"></div><div class="attack-impact ${critical?"critical":strong?"strong":""}">${dmg}</div>
-    <div class="attack-label">${critical?"DEVASTATING!!":strong?"HEAVY HIT!":"HIT!"}</div>`;
+    const tier=attackTier(dmg);
+    const layer=document.createElement("div");
+    layer.id="attackJuice";
+    layer.className=`tier-${tier}${lethal?" lethal":""}`;
+
+    const sparks=Array.from({length:tier==="critical"?24:tier==="strong"?18:14},(_,i)=>{
+      const a=Math.round(i*(360/(tier==="critical"?24:tier==="strong"?18:14)));
+      const len=44+(i%5)*11;
+      return `<i style="--a:${a}deg;--len:${len}px;--d:${(i%4)*12}ms"></i>`;
+    }).join("");
+
+    layer.innerHTML=`
+      <div class="impact-vignette"></div>
+      <div class="impact-aura"></div>
+      <div class="impact-cross cross-a"></div>
+      <div class="impact-cross cross-b"></div>
+      <div class="impact-ring ring-a"></div>
+      <div class="impact-ring ring-b"></div>
+      <div class="impact-sparks">${sparks}</div>
+      <div class="impact-number">${dmg}</div>
+      <div class="impact-word">${lethal?"FINISH!!":tier==="critical"?"CRUSH!!":tier==="strong"?"SMASH!!":"HIT!"}</div>
+    `;
     document.body.appendChild(layer);
-    playJuicyHitSound(dmg);
-    const stage=document.querySelector(".enemy-stage"), battle=document.querySelector("#battle");
-    stage?.classList.remove("attack-hit"); battle?.classList.remove("attack-screen-shake");
-    void stage?.offsetWidth; stage?.classList.add("attack-hit"); battle?.classList.add("attack-screen-shake");
-    try{if(navigator.vibrate) navigator.vibrate(critical?[35,25,65]:strong?[25,18,45]:[18,12,28])}catch(_){}
-    setTimeout(()=>{stage?.classList.remove("attack-hit");battle?.classList.remove("attack-screen-shake");layer.remove()},650);
+
+    const stage=document.querySelector(".enemy-stage");
+    const art=document.querySelector("#enemyArt");
+    const battle=document.querySelector("#battle");
+    stage?.classList.remove("attack-hit-v8");
+    art?.classList.remove("attack-knock-v8");
+    battle?.classList.remove("attack-screen-v8");
+    void stage?.offsetWidth;
+    stage?.classList.add("attack-hit-v8");
+    art?.classList.add("attack-knock-v8");
+    battle?.classList.add("attack-screen-v8");
+
+    FX.playerImpact(dmg,lethal);
+    try{
+      if(navigator.vibrate){
+        navigator.vibrate(
+          lethal ? [26,16,54,26,85] :
+          tier==="critical" ? [24,14,48,20,70] :
+          tier==="strong" ? [20,12,42] : [16,10,26]
+        );
+      }
+    }catch(_){}
+
+    // very short hit-stop: the frame "sticks" at contact instead of flashing white
+    document.body.classList.add("impact-hitstop");
+    await wait(tier==="critical"||lethal ? 92 : tier==="strong" ? 72 : 54);
+    document.body.classList.remove("impact-hitstop");
+
+    await wait(tier==="critical"||lethal ? 500 : tier==="strong" ? 410 : 330);
+    stage?.classList.remove("attack-hit-v8");
+    art?.classList.remove("attack-knock-v8");
+    battle?.classList.remove("attack-screen-v8");
+    layer.remove();
   }
 
   async function launchDamageToEnemy(dmg){
@@ -722,40 +724,44 @@
     const enemy=$("#enemyArt");
     if(!source || !enemy) return;
 
+    const lethal=dmg>=state.enemyHp;
+    const tier=attackTier(dmg);
     const sr=source.getBoundingClientRect();
     const er=enemy.getBoundingClientRect();
 
+    // anticipation: compress the damage number for one beat before releasing it
+    $("#readyDamage")?.classList.add("attack-primed",`tier-${tier}`);
+    FX.attackCharge(dmg);
+    try{ if(navigator.vibrate) navigator.vibrate(tier==="critical"?18:12); }catch(_){}
+    await wait(tier==="critical"?155:tier==="strong"?125:105);
+
     const flyer=document.createElement("div");
-    flyer.className="damage-flyer";
-    flyer.textContent=dmg;
+    flyer.className=`damage-flyer-v8 tier-${tier}${lethal?" lethal":""}`;
+    flyer.innerHTML=`<span>${dmg}</span><b></b>`;
     flyer.style.left=`${sr.left + sr.width/2}px`;
     flyer.style.top=`${sr.top + sr.height/2}px`;
     document.body.appendChild(flyer);
 
-    const dx=(er.left + er.width/2) - (sr.left + sr.width/2);
-    const dy=(er.top + er.height*.48) - (sr.top + sr.height/2);
+    const sx=sr.left+sr.width/2, sy=sr.top+sr.height/2;
+    const tx=er.left+er.width/2, ty=er.top+er.height*.48;
+    const dx=tx-sx, dy=ty-sy;
+    const arcY=Math.min(-62,dy*.20-34);
 
     $("#readyDamage")?.classList.add("launching");
-    await wait(35);
-    flyer.style.transform=`translate(${dx}px, ${dy}px) scale(.48)`;
-    flyer.style.opacity="1";
+    await wait(22);
 
-    await wait(430);
-    playAttackJuice(dmg);
-    await wait(dmg>=90?170:dmg>=55?135:100);
+    // two-stage arc: lift, then accelerate violently into the monster
+    flyer.style.transform=`translate(${dx*.28}px, ${dy*.28+arcY}px) scale(${tier==="critical"?1.20:1.10}) rotate(-5deg)`;
+    await wait(105);
+    flyer.classList.add("dash");
+    flyer.style.transform=`translate(${dx}px, ${dy}px) scale(.54) rotate(2deg)`;
+    await wait(tier==="critical"?245:tier==="strong"?225:205);
 
-    enemy.classList.remove("damage-impact");
-    void enemy.offsetWidth;
-    enemy.classList.add("damage-impact");
-    document.body.classList.add("enemy-impact-flash");
-    try{ if(navigator.vibrate) navigator.vibrate([35,15,55]); }catch(_){}
+    flyer.classList.add("contact");
+    await playAttackJuice(dmg,lethal);
 
-    flyer.classList.add("hit");
-    await wait(170);
     flyer.remove();
-    document.body.classList.remove("enemy-impact-flash");
-    $("#readyDamage")?.classList.remove("launching");
-    setTimeout(()=>enemy.classList.remove("damage-impact"),260);
+    $("#readyDamage")?.classList.remove("launching","attack-primed","tier-normal","tier-strong","tier-critical");
   }
 
   function multiplierTone(value){
@@ -883,8 +889,6 @@
     $("#damageFx").className="show-damage impact-only";
     $("#slashFx").className="show-slash";
     document.body.classList.add(dmg>=45?"big-shake":"shake");
-    FX.attack(dmg>=45);
-
     const art=$("#enemyArt");
     art.classList.remove("hit");
     void art.offsetWidth;
@@ -899,8 +903,8 @@
     if(state.enemyHp<=0){
       $("#killFx").className="show-kill";
       art.classList.add("dead");
-      FX.defeat();
-      await wait(900);
+      FX.killStinger();
+      await wait(1050);
       $("#killFx").className="";
       await winBattle();
       busy=false;
