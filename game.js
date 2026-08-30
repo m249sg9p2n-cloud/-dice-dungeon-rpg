@@ -107,7 +107,9 @@
       equipped:{weapon:"training_sword",armor:"traveler_clothes"},
       clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0},
       records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0}},
-      unlocked:["1-1"]
+      unlocked:["1-1"],
+      gachaStats:{pulls:0,sinceEpic:0,sinceGod:0,history:[]},
+      lifetime:{kills:0,bossKills:0,bestDamage:0}
     };
   }
 
@@ -130,7 +132,9 @@
         equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
         clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0,...(parsed.clears||{})},
         records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0},...(parsed.records||{})},
-        unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
+        unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"],
+        gachaStats:{pulls:0,sinceEpic:0,sinceGod:0,history:[],...(parsed.gachaStats||{})},
+        lifetime:{kills:0,bossKills:0,bestDamage:0,...(parsed.lifetime||{})}
       };
     }catch{
       return defaultSave();
@@ -187,7 +191,16 @@
     $("#gachaTheater")?.classList.add("hidden");
     pendingGacha=null;
     gachaBusy=false;
+    renderGachaMeta();
     show("gacha");
+  }
+
+  function renderGachaMeta(){
+    const gs=save.gachaStats||(save.gachaStats={pulls:0,sinceEpic:0,sinceGod:0,history:[]});
+    const pulls=$("#gachaPulls"), ep=$("#epicPity"), god=$("#godPity");
+    if(pulls) pulls.textContent=gs.pulls||0;
+    if(ep) ep.textContent=Math.max(1,10-(gs.sinceEpic||0));
+    if(god) god.textContent=Math.max(1,50-(gs.sinceGod||0));
   }
 
   function gachaBaseRarity(tier){
@@ -225,9 +238,20 @@
     }
 
     save.gold-=cfg.cost;
-    const rarity=rollRarity(cfg.rates);
+    let rarity=rollRarity(cfg.rates);
+    const gs=save.gachaStats||(save.gachaStats={pulls:0,sinceEpic:0,sinceGod:0,history:[]});
+
+    // Player-friendly pity: EPIC+ within 10 pulls, GOD within 50 pulls.
+    if((gs.sinceGod||0)>=49) rarity="GOD";
+    else if((gs.sinceEpic||0)>=9 && ["NORMAL","RARE"].includes(rarity)) rarity="EPIC";
+
+    gs.pulls=(gs.pulls||0)+1;
+    gs.sinceGod = rarity==="GOD" ? 0 : (gs.sinceGod||0)+1;
+    gs.sinceEpic = ["EPIC","LEGENDARY","GOD"].includes(rarity) ? 0 : (gs.sinceEpic||0)+1;
+
     const pool=allEquipment().filter(x=>x.item.rarity===rarity);
     const result=pool[Math.floor(Math.random()*pool.length)];
+    gs.history=[`${rarity}:${result.item.name}`,...(gs.history||[])].slice(0,8);
     pendingGacha={
       tier,
       result,
@@ -236,6 +260,7 @@
     };
     persist();
     $("#gachaGold").textContent=save.gold;
+    renderGachaMeta();
     renderHome();
 
     $("#gachaResult").classList.add("hidden");
@@ -422,6 +447,26 @@
   }
 
 
+  function enhancementLevel(id){
+    const count=Math.max(1,Number(save.duplicates?.[id]||1));
+    if(count>=9) return 2;
+    if(count>=3) return 1;
+    return 0;
+  }
+
+  function enhancementLabel(id){
+    const lv=enhancementLevel(id);
+    return lv===2 ? "++" : lv===1 ? "+" : "";
+  }
+
+  function enhancedValue(item,key){
+    if(!item) return 0;
+    const base=Number(item[key]||0);
+    const lv=enhancementLevel(item.id);
+    const mult=lv===2 ? 2.25 : lv===1 ? 1.5 : 1;
+    return Math.round(base*mult);
+  }
+
   function equippedItem(slot){
     const id=save.equipped?.[slot];
     return EQUIPMENT[slot]?.[id] || Object.values(EQUIPMENT[slot])[0];
@@ -432,9 +477,28 @@
     const armor=equippedItem("armor");
     return {
       maxHp:save.base.maxHp,
-      atk:save.base.atk + (weapon?.atk||0) + (armor?.atk||0),
-      def:save.base.def + (weapon?.def||0) + (armor?.def||0)
+      atk:save.base.atk + enhancedValue(weapon,"atk") + enhancedValue(armor,"atk"),
+      def:save.base.def + enhancedValue(weapon,"def") + enhancedValue(armor,"def")
     };
+  }
+
+  function playerPower(){
+    const s=totalStats();
+    return Math.round(s.maxHp + s.atk*5 + s.def*8);
+  }
+
+  function collectionCount(){
+    return new Set([...(save.inventory.weapon||[]),...(save.inventory.armor||[])]).size;
+  }
+
+  function adventurerRank(){
+    const clears=Object.values(save.clears||{}).reduce((a,b)=>a+(Number(b)||0),0);
+    if(clears>=20) return "MYTHIC";
+    if(clears>=10) return "LEGEND";
+    if(clears>=5) return "CONQUEROR";
+    if(clears>=2) return "SLAYER";
+    if(clears>=1) return "HUNTER";
+    return "ROOKIE";
   }
 
   function rarityClass(rarity){
@@ -466,7 +530,7 @@
       btn.innerHTML=`
         <div class="inv-top">
           <span class="rarity-label">${item.rarity}</span>
-          <b>${item.name}</b>
+          <b>${item.name}${enhancementLabel(item.id)}</b>
           ${equipped?'<em>装備中</em>':""}
         </div>
         <div class="inv-stats">
@@ -537,6 +601,10 @@
 
   function renderHome(){
     $("#bankGold").textContent=save.gold;
+    const mr=$("#metaRank"), mp=$("#metaPower"), mc=$("#metaCollection");
+    if(mr) mr.textContent=adventurerRank();
+    if(mp) mp.textContent=playerPower();
+    if(mc) mc.textContent=`${collectionCount()} / ${allEquipment().length}`;
     const totals=totalStats();
     $("#homeHp").textContent=totals.maxHp;
     $("#homeAtk").textContent=totals.atk;
@@ -612,16 +680,55 @@
   }
 
   function calcDamage(){
-    const [a,b,c]=state.dice;
-    if(!a || !b || !c) return null;
-    let dmg=(a+b)*c+state.atk;
-    if(a===6 && b===6 && c===6) dmg=Math.round(dmg*1.5);
+    const [a,b,c0]=state.dice;
+    if(!a || !b || !c0) return null;
+    const weapon=equippedItem("weapon");
+    let c=c0;
+    let skill="";
+
+    if(weapon?.id==="adversity_blade" && c===1){
+      c=6;
+      skill="反転";
+    }
+
+    const dicePart=(a+b)*c;
+    let dmg=dicePart+state.atk;
+
+    if(weapon?.id==="flame_dragon" && c===6){
+      dmg+=dicePart;
+      skill="龍炎";
+    }
+    if(weapon?.id==="triple_star" && a===b && b===c && c<6){
+      dmg=Math.round(dmg*2.5);
+      skill="TRIPLE";
+    }
+    if(weapon?.id==="fate_eater" && a===b){
+      dmg=Math.round(dmg*1.5);
+      skill="DOUBLE";
+    }
+    if(weapon?.id==="heavenly_greatsword" && a>=4 && b>=4 && c>=4){
+      dmg=Math.round(dmg*2);
+      skill="HIGH ROLL";
+    }
+    if(weapon?.id==="divine_dice_sword" && ["123","234","345","456"].includes(`${a}${b}${c}`)){
+      dmg=Math.round(dmg*3);
+      skill="DIVINE STRAIGHT";
+    }
+
+    if(a===6 && b===6 && c0===6){
+      dmg=Math.round(dmg*1.5);
+      skill=skill ? `${skill} + 666` : "CRITICAL 666";
+    }
+
+    state.lastSkill=skill;
     return dmg;
   }
 
   function rawDiceDamage(){
-    const [a,b,c]=state.dice;
-    if(!a || !b || !c) return null;
+    const [a,b,c0]=state.dice;
+    if(!a || !b || !c0) return null;
+    const weapon=equippedItem("weapon");
+    const c=(weapon?.id==="adversity_blade" && c0===1)?6:c0;
     return (a+b)*c;
   }
 
@@ -716,9 +823,19 @@
     renderReadyDamage();
 
     const [a,b,c]=state.dice;
-    $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${c??"?"} + ATK ${state.atk}`;
+    const weapon=equippedItem("weapon");
+    const cText=(weapon?.id==="adversity_blade" && c===1) ? "1→6" : (c??"?");
+    $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${cText} + ATK ${state.atk}`;
 
     const dmg=calcDamage();
+    const skillText=$("#activeSkillText");
+    if(skillText) skillText.textContent=state.lastSkill||weapon?.skill||"NONE";
+    const momentum=$("#momentumText");
+    if(momentum){
+      const r=state.momentum||0;
+      momentum.textContent=r>=4?"OVERDRIVE":r>=3?"FEVER":r>=2?"HOT":r>=1?"CHAIN":"READY";
+      momentum.dataset.level=String(r);
+    }
     const forecast=$("#forecast");
     const ghost=$("#enemyHpForecast");
     const hpbar=$(".enemy-hp-bar");
@@ -767,10 +884,27 @@
       turn:0,
       dice:[null,null,null],
       nextDie:0,
-      enemyHp:0
+      enemyHp:0,
+      momentum:0,
+      lastSkill:"",
+      indomitableUsed:false,
+      aegisUsed:false,
+      phoenixUsed:false,
+      forceThirdSix:false
     };
     loadEnemy();
     show("battle");
+  }
+
+  function showBossIntro(enemy){
+    document.querySelector("#bossIntroV2")?.remove();
+    const layer=document.createElement("div");
+    layer.id="bossIntroV2";
+    layer.innerHTML=`<small>WARNING</small><b>BOSS BATTLE</b><strong>${enemy.name}</strong>`;
+    document.body.appendChild(layer);
+    try{if(navigator.vibrate) navigator.vibrate([20,20,55])}catch(_){}
+    setTimeout(()=>layer.classList.add("show"),30);
+    setTimeout(()=>{layer.classList.add("out");setTimeout(()=>layer.remove(),260)},1050);
   }
 
   function loadEnemy(){
@@ -779,9 +913,19 @@
     state.enemyHp=e.hp;
     state.dice=[null,null,null];
     state.nextDie=0;
+    state.lastSkill="";
+    state.indomitableUsed=false;
+    state.aegisUsed=false;
     busy=false;
+
+    // Purification now has a real battle-start benefit until debuffs arrive.
+    if(equippedItem("armor")?.id==="purification"){
+      state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.10));
+    }
+
     $("#enemyArt").classList.remove("dead","hit");
     renderBattle();
+    if(e.boss) showBossIntro(e);
   }
 
   async function animateOneDie(index, visualDie, mult=false, extraDelay=0){
@@ -804,7 +948,12 @@
       step++;
       await wait(Math.min(76,38+step*4));
     }
-    const value=1+Math.floor(Math.random()*6);
+    let value=1+Math.floor(Math.random()*6);
+    if(index===2 && state.forceThirdSix){
+      value=6;
+      state.forceThirdSix=false;
+      state.lastSkill="AEGIS";
+    }
     state.dice[index]=value;
     drawFace(face,value);
     if(resultLabel){
@@ -1138,6 +1287,10 @@
   async function attack(){
     const dmg=calcDamage();
     if(busy || dmg===null) return;
+    if(state.lastSkill){
+      const r=equippedItem("weapon")?.rarity?.toLowerCase()||"epic";
+      FX.skillProc(r);
+    }
     busy=true;
     renderBattle();
 
@@ -1146,6 +1299,18 @@
 
     const before=state.enemyHp;
     state.enemyHp=Math.max(0,before-dmg);
+    save.lifetime.bestDamage=Math.max(save.lifetime.bestDamage||0,dmg);
+
+    // Momentum rewards repeated strong turns and creates visible escalation.
+    if(dmg>=100) state.momentum=Math.min(4,(state.momentum||0)+2);
+    else if(dmg>=60) state.momentum=Math.min(4,(state.momentum||0)+1);
+    else state.momentum=Math.max(0,(state.momentum||0)-1);
+
+    // LUCKY SIX: heal immediately when multiplier die is 6.
+    if(equippedItem("armor")?.id==="gambler_cloak" && state.dice[2]===6){
+      state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.15));
+      state.lastSkill="LUCKY SIX";
+    }
 
     $("#damageFx").textContent=dmg;
     $("#damageFx").className="show-damage impact-only";
@@ -1163,6 +1328,9 @@
     document.body.classList.remove("shake","big-shake");
 
     if(state.enemyHp<=0){
+      save.lifetime.kills=(save.lifetime.kills||0)+1;
+      if(currentEnemy().boss) save.lifetime.bossKills=(save.lifetime.bossKills||0)+1;
+      persist();
       $("#killFx").className="show-kill";
       art.classList.add("dead");
       FX.killStinger();
@@ -1175,12 +1343,40 @@
 
     await wait(180);
     const incoming=Math.max(1,currentAttack()-state.def);
-    state.hp-=incoming;
+    const armor=equippedItem("armor");
+    const fatal=incoming>=state.hp;
+
+    if(fatal && armor?.id==="aegis" && !state.aegisUsed){
+      state.aegisUsed=true;
+      state.forceThirdSix=true;
+      state.lastSkill="AEGIS";
+      state.momentum=Math.min(4,(state.momentum||0)+1);
+    }else if(fatal && armor?.id==="indomitable" && !state.indomitableUsed){
+      state.indomitableUsed=true;
+      state.hp=1;
+      state.lastSkill="不屈";
+    }else{
+      state.hp-=incoming;
+    }
+
     FX.enemyAttack();
     document.body.classList.add("shake");
     await wait(260);
     document.body.classList.remove("shake");
     state.turn++;
+
+    if(state.hp<=0 && armor?.id==="phoenix_armor" && !state.phoenixUsed){
+      state.phoenixUsed=true;
+      state.hp=Math.ceil(state.maxHp*.5);
+      state.lastSkill="REBIRTH";
+      state.momentum=4;
+      const revive=document.createElement("div");
+      revive.className="revive-v2";
+      revive.innerHTML="<small>LEGENDARY SKILL</small><b>REBIRTH</b><strong>HP 50% 復活</strong>";
+      document.body.appendChild(revive);
+      setTimeout(()=>revive.remove(),1050);
+      try{if(navigator.vibrate) navigator.vibrate([25,20,65])}catch(_){}
+    }
 
     if(state.hp<=0){
       finishDefeat();
@@ -1206,13 +1402,39 @@
     $("#rewardBattleText").textContent=`BATTLE ${state.battle+1} CLEAR`;
     $("#rewardGoldText").textContent=`+${e.gold}G`;
     FX.reward();
+    renderRewardChoices();
     show("reward");
   }
 
+  const RUN_REWARDS={
+    heal:{icon:"❤️",name:"HP大回復",desc:"最大HPの35%回復",tag:"RECOVER",cls:"reward-heal"},
+    gold:{icon:"🪙",name:"GOLD JACKPOT",desc:"追加で80G獲得",tag:"BONUS",cls:"reward-gold"},
+    atk:{icon:"⚔️",name:"攻撃覚醒",desc:"このラン中 ATK +5",tag:"POWER",cls:"reward-atk"},
+    def:{icon:"🛡️",name:"防御覚醒",desc:"このラン中 DEF +3",tag:"GUARD",cls:"reward-def"},
+    hpmax:{icon:"💎",name:"生命覚醒",desc:"最大HP +15 & 15回復",tag:"VITAL",cls:"reward-vital"}
+  };
+
+  function renderRewardChoices(){
+    const keys=Object.keys(RUN_REWARDS).sort(()=>Math.random()-.5).slice(0,3);
+    const grid=$("#rewardChoices");
+    if(!grid) return;
+    grid.innerHTML=keys.map(k=>{
+      const r=RUN_REWARDS[k];
+      return `<button class="reward ${r.cls}" data-reward="${k}">
+        <span class="reward-icon">${r.icon}</span>
+        <span class="reward-copy"><b>${r.name}</b><span>${r.desc}</span></span>
+        <em>${r.tag}</em>
+      </button>`;
+    }).join("");
+    grid.querySelectorAll("[data-reward]").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
+  }
+
   function chooseReward(kind){
-    if(kind==="heal") state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.3));
-    if(kind==="gold") state.runGold+=40;
-    if(kind==="atk") state.atk+=3;
+    if(kind==="heal") state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.35));
+    if(kind==="gold") state.runGold+=80;
+    if(kind==="atk") state.atk+=5;
+    if(kind==="def") state.def+=3;
+    if(kind==="hpmax"){ state.maxHp+=15; state.hp=Math.min(state.maxHp,state.hp+15); }
 
     state.battle++;
     loadEnemy();
@@ -1360,7 +1582,6 @@
     if(calcDamage()===null) rollPair();
     else attack();
   });
-  $$(".reward").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));
   $("#deathHome").addEventListener("click",returnHome);
   $("#resultHome").addEventListener("click",returnHome);

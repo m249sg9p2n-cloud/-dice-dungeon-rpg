@@ -183,6 +183,14 @@
     const chord=god?[523.25,659.25,783.99,1046.5]:leg?[440,554.37,659.25]:[329.63,440,523.25];
     chord.forEach((f,i)=>oscTo(b,"triangle",f,f*1.01,god?.42:.30,god?.052:.04,.10+i*.04));
   }
+  function skillProc(tier="epic"){
+    if(muted) return;
+    const b=hitBus();
+    const strong=tier==="god"||tier==="legendary";
+    oscTo(b,"triangle",strong?420:330,strong?980:720,.20,strong?.055:.038,0);
+    oscTo(b,"sine",88,44,.28,strong?.13:.085,.015);
+    noiseTo(b,.08,strong?.09:.055,.01,650,3200);
+  }
   function killStinger(){
     if(muted) return;
     const b=hitBus();
@@ -196,7 +204,7 @@
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, chestTension, chestBurst, puchun, gradeUp, chestOpen, killStinger, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, chestTension, chestBurst, puchun, gradeUp, chestOpen, skillProc, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();

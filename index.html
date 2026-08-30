@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=1400">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=1400">
-  <link rel="stylesheet" href="./style.css?v=1400">
-  <title>Dice Dungeon RPG v1.4.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=2000">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=2000">
+  <link rel="stylesheet" href="./style.css?v=2000">
+  <title>Dice Dungeon RPG v2.0.0</title>
 </head>
 <body>
 <main id="app">
@@ -31,6 +31,12 @@
         <small>ROLL • GROW • CONQUER</small>
       </div>
       <span class="brand-spark">✦</span>
+    </div>
+
+    <div class="ascension-meta">
+      <div><span>RANK</span><b id="metaRank">ROOKIE</b></div>
+      <div><span>POWER</span><b id="metaPower">0</b></div>
+      <div><span>COLLECTION</span><b id="metaCollection">2 / 30</b></div>
     </div>
 
     <article class="hero-card">
@@ -100,7 +106,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v1.4.0 — HARDCORE / GACHA / DEV MODE</p>
+    <p class="note">v2.0.0 — ASCENSION UPDATE</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -154,6 +160,12 @@
         <b>武器・防具 全30種</b>
         <small>NORMAL / RARE / EPIC / LEGENDARY / GOD</small>
       </div>
+    </div>
+
+    <div class="gacha-meta-panel">
+      <div><span>TOTAL PULLS</span><b id="gachaPulls">0</b></div>
+      <div><span>EPIC+ PITY</span><b id="epicPity">10</b></div>
+      <div><span>GOD PITY</span><b id="godPity">50</b></div>
     </div>
 
     <div class="gacha-rates">
@@ -220,6 +232,11 @@
       <div><b id="battleNo">BATTLE 1/5</b><small>1-1 ゴブリンの森</small></div>
       <div class="run-gold">🪙 <span id="runGold">0</span>G</div>
     </header>
+
+    <div class="battle-status-strip">
+      <div class="momentum"><span>MOMENTUM</span><b id="momentumText">READY</b></div>
+      <div class="battle-skill"><span>ACTIVE SKILL</span><b id="activeSkillText">NONE</b></div>
+    </div>
 
     <section class="enemy-stage">
       <div class="stage-scenery" aria-hidden="true">
@@ -306,23 +323,7 @@
       <p>基本GOLDはすでに獲得済み。</p>
     </div>
     <div class="reward-progress"><span id="rewardBattleText">BATTLE 1 CLEAR</span><b id="rewardGoldText">+25G</b></div>
-    <div class="reward-grid">
-      <button class="reward reward-heal" data-reward="heal">
-        <span class="reward-icon">❤️</span>
-        <span class="reward-copy"><b>HP回復</b><span>最大HPの30%回復</span></span>
-        <em>RECOVER</em>
-      </button>
-      <button class="reward reward-gold" data-reward="gold">
-        <span class="reward-icon">🪙</span>
-        <span class="reward-copy"><b>GOLD</b><span>追加で40G獲得</span></span>
-        <em>BONUS</em>
-      </button>
-      <button class="reward reward-atk" data-reward="atk">
-        <span class="reward-icon">⚔️</span>
-        <span class="reward-copy"><b>攻撃強化</b><span>このラン中 ATK +3</span></span>
-        <em>POWER</em>
-      </button>
-    </div>
+    <div id="rewardChoices" class="reward-grid"></div>
   </section>
 
   <section id="bossReward" class="screen">
@@ -384,11 +385,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=1400"></script>
-<script src="./game.js?v=1400"></script>
+<script src="./effects.js?v=2000"></script>
+<script src="./game.js?v=2000"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=1400").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2000").catch(console.error));
 }
 </script>
 </body>

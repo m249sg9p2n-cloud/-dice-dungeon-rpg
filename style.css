@@ -3478,3 +3478,109 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
   box-shadow:0 0 10px #fff6bd,0 0 22px #ffd53b,0 0 34px #d55cff;
 }
 @keyframes rewardSigil{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+
+/* ==========================================================
+   v2.0.0 ASCENSION UPDATE
+   Cohesive game-wide quality pass
+   ========================================================== */
+
+.ascension-meta{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:9px 0 12px;
+}
+.ascension-meta>div{
+  min-width:0;padding:9px 7px;border:1px solid #3b4558;border-radius:11px;
+  background:linear-gradient(180deg,#141925,#0b0e15);
+  text-align:center;box-shadow:inset 0 0 16px #ffffff06;
+}
+.ascension-meta span{display:block;font-size:8px;font-weight:900;letter-spacing:.13em;color:#7f8ba2}
+.ascension-meta b{display:block;margin-top:3px;font-size:14px;color:#f4d06a;text-shadow:0 0 9px #d1922a55}
+.ascension-meta>div:nth-child(2) b{color:#77c9ff}
+.ascension-meta>div:nth-child(3) b{color:#7ee6a0}
+
+.gacha-meta-panel{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:9px 0 11px;
+}
+.gacha-meta-panel>div{
+  padding:8px 5px;border:1px solid #443d65;border-radius:10px;
+  background:linear-gradient(180deg,#19152b,#0e0d17);text-align:center;
+}
+.gacha-meta-panel span{display:block;font-size:7px;letter-spacing:.11em;color:#958cb5;font-weight:900}
+.gacha-meta-panel b{display:block;margin-top:3px;color:#e3c4ff;font-size:15px}
+.gacha-meta-panel>div:last-child b{color:#ffe05b;text-shadow:0 0 9px #e39d2a66}
+
+.battle-status-strip{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:5px 0 7px;
+}
+.battle-status-strip>div{
+  padding:6px 8px;border:1px solid #333b4b;border-radius:9px;
+  background:#0c1018cc;display:flex;justify-content:space-between;align-items:center;min-width:0;
+}
+.battle-status-strip span{font-size:7px;letter-spacing:.12em;color:#7d899d;font-weight:900}
+.battle-status-strip b{font-size:10px;color:#d7e5f7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#momentumText[data-level="1"]{color:#75baff}
+#momentumText[data-level="2"]{color:#7ce29b;text-shadow:0 0 8px #38c86b55}
+#momentumText[data-level="3"]{color:#ffbb47;text-shadow:0 0 8px #ff8d2855}
+#momentumText[data-level="4"]{color:#ff674d;text-shadow:0 0 10px #ff322f88;animation:momentumPulse .52s ease-in-out infinite alternate}
+@keyframes momentumPulse{to{filter:brightness(1.35);transform:scale(1.04)}}
+
+.copy-count{
+  display:block!important;margin-top:5px!important;color:#9aaac1!important;font-size:9px!important;
+}
+.inventory-item.rarity-epic .copy-count{color:#c68cff!important}
+.inventory-item.rarity-legendary .copy-count{color:#f0bc59!important}
+.inventory-item.rarity-god .copy-count{color:#fff078!important}
+
+.reward-def{border-color:#479e8666!important;background:linear-gradient(180deg,#10271f,#0b1713)!important}
+.reward-def .reward-icon{background:#2c795a44!important}
+.reward-vital{border-color:#5584c866!important;background:linear-gradient(180deg,#111f35,#0b1320)!important}
+.reward-vital .reward-icon{background:#416fa544!important}
+.reward-grid{gap:9px}
+
+#bossIntroV2{
+  position:fixed;inset:0;z-index:1450;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at center,#7f14194a 0 18%,#000b 58%,#000e);
+  opacity:0;transform:scale(1.08);
+}
+#bossIntroV2.show{animation:bossIntroIn .34s ease-out forwards}
+#bossIntroV2.out{animation:bossIntroOut .25s ease-in forwards}
+#bossIntroV2 small{font-size:12px;font-weight:1000;letter-spacing:.42em;color:#ff664e;text-shadow:0 0 12px #ff2f2f}
+#bossIntroV2 b{margin-top:5px;font-size:46px;line-height:1;font-style:italic;font-weight:1000;color:#ffcc50;-webkit-text-stroke:2px #70130f;text-shadow:0 4px 0 #4f0d0a,0 0 22px #ff652e,0 0 44px #d92325}
+#bossIntroV2 strong{margin-top:12px;font-size:20px;color:#fff1c1;letter-spacing:.08em}
+@keyframes bossIntroIn{0%{opacity:0;transform:scale(1.4)}35%{opacity:1;transform:scale(.94)}100%{opacity:1;transform:scale(1)}}
+@keyframes bossIntroOut{to{opacity:0;transform:scale(1.06)}}
+
+.revive-v2{
+  position:fixed;inset:0;z-index:1480;pointer-events:none;
+  display:grid;place-content:center;text-align:center;
+  background:radial-gradient(circle at center,#ff8b3136 0 14%,#000b 52%,#000e);
+  animation:reviveV2 1.05s ease-out forwards;
+}
+.revive-v2 small{font-size:11px;letter-spacing:.25em;color:#ffcf68;font-weight:1000}
+.revive-v2 b{font-size:58px;color:#ffb238;-webkit-text-stroke:2px #6d1a0d;text-shadow:0 0 20px #ff7d25,0 0 42px #e43e23;font-style:italic}
+.revive-v2 strong{font-size:17px;color:#fff0b5}
+@keyframes reviveV2{0%{opacity:0;transform:scale(.5)}20%{opacity:1;transform:scale(1.08)}75%{opacity:1}100%{opacity:0;transform:scale(1)}}
+
+/* Better low-HP urgency without white flashes */
+.player-hp-bar i{transition:width .28s ease,background .25s}
+.battle-screen:has(#playerHpFill[style*="10%"]) .player-strip{animation:none}
+
+/* More tactile menu / cards */
+.home-menu-card,.dungeon-card,.upgrade-card,.inventory-item,.reward{
+  transition:transform .12s ease,filter .12s ease,border-color .12s ease;
+}
+.home-menu-card:active,.dungeon-card:not(:disabled):active,.upgrade-card:active,.inventory-item:active,.reward:active{
+  transform:scale(.985);filter:brightness(1.10);
+}
+
+/* Make important rarity tiers feel materially different */
+.inventory-item.rarity-legendary{box-shadow:inset 0 0 24px #f0a52a0d}
+.inventory-item.rarity-god{
+  box-shadow:inset 0 0 26px #ffe13a12,0 0 12px #d672ff12;
+  background-image:linear-gradient(135deg,#19100c,#151021,#101723);
+}
+
+/* Result panel polish */
+#runResult .center-title h2{letter-spacing:.03em}
+.boss-result strong{filter:drop-shadow(0 0 11px #ffb432)}
