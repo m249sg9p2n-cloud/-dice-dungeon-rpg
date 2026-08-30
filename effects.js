@@ -202,9 +202,17 @@
   function enemyAttack(){ noise(.10,.065,0,70,600); tone(82,.16,"square",.055,0,42); }
   function defeat(){ tone(450,.07,"triangle",.04); tone(650,.09,"triangle",.045,.07); tone(920,.16,"triangle",.06,.16,1280); }
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
+  function jackpot(mult=3){
+    if(muted) return;
+    const b=hitBus(), huge=mult>=5;
+    [261.63,329.63,392,523.25].forEach((f,i)=>oscTo(b,"triangle",f,f*1.02,.34,huge?.07:.05,i*.045));
+    oscTo(b,"sine",72,36,.52,huge?.22:.15,0);
+    noiseTo(b,.18,huge?.13:.09,.03,480,4200);
+  }
+
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, chestTension, chestBurst, puchun, gradeUp, chestOpen, skillProc, killStinger, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, chestTension, chestBurst, puchun, gradeUp, chestOpen, skillProc, jackpot, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();

@@ -33,7 +33,7 @@
       triple_star:{id:"triple_star",name:"三連星",rarity:"EPIC",atk:10,def:0,skill:"TRIPLE",desc:"111〜555のゾロ目で最終ダメージ×2.5。"},
       adversity_blade:{id:"adversity_blade",name:"逆境の魔剣",rarity:"EPIC",atk:12,def:0,skill:"反転",desc:"③が1なら6として扱う。"},
 
-      fate_eater:{id:"fate_eater",name:"運命喰らい",rarity:"LEGENDARY",atk:15,def:0,skill:"DOUBLE",desc:"①=②なら③を2回振り高い方を採用、最終×1.5。"},
+      fate_eater:{id:"fate_eater",name:"運命喰らい",rarity:"LEGENDARY",atk:15,def:0,skill:"DOUBLE",desc:"①=②なら最終ダメージ×1.5。"},
       heavenly_greatsword:{id:"heavenly_greatsword",name:"天命の大剣",rarity:"LEGENDARY",atk:17,def:0,skill:"HIGH ROLL",desc:"全ダイス4以上で最終×2。"},
 
       divine_dice_sword:{id:"divine_dice_sword",name:"神骰剣・天命",rarity:"GOD",atk:22,def:0,skill:"DIVINE STRAIGHT",desc:"123/234/345/456で最終ダメージ×3。"}
@@ -51,10 +51,10 @@
       magic_coat:{id:"magic_coat",name:"魔導外套",rarity:"RARE",atk:0,def:8,desc:"魔力を編み込んだ外套。"},
 
       indomitable:{id:"indomitable",name:"不屈の鎧",rarity:"EPIC",atk:0,def:10,skill:"不屈",desc:"致死ダメージをHP1で耐える。1戦1回。"},
-      purification:{id:"purification",name:"浄化の聖衣",rarity:"EPIC",atk:0,def:9,skill:"浄化",desc:"最初のデバフを無効化しHPを回復。"},
+      purification:{id:"purification",name:"浄化の聖衣",rarity:"EPIC",atk:0,def:9,skill:"浄化",desc:"各戦闘開始時に最大HPの10%回復。"},
       gambler_cloak:{id:"gambler_cloak",name:"賭博師の外套",rarity:"EPIC",atk:0,def:9,skill:"LUCKY SIX",desc:"③が6なら最大HPの15%回復。"},
 
-      fate_armor:{id:"fate_armor",name:"運命の鎧",rarity:"LEGENDARY",atk:0,def:13,skill:"運命改変",desc:"敵に固定されたダイスを6へ変える。"},
+      fate_armor:{id:"fate_armor",name:"運命の鎧",rarity:"LEGENDARY",atk:0,def:13,skill:"運命改変",desc:"1戦1回、致死攻撃を半減して運命をずらす。"},
       phoenix_armor:{id:"phoenix_armor",name:"不死鳥の鎧",rarity:"LEGENDARY",atk:0,def:14,skill:"REBIRTH",desc:"1ランに1度、HP50%で復活。"},
 
       aegis:{id:"aegis",name:"神護・アイギス",rarity:"GOD",atk:0,def:18,skill:"AEGIS",desc:"致死攻撃を無効化し、次の③を6にする。"}
@@ -62,25 +62,25 @@
   };
 
   const DUNGEONS = {
-    "1-1":{id:"1-1",name:"ゴブリンの森",mission:"序章から容赦なし。ゴブリンキングを撃破せよ。",enemies:[
+    "1-1":{id:"1-1",name:"ゴブリンの森",recommended:220,theme:"FOREST",mission:"序章から容赦なし。ゴブリンキングを撃破せよ。",enemies:[
       {name:"ゴブリン",image:"enemy_01_goblin.png",hp:125,attacks:[18,24,32],gold:45,lv:1},
       {name:"ゴブリン弓兵",image:"enemy_02_goblin_archer.png",hp:155,attacks:[20,20,38],gold:60,lv:2},
       {name:"ゴブリン戦士",image:"enemy_03_goblin_warrior.png",hp:210,attacks:[28,34,42],gold:80,lv:3},
       {name:"ゴブリン隊長",image:"enemy_04_goblin_captain.png",hp:285,attacks:[30,44,62],gold:110,lv:4},
       {name:"ゴブリンキング",image:"enemy_05_goblin_king.png",hp:450,attacks:[36,52,42,86],gold:220,lv:5,boss:true}]},
-    "1-2":{id:"1-2",name:"毒蜘蛛の洞窟",mission:"毒と高火力の連戦。強化と装備なしでは突破困難。",enemies:[
+    "1-2":{id:"1-2",name:"毒蜘蛛の洞窟",recommended:300,theme:"VENOM",mission:"毒と高火力の連戦。強化と装備なしでは突破困難。",enemies:[
       {name:"洞窟コウモリ",image:"enemy_06_cave_bat.png",hp:230,attacks:[28,34,42],gold:80,lv:6},
       {name:"子蜘蛛",image:"enemy_07_baby_spider.png",hp:280,attacks:[32,42,48],gold:100,lv:7},
       {name:"毒蜘蛛",image:"enemy_08_poison_spider.png",hp:345,attacks:[38,48,58],gold:125,lv:8},
       {name:"大蜘蛛",image:"enemy_09_giant_spider.png",hp:425,attacks:[42,58,76],gold:160,lv:9},
       {name:"大毒蜘蛛",image:"enemy_10_queen_spider.png",hp:650,attacks:[50,66,54,105],gold:310,lv:10,boss:true}]},
-    "1-3":{id:"1-3",name:"呪われた墓地",mission:"亡者の群れを超え、スケルトンロードを撃破せよ。",enemies:[
+    "1-3":{id:"1-3",name:"呪われた墓地",recommended:390,theme:"CURSE",mission:"亡者の群れを超え、スケルトンロードを撃破せよ。",enemies:[
       {name:"スケルトン",image:"enemy_11_skeleton.png",hp:360,attacks:[40,52,62],gold:120,lv:11},
       {name:"ゾンビ",image:"enemy_12_zombie.png",hp:430,attacks:[46,56,72],gold:145,lv:12},
       {name:"スケルトン騎士",image:"enemy_13_skeleton_knight.png",hp:520,attacks:[50,68,82],gold:175,lv:13},
       {name:"ネクロマンサー",image:"enemy_14_necromancer.png",hp:620,attacks:[56,74,96],gold:215,lv:14},
       {name:"スケルトンロード",image:"enemy_15_skeleton_lord.png",hp:900,attacks:[62,82,68,132],gold:420,lv:15,boss:true}]},
-    "1-4":{id:"1-4",name:"灼熱の火山",mission:"極悪難度。火力と耐久を育て切って挑め。",enemies:[
+    "1-4":{id:"1-4",name:"灼熱の火山",recommended:500,theme:"VOLCANO",mission:"極悪難度。火力と耐久を育て切って挑め。",enemies:[
       {name:"ファイアスライム",image:"enemy_16_fire_slime.png",hp:520,attacks:[58,70,84],gold:170,lv:16},
       {name:"ファイアリザード",image:"enemy_17_fire_lizard.png",hp:620,attacks:[64,78,94],gold:205,lv:17},
       {name:"炎戦士",image:"enemy_18_flame_warrior.png",hp:750,attacks:[70,88,108],gold:250,lv:18},
@@ -109,7 +109,8 @@
       records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0}},
       unlocked:["1-1"],
       gachaStats:{pulls:0,sinceEpic:0,sinceGod:0,history:[]},
-      lifetime:{kills:0,bossKills:0,bestDamage:0}
+      lifetime:{kills:0,bossKills:0,bestDamage:0,maxCombo:0,totalRuns:0,deaths:0},
+      mastery:{"1-1":0,"1-2":0,"1-3":0,"1-4":0}
     };
   }
 
@@ -134,7 +135,8 @@
         records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0},...(parsed.records||{})},
         unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"],
         gachaStats:{pulls:0,sinceEpic:0,sinceGod:0,history:[],...(parsed.gachaStats||{})},
-        lifetime:{kills:0,bossKills:0,bestDamage:0,...(parsed.lifetime||{})}
+        lifetime:{kills:0,bossKills:0,bestDamage:0,maxCombo:0,totalRuns:0,deaths:0,...(parsed.lifetime||{})},
+        mastery:{"1-1":0,"1-2":0,"1-3":0,"1-4":0,...(parsed.mastery||{})}
       };
     }catch{
       return defaultSave();
@@ -201,6 +203,14 @@
     if(pulls) pulls.textContent=gs.pulls||0;
     if(ep) ep.textContent=Math.max(1,10-(gs.sinceEpic||0));
     if(god) god.textContent=Math.max(1,50-(gs.sinceGod||0));
+    const hist=$("#gachaHistory");
+    if(hist){
+      const rows=(gs.history||[]).slice(0,5);
+      hist.innerHTML=rows.length ? rows.map(x=>{
+        const [r,...rest]=x.split(":");
+        return `<span class="hist-${String(r).toLowerCase()}"><b>${r}</b>${rest.join(":")}</span>`;
+      }).join("") : "<small>召喚履歴はまだありません</small>";
+    }
   }
 
   function gachaBaseRarity(tier){
@@ -521,10 +531,16 @@
     const list=$("#equipmentList");
     list.innerHTML="";
     const owned=save.inventory?.[slot] || [];
+    const current=equippedItem(slot);
     for(const id of owned){
       const item=EQUIPMENT[slot]?.[id];
       if(!item) continue;
       const equipped=save.equipped?.[slot]===id;
+      const value=slot==="weapon"?enhancedValue(item,"atk"):enhancedValue(item,"def");
+      const curValue=slot==="weapon"?enhancedValue(current,"atk"):enhancedValue(current,"def");
+      const delta=value-curValue;
+      const count=save.duplicates[item.id]||1;
+      const progress=enhancementLevel(item.id)===2?"MAX ++":enhancementLevel(item.id)===1?`++まで ${Math.max(0,9-count)}個`:`+まで ${Math.max(0,3-count)}個`;
       const btn=document.createElement("button");
       btn.className=`inventory-item ${rarityClass(item.rarity)} ${equipped?"equipped":""}`;
       btn.innerHTML=`
@@ -533,10 +549,10 @@
           <b>${item.name}${enhancementLabel(item.id)}</b>
           ${equipped?'<em>装備中</em>':""}
         </div>
-        <div class="inv-stats">
-          ${slot==="weapon"?`ATK +${item.atk}`:`DEF +${item.def}`}
-        </div>
+        <div class="inv-stats">${slot==="weapon"?`ATK +${value}`:`DEF +${value}`}</div>
         <small>${item.desc}</small>
+        <small class="copy-count">所持 ×${count} • ${progress}</small>
+        <small class="power-delta">${equipped?"CURRENT":delta>=0?`▲ ${slot==="weapon"?"ATK":"DEF"} +${delta}`:`▼ ${slot==="weapon"?"ATK":"DEF"} ${delta}`}</small>
       `;
       btn.addEventListener("click",()=>equipItem(slot,id));
       list.appendChild(btn);
@@ -662,6 +678,19 @@
       }
     });
 
+    if($("#recordKills")) $("#recordKills").textContent=save.lifetime.kills||0;
+    if($("#recordBossKills")) $("#recordBossKills").textContent=save.lifetime.bossKills||0;
+    if($("#recordBestDamage")) $("#recordBestDamage").textContent=save.lifetime.bestDamage||0;
+    if($("#recordMaxCombo")) $("#recordMaxCombo").textContent=save.lifetime.maxCombo||0;
+    const milestone=nextRankProgress();
+    if($("#milestoneText")) $("#milestoneText").textContent=milestone.text;
+    if($("#milestoneFill")) $("#milestoneFill").style.width=`${Math.max(0,Math.min(100,milestone.pct))}%`;
+    const selectedCard=document.querySelector(`.dungeon-card[data-dungeon="${selectedDungeonId}"]`);
+    if(selectedCard){
+      selectedCard.dataset.mastery=`${"★".repeat(masteryStars(selectedDungeonId))}${"☆".repeat(3-masteryStars(selectedDungeonId))}`;
+      selectedCard.dataset.power=`推奨POWER ${selected.recommended}`;
+    }
+
     const clears=save.clears[selectedDungeonId]||0;
     $("#clearCount").textContent=clears;
     $("#bestRunGold").textContent=`${save.records[selectedDungeonId]?.bestRunGold||0}G`;
@@ -670,6 +699,48 @@
       badge.textContent=clears>0 ? `CLEAR ×${clears}` : "未CLEAR";
       badge.classList.toggle("cleared",clears>0);
     }
+  }
+
+
+  const ENEMY_INTENTS={
+    "ゴブリン":["小突き","悪だくみ","強打"],"ゴブリン弓兵":["狙い撃ち","連射","ヘッドショット"],
+    "ゴブリン戦士":["斬撃","踏み込み","大振り"],"ゴブリン隊長":["号令斬り","猛攻","処刑斬り"],
+    "ゴブリンキング":["王の一撃","暴君ラッシュ","威圧","キングクラッシュ"],
+    "洞窟コウモリ":["急降下","噛みつき","超音波突進"],"子蜘蛛":["噛みつき","糸絡め","毒牙"],
+    "毒蜘蛛":["毒牙","飛びかかり","猛毒刺し"],"大蜘蛛":["捕食","強襲","大毒牙"],
+    "大毒蜘蛛":["女王の牙","猛毒散布","捕食","デッドリーバイト"],
+    "スケルトン":["骨斬り","連撃","死者の一太刀"],"ゾンビ":["腐食打","掴み","怪力"],
+    "スケルトン騎士":["騎士斬り","シールドバッシュ","処刑剣"],"ネクロマンサー":["呪弾","死霊術","暗黒波"],
+    "スケルトンロード":["冥府斬","王の呪い","死者召喚","デスブリンガー"],
+    "ファイアスライム":["火花","灼熱体当たり","爆ぜる"],"ファイアリザード":["火炎爪","灼熱突進","フレイムバイト"],
+    "炎戦士":["炎斬","連炎撃","業火斬"],"マグマゴーレム":["岩砕き","溶岩拳","地殻粉砕"],
+    "火山の暴君":["獄炎爪","暴君の咆哮","灼熱突進","終焉火山"]
+  };
+
+  function enemyIntent(enemy, turn){
+    const arr=ENEMY_INTENTS[enemy.name]||["攻撃"];
+    return arr[turn%arr.length];
+  }
+  function momentumMultiplier(){
+    return [1,1.05,1.10,1.18,1.30][state?.momentum||0]||1;
+  }
+  function currentRunBlessing(){
+    const b=state?.blessings||{};
+    const parts=[];
+    if(b.fury) parts.push(`FURY +${b.fury}`);
+    if(b.guard) parts.push(`GUARD +${b.guard}`);
+    if(b.fortune) parts.push(`FORTUNE ${b.fortune}`);
+    if(b.vital) parts.push(`VITAL ${b.vital}`);
+    return parts[0]||"NO BLESSING";
+  }
+  function masteryStars(id){ return Math.max(0,Math.min(3,Number(save.mastery?.[id]||0))); }
+  function nextRankProgress(){
+    const clears=Object.values(save.clears||{}).reduce((a,b)=>a+(Number(b)||0),0);
+    const thresholds=[["HUNTER",1],["SLAYER",2],["CONQUEROR",5],["LEGEND",10],["MYTHIC",20]];
+    const next=thresholds.find(([,n])=>clears<n);
+    if(!next) return {text:"MYTHIC到達 — 伝説は続く",pct:100};
+    const prev=[0,1,2,5,10].filter(n=>n<next[1]).pop()||0;
+    return {text:`${next[0]}まで CLEAR ${clears}/${next[1]}`,pct:(clears-prev)/(next[1]-prev)*100};
   }
 
   function currentDungeon(){ return DUNGEONS[state.dungeonId]; }
@@ -719,7 +790,8 @@
       dmg=Math.round(dmg*1.5);
       skill=skill ? `${skill} + 666` : "CRITICAL 666";
     }
-
+    dmg=Math.round(dmg*momentumMultiplier());
+    if(state?.blessings?.fury) dmg+=state.blessings.fury;
     state.lastSkill=skill;
     return dmg;
   }
@@ -800,10 +872,13 @@
     $("#enemyLv").textContent=`Lv.${e.lv}`;
     const shownEnemyAtk=currentAttack();
     $("#nextAttack").textContent=shownEnemyAtk;
+    if($("#enemyIntent")) $("#enemyIntent").textContent=enemyIntent(e,state.turn);
     const battleEl=$("#battle");
     if(battleEl) battleEl.dataset.stage=state.dungeonId;
     battleEl?.classList.toggle("boss-battle",!!e.boss || state.battle===4);
-    const danger=shownEnemyAtk>=30?"deadly":shownEnemyAtk>=20?"high":shownEnemyAtk>=14?"mid":"low";
+    const projected=Math.max(1,shownEnemyAtk-state.def-(state?.blessings?.guard||0));
+    const ratio=projected/Math.max(1,state.hp);
+    const danger=ratio>=1?"deadly":ratio>=.60?"high":ratio>=.32?"mid":"low";
     if(battleEl) battleEl.dataset.danger=danger;
     const dangerLabel=$("#dangerLabel");
     if(dangerLabel) dangerLabel.textContent=danger==="deadly"?"DANGER!":danger==="high"?"HIGH":danger==="mid"?"CAUTION":"WATCH";
@@ -819,13 +894,15 @@
 
     $("#runAtk").textContent=state.atk;
     $("#runDef").textContent=state.def;
+    if($("#runTrait")) $("#runTrait").textContent=currentRunBlessing();
     renderDice();
     renderReadyDamage();
 
     const [a,b,c]=state.dice;
     const weapon=equippedItem("weapon");
     const cText=(weapon?.id==="adversity_blade" && c===1) ? "1→6" : (c??"?");
-    $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${cText} + ATK ${state.atk}`;
+    const mm=momentumMultiplier();
+    $("#formula").textContent=`( ${a??"?"} + ${b??"?"} ) × ${cText} + ATK ${state.atk}${mm>1?` ×MOM ${mm.toFixed(2)}`:""}`;
 
     const dmg=calcDamage();
     const skillText=$("#activeSkillText");
@@ -889,9 +966,14 @@
       lastSkill:"",
       indomitableUsed:false,
       aegisUsed:false,
+      fateArmorUsed:false,
       phoenixUsed:false,
-      forceThirdSix:false
+      forceThirdSix:false,
+      blessings:{fury:0,guard:0,vital:0,fortune:0},
+      turnsTaken:0,bestHit:0,combo:0,maxCombo:0
     };
+    save.lifetime.totalRuns=(save.lifetime.totalRuns||0)+1;
+    persist();
     loadEnemy();
     show("battle");
   }
@@ -916,6 +998,7 @@
     state.lastSkill="";
     state.indomitableUsed=false;
     state.aegisUsed=false;
+    state.fateArmorUsed=false;
     busy=false;
 
     // Purification now has a real battle-start benefit until debuffs arrive.
@@ -953,6 +1036,9 @@
       value=6;
       state.forceThirdSix=false;
       state.lastSkill="AEGIS";
+    }else if(index===2 && state?.blessings?.fortune){
+      const chance=Math.min(.30,state.blessings.fortune*.08);
+      if(Math.random()<chance && value<6) value++;
     }
     state.dice[index]=value;
     drawFace(face,value);
@@ -1300,6 +1386,11 @@
     const before=state.enemyHp;
     state.enemyHp=Math.max(0,before-dmg);
     save.lifetime.bestDamage=Math.max(save.lifetime.bestDamage||0,dmg);
+    state.bestHit=Math.max(state.bestHit||0,dmg);
+    state.turnsTaken=(state.turnsTaken||0)+1;
+    if(dmg>=60) state.combo=(state.combo||0)+1; else state.combo=0;
+    state.maxCombo=Math.max(state.maxCombo||0,state.combo||0);
+    save.lifetime.maxCombo=Math.max(save.lifetime.maxCombo||0,state.maxCombo||0);
 
     // Momentum rewards repeated strong turns and creates visible escalation.
     if(dmg>=100) state.momentum=Math.min(4,(state.momentum||0)+2);
@@ -1342,7 +1433,7 @@
     }
 
     await wait(180);
-    const incoming=Math.max(1,currentAttack()-state.def);
+    const incoming=Math.max(1,currentAttack()-state.def-(state?.blessings?.guard||0));
     const armor=equippedItem("armor");
     const fatal=incoming>=state.hp;
 
@@ -1351,6 +1442,10 @@
       state.forceThirdSix=true;
       state.lastSkill="AEGIS";
       state.momentum=Math.min(4,(state.momentum||0)+1);
+    }else if(fatal && armor?.id==="fate_armor" && !state.fateArmorUsed){
+      state.fateArmorUsed=true;
+      state.hp-=Math.max(1,Math.floor(incoming*.5));
+      state.lastSkill="運命改変";
     }else if(fatal && armor?.id==="indomitable" && !state.indomitableUsed){
       state.indomitableUsed=true;
       state.hp=1;
@@ -1407,20 +1502,33 @@
   }
 
   const RUN_REWARDS={
-    heal:{icon:"❤️",name:"HP大回復",desc:"最大HPの35%回復",tag:"RECOVER",cls:"reward-heal"},
-    gold:{icon:"🪙",name:"GOLD JACKPOT",desc:"追加で80G獲得",tag:"BONUS",cls:"reward-gold"},
-    atk:{icon:"⚔️",name:"攻撃覚醒",desc:"このラン中 ATK +5",tag:"POWER",cls:"reward-atk"},
-    def:{icon:"🛡️",name:"防御覚醒",desc:"このラン中 DEF +3",tag:"GUARD",cls:"reward-def"},
-    hpmax:{icon:"💎",name:"生命覚醒",desc:"最大HP +15 & 15回復",tag:"VITAL",cls:"reward-vital"}
+    heal:{icon:"❤️",name:"生命の雫",desc:"最大HPの35%回復",tag:"RECOVER",cls:"reward-heal",tier:"NORMAL"},
+    gold:{icon:"🪙",name:"黄金の祝福",desc:"追加で80G獲得",tag:"BONUS",cls:"reward-gold",tier:"NORMAL"},
+    fury:{icon:"⚔️",name:"烈火の加護",desc:"このラン中 全攻撃 +6",tag:"FURY",cls:"reward-atk",tier:"RARE"},
+    guard:{icon:"🛡️",name:"鉄壁の加護",desc:"このラン中 被ダメージ -4",tag:"GUARD",cls:"reward-def",tier:"RARE"},
+    vital:{icon:"💎",name:"生命覚醒",desc:"最大HP +18 & HP18回復",tag:"VITAL",cls:"reward-vital",tier:"EPIC"},
+    fortune:{icon:"🎲",name:"幸運の骰子",desc:"③の出目が上振れする確率UP",tag:"FORTUNE",cls:"reward-fortune",tier:"EPIC"},
+    momentum:{icon:"🔥",name:"闘気解放",desc:"次戦をMOMENTUM HOTで開始",tag:"HOT START",cls:"reward-momentum",tier:"LEGENDARY"}
   };
 
+  function weightedRewardKeys(){
+    const entries=Object.entries(RUN_REWARDS), weight={NORMAL:30,RARE:20,EPIC:10,LEGENDARY:3}, picked=[];
+    while(picked.length<3){
+      const pool=entries.filter(([k])=>!picked.includes(k));
+      let roll=Math.random()*pool.reduce((s,[,r])=>s+(weight[r.tier]||1),0);
+      let chosen=pool[0][0];
+      for(const [k,r] of pool){ roll-=weight[r.tier]||1; if(roll<=0){chosen=k;break;} }
+      picked.push(chosen);
+    }
+    return picked;
+  }
+
   function renderRewardChoices(){
-    const keys=Object.keys(RUN_REWARDS).sort(()=>Math.random()-.5).slice(0,3);
-    const grid=$("#rewardChoices");
-    if(!grid) return;
-    grid.innerHTML=keys.map(k=>{
+    const grid=$("#rewardChoices"); if(!grid) return;
+    grid.innerHTML=weightedRewardKeys().map(k=>{
       const r=RUN_REWARDS[k];
-      return `<button class="reward ${r.cls}" data-reward="${k}">
+      return `<button class="reward ${r.cls} reward-tier-${r.tier.toLowerCase()}" data-reward="${k}">
+        <span class="reward-rarity-tag">${r.tier}</span>
         <span class="reward-icon">${r.icon}</span>
         <span class="reward-copy"><b>${r.name}</b><span>${r.desc}</span></span>
         <em>${r.tag}</em>
@@ -1429,16 +1537,18 @@
     grid.querySelectorAll("[data-reward]").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   }
 
-  function chooseReward(kind){
+  async function chooseReward(kind){
+    const chosen=document.querySelector(`[data-reward="${kind}"]`);
+    document.querySelectorAll("#rewardChoices .reward").forEach(x=>x.disabled=true);
+    chosen?.classList.add("reward-chosen"); FX.reward(); await wait(330);
     if(kind==="heal") state.hp=Math.min(state.maxHp,state.hp+Math.ceil(state.maxHp*.35));
     if(kind==="gold") state.runGold+=80;
-    if(kind==="atk") state.atk+=5;
-    if(kind==="def") state.def+=3;
-    if(kind==="hpmax"){ state.maxHp+=15; state.hp=Math.min(state.maxHp,state.hp+15); }
-
-    state.battle++;
-    loadEnemy();
-    show("battle");
+    if(kind==="fury") state.blessings.fury=(state.blessings.fury||0)+6;
+    if(kind==="guard") state.blessings.guard=(state.blessings.guard||0)+4;
+    if(kind==="vital"){ state.blessings.vital=(state.blessings.vital||0)+1; state.maxHp+=18; state.hp=Math.min(state.maxHp,state.hp+18); }
+    if(kind==="fortune") state.blessings.fortune=(state.blessings.fortune||0)+1;
+    if(kind==="momentum") state.momentum=Math.max(2,state.momentum||0);
+    state.battle++; loadEnemy(); show("battle");
   }
 
   function showBossBoxes(){
@@ -1455,15 +1565,21 @@
   function chooseBox(btn){
     if(!state) return;
 
-    // provisional equal rates; isolated here so probabilities can be tuned later.
-    const mult=[1,2,3][Math.floor(Math.random()*3)];
+    const r=Math.random();
+    const mult=r<.05?5:r<.18?3:r<.48?2:r<.72?1.5:1;
 
-    btn.classList.add("opened");
-    btn.innerHTML=`×${mult}<span>BONUS</span>`;
+    btn.classList.add("opened",mult>=3?"jackpot":"");
+    btn.innerHTML=`×${mult}<span>${mult===5?"JACKPOT!!":"BONUS"}</span>`;
+    if(mult>=3){
+      FX.jackpot?.(mult);
+      document.body.classList.add("boss-jackpot");
+      try{if(navigator.vibrate) navigator.vibrate(mult===5?[35,25,80,30,110]:[28,20,70])}catch(_){}
+      setTimeout(()=>document.body.classList.remove("boss-jackpot"),950);
+    }
     $$(".box").forEach(b=>b.disabled=true);
 
     const runGold=state.runGold;
-    const total=runGold*mult;
+    const total=Math.round(runGold*mult);
 
     save.gold+=total;
     save.clears[state.dungeonId]=(save.clears[state.dungeonId]||0)+1;
@@ -1472,15 +1588,26 @@
     const record=save.records[state.dungeonId] || {bestRunGold:0};
     record.bestRunGold=Math.max(record.bestRunGold,total);
     save.records[state.dungeonId]=record;
+    const hpRatio=state.hp/Math.max(1,state.maxHp), turns=state.turnsTaken||99;
+    const stars=(hpRatio>=.70 && turns<=12)?3:(hpRatio>=.35 && turns<=18)?2:1;
+    save.mastery[state.dungeonId]=Math.max(save.mastery[state.dungeonId]||0,stars);
     persist();
 
-    lastClear={runGold,mult,total,dungeonId:state.dungeonId};
+    lastClear={runGold,mult,total,dungeonId:state.dungeonId,stars,bestHit:state.bestHit||0,turns,hpRatio};
     $("#bossResult").innerHTML=`<strong>×${mult}</strong><span>${total}G GET!</span>`;
 
     setTimeout(()=>{
       $("#resultRunGold").textContent=`${runGold}G`;
       $("#resultMultiplier").textContent=`×${mult}`;
       $("#resultTotalGold").textContent=`${total}G`;
+      if($("#resultBestHit")) $("#resultBestHit").textContent=state.bestHit||0;
+      const grade=stars===3?"S":stars===2?"A":"B";
+      if($("#clearGradeLetter")) $("#clearGradeLetter").textContent=grade;
+      if($("#clearGradeText")) $("#clearGradeText").textContent=grade==="S"?"DOMINATING CLEAR":grade==="A"?"GREAT RUN":"HARD FOUGHT";
+      $("#clearGrade")?.setAttribute("data-grade",grade);
+      const nextUnlock={"1-1":"1-2","1-2":"1-3","1-3":"1-4"}[state.dungeonId];
+      const nextBtn=$("#resultNext");
+      if(nextBtn){ nextBtn.hidden=!nextUnlock; nextBtn.dataset.dungeon=nextUnlock||""; nextBtn.textContent=nextUnlock?`${nextUnlock}へ進む`:""; }
       show("runResult");
     },850);
   }
@@ -1488,9 +1615,17 @@
   function finishDefeat(){
     const earned=state.runGold;
     save.gold+=earned;
+    save.lifetime.deaths=(save.lifetime.deaths||0)+1;
     persist();
     $("#deathGold").textContent=`${earned}G`;
+    if($("#deathReached")) $("#deathReached").textContent=`BATTLE ${state.battle+1} / 5`;
+    if($("#deathBestHit")) $("#deathBestHit").textContent=state.bestHit||0;
     show("gameover");
+  }
+
+  function retryCurrentDungeon(){
+    selectedDungeonId=state?.dungeonId||selectedDungeonId;
+    startRun();
   }
 
   function returnHome(){
@@ -1584,6 +1719,12 @@
   });
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));
   $("#deathHome").addEventListener("click",returnHome);
+  $("#deathRetry")?.addEventListener("click",retryCurrentDungeon);
+  $("#resultRetry")?.addEventListener("click",retryCurrentDungeon);
+  $("#resultNext")?.addEventListener("click",()=>{
+    const id=$("#resultNext")?.dataset.dungeon;
+    if(id && save.unlocked.includes(id)){ selectedDungeonId=id; startRun(); }
+  });
   $("#resultHome").addEventListener("click",returnHome);
 
   recalcBase();

@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=2000">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=2000">
-  <link rel="stylesheet" href="./style.css?v=2000">
-  <title>Dice Dungeon RPG v2.0.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=2500">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=2500">
+  <link rel="stylesheet" href="./style.css?v=2500">
+  <title>Dice Dungeon RPG v2.5.0</title>
 </head>
 <body>
 <main id="app">
@@ -104,9 +104,19 @@
       <div><span>CLEAR</span><b id="clearCount">0</b></div>
       <div><span>BEST RUN GOLD</span><b id="bestRunGold">0G</b></div>
     </div>
+    <div class="legacy-panel">
+      <div class="legacy-head"><span>ADVENTURE RECORD</span><small>積み上げた戦績</small></div>
+      <div class="legacy-grid">
+        <div><span>KILLS</span><b id="recordKills">0</b></div>
+        <div><span>BOSS</span><b id="recordBossKills">0</b></div>
+        <div><span>BEST DMG</span><b id="recordBestDamage">0</b></div>
+        <div><span>MAX COMBO</span><b id="recordMaxCombo">0</b></div>
+      </div>
+      <div class="milestone"><span id="milestoneText">次の称号まで冒険を続けよう</span><i><b id="milestoneFill"></b></i></div>
+    </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v2.0.0 — ASCENSION UPDATE</p>
+    <p class="note">v2.5.0 — RE:BIRTH UPDATE</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -175,6 +185,7 @@
       <span>L <b>4%</b></span>
       <span>GOD <b>1%</b></span>
     </div>
+    <div id="gachaHistory" class="gacha-history"></div>
 
     <div id="gachaTheater" class="gacha-theater hidden" aria-live="polite">
       <div class="gacha-stage-glow"></div>
@@ -256,7 +267,7 @@
       </div>
 
       <div class="next">
-        <span>NEXT ATTACK</span>
+        <div class="intent-copy"><span>NEXT ATTACK</span><strong id="enemyIntent">攻撃</strong></div>
         <b id="nextAttack">8</b><em id="dangerLabel">WATCH</em>
       </div>
     </section>
@@ -311,6 +322,7 @@
 
     <footer class="battle-foot">
       <div class="mini-stat">ATK <b id="runAtk">12</b></div>
+      <div class="run-trait" id="runTrait">NO BLESSING</div>
       <div class="mini-stat">DEF <b id="runDef">4</b></div>
       <button id="attackBtn" class="primary attack roll-mode">サイコロを振る！</button>
     </footer>
@@ -333,6 +345,7 @@
       <p>3つから1つ。ラン獲得GOLDの倍率が決まる。</p>
     </div>
     <div class="boss-base-gold">RUN GOLD <b id="bossBaseGold">0G</b></div>
+    <div class="boss-jackpot-note">低確率で <b>×5 JACKPOT</b></div>
     <div class="boxes">
       <button class="box">🎁<span>BOX</span></button>
       <button class="box">🎁<span>BOX</span></button>
@@ -347,12 +360,18 @@
       <h2>1-1 ゴブリンの森 CLEAR!</h2>
       <p>獲得したGOLDを持ち帰った。</p>
     </div>
+    <div class="clear-grade" id="clearGrade">
+      <small>CLEAR RANK</small><strong id="clearGradeLetter">A</strong><span id="clearGradeText">GREAT RUN</span>
+    </div>
     <div class="run-result-card">
       <div><span>RUN GOLD</span><b id="resultRunGold">0G</b></div>
       <div><span>BONUS</span><b id="resultMultiplier">×1</b></div>
+      <div><span>BEST HIT</span><b id="resultBestHit">0</b></div>
       <div class="total"><span>GET GOLD</span><b id="resultTotalGold">0G</b></div>
     </div>
-    <button id="resultHome" class="primary">ホームへ</button>
+    <button id="resultNext" class="primary result-next">次のダンジョンへ</button>
+    <button id="resultRetry" class="secondary result-retry">同じダンジョンをもう一度</button>
+    <button id="resultHome" class="ghost-btn">ホームへ</button>
   </section>
 
   <section id="gameover" class="screen">
@@ -361,8 +380,14 @@
       <h2>ダンジョン失敗</h2>
       <p>倒れても、このランで獲得したGOLDはすべて持ち帰る。</p>
     </div>
-    <div class="result-card">獲得GOLD <b id="deathGold">0G</b></div>
-    <button id="deathHome" class="primary">ホームへ</button>
+    <div class="death-report">
+      <div><span>到達</span><b id="deathReached">BATTLE 1</b></div>
+      <div><span>獲得GOLD</span><b id="deathGold">0G</b></div>
+      <div><span>BEST HIT</span><b id="deathBestHit">0</b></div>
+    </div>
+    <div class="death-message"><b>DEATH IS PROGRESS.</b><span>持ち帰ったGOLDで強くなり、もう一度挑め。</span></div>
+    <button id="deathRetry" class="primary">もう一度挑戦</button>
+    <button id="deathHome" class="ghost-btn">ホームへ</button>
   </section>
   <section id="devMode" class="screen">
     <div class="screen-head"><button class="icon-btn" data-home>←</button><h2>DEVELOPER MODE</h2><span>TEST</span></div>
@@ -385,11 +410,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=2000"></script>
-<script src="./game.js?v=2000"></script>
+<script src="./effects.js?v=2500"></script>
+<script src="./game.js?v=2500"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2000").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2500").catch(console.error));
 }
 </script>
 </body>
