@@ -282,60 +282,61 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()}`;
     layer.innerHTML=`
-      <div class="p-screen-cut"></div>
-      <div class="p-white-core"></div>
-      <div class="p-black"></div>
-      <div class="p-crt-glow"></div>
-      <div class="p-crt-bar-h"></div>
-      <div class="p-crt-bar-v"></div>
-      <div class="p-crt-line-h"></div>
-      <div class="p-crt-line-v"></div>
-      <div class="p-crt-dot"></div>
-      <div class="p-grade">
-        <div class="p-grade-rays"></div>
-        <div class="p-grade-ring ring-a"></div>
-        <div class="p-grade-ring ring-b"></div>
+      <div class="ref-black"></div>
+      <div class="ref-white"></div>
+      <div class="ref-star">
+        <i class="star-h"></i><i class="star-v"></i><i class="star-core"></i>
+      </div>
+      <div class="ref-line-h"></div>
+      <div class="ref-line-v"></div>
+      <div class="ref-afterglow"></div>
+      <div class="ref-grade">
+        <div class="grade-rays"></div>
+        <div class="grade-ring a"></div><div class="grade-ring b"></div>
         <small>GRADE UP</small>
         <strong>${nextRarity}</strong>
         <em>昇 格</em>
       </div>`;
     document.body.appendChild(layer);
 
-    // 無予告で一瞬溜める
-    await wait(360);
+    // Reference: game screen remains untouched for most of the beat.
+    await wait(610);
 
-    // 電源断
-    layer.classList.add("power-cut");
+    // Frame 1: hard white discharge.
+    layer.classList.add("flash");
     FX.puchun();
-    try{if(navigator.vibrate) navigator.vibrate([8,18,30])}catch(_){}
+    try{if(navigator.vibrate) navigator.vibrate([10,14,26])}catch(_){}
+    await wait(72);
 
-    await wait(65);
+    // Frame 2: bright four-point CRT star.
+    layer.classList.add("star");
+    await wait(92);
 
-    // 中央の大発光
-    layer.classList.add("crt-bloom");
-    await wait(210);
+    // Frame 3: star collapses hard — horizontal dominates, vertical remains as a short spike.
+    layer.classList.add("cross");
+    await wait(92);
 
-    // 横と縦へ押し潰されて十字になる
-    layer.classList.add("crt-cross-bar");
-    await wait(165);
+    // Frame 4: only a razor line + tiny vertical center remains.
+    layer.classList.add("line");
+    await wait(115);
 
-    // 十字線へ細く収束
-    layer.classList.add("crt-cross-line");
+    // Frame 5: line fades almost completely.
+    layer.classList.add("fade");
     await wait(125);
 
-    // 十字の中心へ一気に収束
-    layer.classList.add("crt-dot");
-    await wait(110);
-
-    // 本当の暗闇
+    // Frame 6: dead black. Hold silence.
     layer.classList.add("dead");
-    await wait(nextRarity==="GOD"?390:285);
+    await wait(nextRarity==="GOD"?330:245);
 
-    // 暗闇から昇格告知
+    // Separate reward event after the CRT is fully dead.
     layer.classList.add("grade-on");
     FX.gradeUp();
-    try{if(navigator.vibrate) navigator.vibrate(nextRarity==="GOD"?[22,20,70,26,95]:[20,18,60])}catch(_){}
-    await wait(nextRarity==="GOD"?1120:880);
+    try{
+      if(navigator.vibrate){
+        navigator.vibrate(nextRarity==="GOD"?[22,18,65,20,88]:[18,16,54]);
+      }
+    }catch(_){}
+    await wait(nextRarity==="GOD"?1080:820);
 
     layer.classList.add("grade-out");
     await wait(180);

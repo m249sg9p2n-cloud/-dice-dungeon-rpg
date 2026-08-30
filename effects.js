@@ -132,22 +132,26 @@
   function puchun(){
     if(muted) return;
     const c=audio(), t=c.currentTime;
-    // Contact click
-    tone(125,.045,"square",.06,0,52);
-    // Short electrical scrape
-    noise(.055,.045,.018,900,5200);
-    // CRT pitch collapse: high buzz falls into a sub thump
+
+    // Tiny contact snap.
+    tone(155,.032,"square",.055,0,74);
+
+    // Electrical tear.
+    noise(.036,.052,.010,850,5200);
+
+    // CRT whine falls brutally into the floor.
     const o=c.createOscillator(), g=c.createGain();
     o.type="sawtooth";
-    o.frequency.setValueAtTime(390,t+.045);
-    o.frequency.exponentialRampToValueAtTime(46,t+.20);
-    g.gain.setValueAtTime(.0001,t+.045);
-    g.gain.exponentialRampToValueAtTime(.052,t+.055);
-    g.gain.exponentialRampToValueAtTime(.0001,t+.23);
-    o.connect(g); g.connect(c.destination); o.start(t+.045); o.stop(t+.24);
-    tone(68,.16,"sine",.10,.13,31);
-    // Tiny glassy shutoff tick, then silence
-    tone(980,.035,"triangle",.022,.205,540);
+    o.frequency.setValueAtTime(510,t+.018);
+    o.frequency.exponentialRampToValueAtTime(44,t+.135);
+    g.gain.setValueAtTime(.0001,t+.018);
+    g.gain.exponentialRampToValueAtTime(.060,t+.026);
+    g.gain.exponentialRampToValueAtTime(.0001,t+.145);
+    o.connect(g); g.connect(c.destination);
+    o.start(t+.018); o.stop(t+.15);
+
+    // Low "power gone" body. No musical tail.
+    tone(72,.115,"sine",.105,.075,30);
   }
   function gradeUp(){
     if(muted) return;

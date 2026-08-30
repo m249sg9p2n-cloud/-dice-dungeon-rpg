@@ -3019,3 +3019,248 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
   72%{height:54px;opacity:1}
   100%{height:4px;opacity:0}
 }
+
+
+/* ==========================================================
+   v1.3.0 REFERENCE CUT
+   Rebuilt from frame-by-frame reference timing.
+   No round halo, no giant vertical oval: four-point star -> line -> black.
+   ========================================================== */
+
+#gachaPuchun{
+  position:fixed;inset:0;z-index:1700;overflow:hidden;pointer-events:none;
+  background:transparent;
+}
+#gachaPuchun .ref-black,
+#gachaPuchun .ref-white{
+  position:absolute;inset:0;opacity:0;
+}
+#gachaPuchun .ref-black{background:#000}
+#gachaPuchun .ref-white{background:#fff}
+
+#gachaPuchun .ref-star,
+#gachaPuchun .ref-line-h,
+#gachaPuchun .ref-line-v,
+#gachaPuchun .ref-afterglow{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  opacity:0;
+}
+#gachaPuchun .ref-star{
+  width:100vw;height:70vh;
+}
+#gachaPuchun .ref-star i{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  display:block;
+}
+#gachaPuchun .star-h{
+  width:112vw;height:38vh;
+  background:
+    radial-gradient(ellipse at center,
+      #fff 0 5%,
+      rgba(255,255,255,.98) 8%,
+      rgba(255,255,255,.76) 18%,
+      rgba(255,255,255,.26) 36%,
+      transparent 68%);
+  filter:blur(5px);
+}
+#gachaPuchun .star-v{
+  width:42vw;height:78vh;
+  background:
+    radial-gradient(ellipse at center,
+      #fff 0 5%,
+      rgba(255,255,255,.96) 8%,
+      rgba(255,255,255,.69) 17%,
+      rgba(255,255,255,.20) 34%,
+      transparent 68%);
+  filter:blur(5px);
+}
+#gachaPuchun .star-core{
+  width:38px;height:38px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 12px #fff,0 0 28px #fff,0 0 54px rgba(255,255,255,.95);
+}
+#gachaPuchun .ref-line-h{
+  width:110vw;height:8px;
+  background:linear-gradient(90deg,transparent 0 2%,rgba(255,255,255,.20) 12%,#fff 44%,#fff 56%,rgba(255,255,255,.20) 88%,transparent 98% 100%);
+  box-shadow:0 0 7px #fff,0 0 18px rgba(255,255,255,.9),0 0 34px rgba(255,255,255,.5);
+  filter:blur(.3px);
+}
+#gachaPuchun .ref-line-v{
+  width:6px;height:33vh;
+  background:linear-gradient(180deg,transparent 0 5%,rgba(255,255,255,.20) 20%,#fff 43%,#fff 57%,rgba(255,255,255,.20) 80%,transparent 95% 100%);
+  box-shadow:0 0 6px #fff,0 0 15px rgba(255,255,255,.82);
+  filter:blur(.3px);
+}
+#gachaPuchun .ref-afterglow{
+  width:82vw;height:3px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.34) 22%,rgba(255,255,255,.62) 50%,rgba(255,255,255,.34) 78%,transparent);
+  box-shadow:0 0 9px rgba(255,255,255,.46);
+}
+
+/* hard discharge */
+#gachaPuchun.flash .ref-white{
+  animation:refFlash .072s linear forwards;
+}
+#gachaPuchun.flash .ref-black{
+  animation:refBlack .072s linear .055s forwards;
+}
+
+/* four-point star */
+#gachaPuchun.star .ref-star{
+  opacity:1;
+  animation:refStarIn .092s cubic-bezier(.12,.72,.18,1) forwards;
+}
+
+/* collapse star into cross */
+#gachaPuchun.cross .ref-star{
+  opacity:1;
+  animation:refStarCollapse .092s cubic-bezier(.76,.02,.92,.25) forwards;
+}
+#gachaPuchun.cross .ref-line-h,
+#gachaPuchun.cross .ref-line-v{
+  opacity:1;
+  animation:refCrossAppear .092s ease-out forwards;
+}
+
+/* razor line */
+#gachaPuchun.line .ref-star{display:none}
+#gachaPuchun.line .ref-line-h{
+  opacity:1;
+  animation:refHorizontalHold .115s ease-out forwards;
+}
+#gachaPuchun.line .ref-line-v{
+  opacity:1;
+  animation:refVerticalShrink .115s cubic-bezier(.75,.03,.9,.28) forwards;
+}
+
+/* faint residual line */
+#gachaPuchun.fade .ref-line-h,
+#gachaPuchun.fade .ref-line-v{display:none}
+#gachaPuchun.fade .ref-afterglow{
+  opacity:1;
+  animation:refAfterglow .125s ease-out forwards;
+}
+
+#gachaPuchun.dead .ref-black{opacity:1}
+#gachaPuchun.dead .ref-white,
+#gachaPuchun.dead .ref-star,
+#gachaPuchun.dead .ref-line-h,
+#gachaPuchun.dead .ref-line-v,
+#gachaPuchun.dead .ref-afterglow{display:none}
+
+/* grade-up stays completely separate from the puchun */
+#gachaPuchun .ref-grade{
+  position:absolute;inset:0;
+  display:grid;place-content:center;text-align:center;
+  opacity:0;
+}
+#gachaPuchun .ref-grade small{
+  font-size:13px;font-weight:1000;letter-spacing:.38em;color:#c6ae66;
+}
+#gachaPuchun .ref-grade strong{
+  display:block;margin-top:5px;font-size:64px;line-height:1;
+  font-weight:1000;font-style:italic;color:#ffd85c;
+  -webkit-text-stroke:2px #6a2a0d;
+  text-shadow:0 0 14px #ffc231,0 0 35px #ff7624,0 0 60px rgba(231,64,29,.76);
+}
+#gachaPuchun .ref-grade em{
+  display:block;margin-top:10px;font-style:normal;font-size:14px;font-weight:1000;letter-spacing:.35em;color:#efd37e;
+}
+#gachaPuchun .grade-rays{
+  position:absolute;left:50%;top:50%;width:130vw;height:130vw;
+  transform:translate(-50%,-50%);
+  background:repeating-conic-gradient(from 0deg,transparent 0deg 7deg,rgba(255,187,51,.15) 8deg 9deg,transparent 10deg 16deg);
+  animation:refGradeSpin 2.2s linear infinite;
+}
+#gachaPuchun .grade-ring{
+  position:absolute;left:50%;top:50%;width:52px;height:52px;border:3px solid #ffc63e;border-radius:50%;
+  transform:translate(-50%,-50%) scale(.2);opacity:0;
+}
+#gachaPuchun .grade-ring.b{animation-delay:90ms!important}
+#gachaPuchun.grade-on .ref-grade{
+  animation:refGradeIn .78s cubic-bezier(.06,.84,.12,1) forwards;
+}
+#gachaPuchun.grade-on .grade-ring{
+  animation:refGradeRing .72s ease-out forwards;
+}
+#gachaPuchun.puchun-rare .ref-grade strong{color:#6dbdff;-webkit-text-stroke-color:#153b64;text-shadow:0 0 15px #55aaff,0 0 34px #2866ca}
+#gachaPuchun.puchun-epic .ref-grade strong{color:#d789ff;-webkit-text-stroke-color:#4a1a67;text-shadow:0 0 15px #c35fff,0 0 36px #722bb7}
+#gachaPuchun.puchun-legendary .ref-grade strong{color:#ffc64d;text-shadow:0 0 15px #ffae29,0 0 40px #ff6022}
+#gachaPuchun.puchun-god .ref-grade strong{font-size:74px;color:#fff174;text-shadow:0 0 18px #ffe23f,0 0 48px #ff9e23,0 0 84px #ed4e2a}
+#gachaPuchun.grade-out{animation:refGradeOut .18s ease-in forwards}
+
+@keyframes refFlash{
+  0%{opacity:0}
+  14%{opacity:1}
+  100%{opacity:1}
+}
+@keyframes refBlack{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes refStarIn{
+  0%{opacity:.2;transform:translate(-50%,-50%) scale(.34)}
+  32%{opacity:1;transform:translate(-50%,-50%) scale(1.10)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+@keyframes refStarCollapse{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1,1)}
+  100%{opacity:.74;transform:translate(-50%,-50%) scale(1.06,.22)}
+}
+@keyframes refCrossAppear{
+  0%{opacity:0;filter:blur(3px)}
+  32%{opacity:1}
+  100%{opacity:1;filter:blur(.25px)}
+}
+@keyframes refHorizontalHold{
+  0%{height:8px;opacity:1;transform:translate(-50%,-50%) scaleX(1)}
+  100%{height:3px;opacity:.88;transform:translate(-50%,-50%) scaleX(.88)}
+}
+@keyframes refVerticalShrink{
+  0%{height:33vh;opacity:1}
+  70%{height:36px;opacity:.92}
+  100%{height:4px;opacity:0}
+}
+@keyframes refAfterglow{
+  0%{opacity:.72;transform:translate(-50%,-50%) scaleX(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scaleX(.82)}
+}
+@keyframes refGradeIn{
+  0%{opacity:0;transform:scale(.50) rotate(-4deg)}
+  24%{opacity:1;transform:scale(1.19) rotate(1deg)}
+  50%{transform:scale(.93)}
+  72%{transform:scale(1.04)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes refGradeRing{
+  0%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(13)}
+}
+@keyframes refGradeSpin{to{transform:translate(-50%,-50%) rotate(24deg)}}
+@keyframes refGradeOut{to{opacity:0}}
+
+/* v1.3.0 reward polish */
+#gachaRewardFull::before{
+  content:"";position:absolute;inset:-20%;
+  background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.02) 43%,rgba(255,240,170,.22) 49%,rgba(255,255,255,.03) 55%,transparent 62%);
+  transform:translateX(-55%);
+  animation:rewardSweep 1.15s cubic-bezier(.2,.75,.22,1) .18s both;
+  pointer-events:none;z-index:3;
+}
+#gachaRewardFull.reward-legendary .reward-content h1,
+#gachaRewardFull.reward-god .reward-content h1{
+  letter-spacing:.015em;
+}
+#gachaRewardFull.reward-god .reward-rarity{
+  font-size:20px;color:#fff27c;text-shadow:0 0 14px #ffe343,0 0 30px #ff9b27,0 0 52px #d64fff;
+}
+#gachaRewardFull.reward-god .reward-new{
+  background:#5a250db8;border-color:#ffe36c;color:#fff7bd;
+}
+@keyframes rewardSweep{
+  0%{transform:translateX(-55%) rotate(1deg);opacity:0}
+  20%{opacity:1}
+  100%{transform:translateX(55%) rotate(1deg);opacity:0}
+}
