@@ -391,11 +391,6 @@
       }
     });
 
-    const ready=state.nextDie===0 && !busy;
-    $("#pairRollBtn").disabled=!ready;
-    $("#pairRollBtn").classList.toggle("locked",!ready);
-    $("#pairRollBtn").classList.toggle("ready",ready);
-
     $("#multRollBtn").classList.toggle("auto-wait",busy && state.nextDie===2);
     $("#multRollBtn").classList.add("locked");
     document.body.classList.toggle("mult-dim",state.nextDie===2 && busy);
@@ -451,6 +446,9 @@
       ghost.style.width=`${Math.max(0,curPct-remPct)}%`;
       hpbar.classList.toggle("kill-preview",remain===0);
       $("#attackBtn").disabled=busy;
+      $("#attackBtn").textContent="攻撃する！";
+      $("#attackBtn").classList.remove("roll-mode");
+      $("#attackBtn").classList.add("attack-mode");
       $("#instruction").textContent="ダメージ確定！攻撃！";
     }else{
       forecast.textContent="";
@@ -458,8 +456,11 @@
       ghost.style.left="100%";
       ghost.style.width="0";
       hpbar.classList.remove("kill-preview");
-      $("#attackBtn").disabled=true;
-      if(state.nextDie===0) $("#instruction").textContent="タップしてROLL！";
+      $("#attackBtn").disabled=busy;
+      $("#attackBtn").textContent=busy ? "ROLLING…" : "サイコロを振る！";
+      $("#attackBtn").classList.add("roll-mode");
+      $("#attackBtn").classList.remove("attack-mode");
+      if(state.nextDie===0) $("#instruction").textContent="下のボタンでROLL！";
       else if(state.nextDie===2) $("#instruction").textContent="倍率チャージ…";
       else $("#instruction").textContent="ROLLING…";
     }
@@ -532,6 +533,45 @@
     return value;
   }
 
+  function faceColorClass(value){
+    return `face-${Math.max(1,Math.min(6,value||1))}`;
+  }
+
+  async function showEquationImpact(step, a, b=null, c=null){
+    const box=$("#equationImpact");
+    const text=$("#equationText");
+    const sub=$("#equationSub");
+
+    let markup="";
+    if(step===1){
+      markup=`<span class="eq-num ${faceColorClass(a)}">${a}</span><span class="eq-bang">!</span>`;
+      sub.textContent="FIRST";
+    }else if(step===2){
+      markup=`<span class="eq-num ${faceColorClass(a)}">${a}</span><span class="eq-op">＋</span><span class="eq-num ${faceColorClass(b)}">${b}</span><span class="eq-bang">!</span>`;
+      sub.textContent="SECOND";
+    }else{
+      markup=`<span class="eq-num ${faceColorClass(a)}">${a}</span><span class="eq-op">＋</span><span class="eq-num ${faceColorClass(b)}">${b}</span><span class="eq-op mult">×</span><span class="eq-num ${faceColorClass(c)} hot">${c}</span><span class="eq-bang">!</span>`;
+      sub.textContent=`( ${a} + ${b} ) × ${c}`;
+    }
+
+    text.innerHTML=markup;
+    box.className=`equation-impact show step-${step} ${step===3?faceColorClass(c):faceColorClass(step===1?a:b)}`;
+
+    document.body.classList.remove("eq-hit-1","eq-hit-2","eq-hit-3");
+    void document.body.offsetWidth;
+    document.body.classList.add(`eq-hit-${step}`);
+
+    try{
+      if(navigator.vibrate){
+        navigator.vibrate(step===3 ? [24,18,42] : step===2 ? 24 : 16);
+      }
+    }catch(_){}
+
+    await wait(step===3 ? 520 : 330);
+    box.className="equation-impact";
+    document.body.classList.remove(`eq-hit-${step}`);
+  }
+
   function multiplierTone(value){
     return {
       1:{cls:"impact-1",label:"×1"},
@@ -579,51 +619,47 @@
     busy=true;
     state.dice=[0,0,0];
     renderBattle();
-    $("#instruction").textContent="ROLL!";
 
     const dice=$$(".die");
 
-    // First tap rolls ① and ② automatically.
-    const [a,b]=await Promise.all([
-      animateOneDie(0,dice[0],false,0),
-      animateOneDie(1,dice[1],false,105)
-    ]);
+    $("#instruction").textContent="1st ROLL";
+    const a=await animateOneDie(0,dice[0],false,0);
+    await showEquationImpact(1,a);
+
+    await wait(90);
+    $("#instruction").textContent="2nd ROLL";
+    const b=await animateOneDie(1,dice[1],false,0);
+    await showEquationImpact(2,a,b);
 
     state.nextDie=2;
-
     const sum=$("#sumBurst");
     sum.textContent=`${a} + ${b} = ${a+b}`;
     sum.className="sum-burst show";
-    document.body.classList.add("pair-impact");
     FX.attack(false);
+    setTimeout(()=>sum.className="sum-burst",520);
 
-    await wait(210);
-    document.body.classList.remove("pair-impact");
-    setTimeout(()=>sum.className="sum-burst",500);
-
-    // The third die is automatic, but gets a deliberate suspense pause.
+    // The multiplier gets its own suspense beat.
     $("#instruction").textContent="倍率チャージ…";
     $("#multRollBtn").classList.add("charge","auto-wait");
     document.body.classList.add("mult-focus","mult-charge-screen");
-
-    await wait(420);
+    await wait(480);
 
     $("#multRollBtn").classList.remove("charge");
-    $("#instruction").textContent="倍率抽選！";
-
-    const value=await animateOneDie(2,dice[2],true,0);
+    $("#instruction").textContent="MULTIPLIER!";
+    const c=await animateOneDie(2,dice[2],true,0);
     state.nextDie=3;
 
     $("#multRollBtn").classList.remove("auto-wait");
     document.body.classList.remove("mult-charge-screen");
 
     const multFx=$("#multFx");
-    multFx.textContent=`×${value}`;
-    multFx.className=`show-mult${value===6?" x6":""}`;
-    FX.multiplier(value);
+    multFx.textContent=`×${c}`;
+    multFx.className=`show-mult${c===6?" x6":""}`;
+    FX.multiplier(c);
 
-    // Large, color-coded "DEN!" result hit.
-    await showRollImpact(value);
+    // Build the entire formula full-screen as the final die locks.
+    await showEquationImpact(3,a,b,c);
+    await showRollImpact(c);
 
     if(state.dice.every(v=>v===6)){
       await wait(80);
@@ -637,7 +673,6 @@
 
     multFx.className="";
     document.body.classList.remove("mult-focus");
-
     busy=false;
     renderBattle();
   }
@@ -790,8 +825,11 @@
   $$(".equip-button").forEach(b=>b.addEventListener("click",()=>openEquipment(b.dataset.slot)));
   $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#startBtn").addEventListener("click",startRun);
-  $("#pairRollBtn").addEventListener("click",rollPair);
-  $("#attackBtn").addEventListener("click",attack);
+  $("#attackBtn").addEventListener("click",()=>{
+    if(busy) return;
+    if(calcDamage()===null) rollPair();
+    else attack();
+  });
   $$(".reward").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));
   $("#deathHome").addEventListener("click",returnHome);

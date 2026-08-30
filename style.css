@@ -869,3 +869,172 @@ body.critical-flash::after{
   animation:criticalFlash .32s ease-out both;
 }
 @keyframes criticalFlash{0%{opacity:0}25%{opacity:.8}100%{opacity:0}}
+
+
+/* ===== v0.7.3 single action button + full-screen die reveals ===== */
+
+/* Dice are visual only; the thumb stays on one bottom button. */
+.display-only,
+.auto-zone{
+  pointer-events:none!important;
+}
+#attackBtn{
+  position:relative;
+  overflow:hidden;
+  transition:transform .12s ease, box-shadow .18s ease, background .18s ease;
+}
+#attackBtn.roll-mode{
+  background:linear-gradient(180deg,#e8bd36,#9d6214);
+  color:#161005;
+  border-color:#f6d66b;
+  box-shadow:0 0 0 1px #ffd96b44,0 7px 20px #d18d2630,inset 0 1px #fff4b8;
+  text-shadow:0 1px #fff3a755;
+}
+#attackBtn.roll-mode::before{
+  content:"🎲";
+  margin-right:7px;
+}
+#attackBtn.attack-mode{
+  background:linear-gradient(180deg,#d9253b,#861624);
+  border-color:#ff5b6e;
+  box-shadow:0 0 0 1px #ff5a6a38,0 8px 24px #d2173534,inset 0 1px #ff9ba5;
+}
+#attackBtn.attack-mode::before{
+  content:"⚔";
+  margin-right:7px;
+}
+#attackBtn:not(:disabled):active{transform:scale(.975)}
+
+/* Full-screen arithmetic reveal. */
+.equation-impact{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:86;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  overflow:hidden;
+  background:radial-gradient(circle at center,#17202c88 0%,#06080bc7 52%,#030405e8 100%);
+  backdrop-filter:blur(1.2px);
+}
+.equation-impact.show{display:flex}
+.eq-glow{
+  position:absolute;
+  width:38vw;height:38vw;
+  border-radius:50%;
+  background:currentColor;
+  opacity:.12;
+  filter:blur(28px);
+  animation:eqGlow .42s ease-out both;
+}
+.equation-text{
+  position:relative;
+  z-index:3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:min(3vw,14px);
+  width:96vw;
+  padding:0 2vw;
+  white-space:nowrap;
+  font-family:system-ui,-apple-system,sans-serif;
+  font-weight:1000;
+  font-style:italic;
+  line-height:.9;
+  letter-spacing:-.05em;
+  transform:skewX(-3deg);
+}
+.eq-num{
+  display:inline-block;
+  font-size:clamp(112px,36vw,176px);
+  -webkit-text-stroke:3px rgba(255,255,255,.62);
+  text-shadow:0 7px 0 #0009,0 0 16px currentColor,0 0 45px currentColor;
+  animation:eqNumPop .34s cubic-bezier(.08,.92,.18,1.38) both;
+}
+.step-2 .eq-num{font-size:clamp(88px,27vw,136px)}
+.step-3 .eq-num{font-size:clamp(67px,20.5vw,108px)}
+.step-3 .eq-num.hot{
+  transform:scale(1.12);
+  text-shadow:0 7px 0 #0009,0 0 20px currentColor,0 0 58px currentColor;
+}
+.eq-op{
+  display:inline-block;
+  font-size:clamp(54px,15vw,84px);
+  color:#fff3cf;
+  -webkit-text-stroke:1px #855d12;
+  text-shadow:0 4px 0 #0008,0 0 18px #ffcc5f;
+  animation:eqOpPop .28s .05s cubic-bezier(.1,.9,.2,1.25) both;
+}
+.eq-op.mult{color:#ffd558}
+.eq-bang{
+  font-size:clamp(46px,12vw,70px);
+  color:#fff;
+  text-shadow:0 3px 0 #000,0 0 14px #fff;
+  animation:eqBang .25s .08s ease-out both;
+}
+.equation-sub{
+  position:absolute;
+  z-index:4;
+  top:64%;
+  left:50%;
+  transform:translateX(-50%);
+  font-weight:1000;
+  font-size:12px;
+  letter-spacing:.22em;
+  color:#f4df9a;
+  text-shadow:0 2px 0 #000,0 0 12px #dca930;
+  animation:eqSub .34s .08s ease-out both;
+}
+
+/* Face colors: obvious at a glance, with higher values feeling hotter. */
+.eq-num.face-1,.equation-impact.face-1{color:#e4e8ee}
+.eq-num.face-2,.equation-impact.face-2{color:#67cbff}
+.eq-num.face-3,.equation-impact.face-3{color:#6ded91}
+.eq-num.face-4,.equation-impact.face-4{color:#c983ff}
+.eq-num.face-5,.equation-impact.face-5{color:#ff7841}
+.eq-num.face-6,.equation-impact.face-6{color:#ffd94c}
+
+@keyframes eqNumPop{
+  0%{opacity:0;transform:scale(2.2) rotate(-9deg);filter:blur(5px)}
+  38%{opacity:1;transform:scale(.78) rotate(2deg);filter:blur(0)}
+  62%{transform:scale(1.12) rotate(-1deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+@keyframes eqOpPop{
+  0%{opacity:0;transform:scale(2)}
+  60%{opacity:1;transform:scale(.86)}
+  100%{transform:scale(1)}
+}
+@keyframes eqBang{
+  0%{opacity:0;transform:scale(2.5) rotate(14deg)}
+  100%{opacity:1;transform:scale(1) rotate(-4deg)}
+}
+@keyframes eqGlow{
+  from{transform:scale(.2);opacity:.3}
+  to{transform:scale(3.7);opacity:0}
+}
+@keyframes eqSub{
+  from{opacity:0;transform:translate(-50%,14px)}
+  to{opacity:1;transform:translate(-50%,0)}
+}
+
+/* Every lock-in gets a visible "DON" screen reaction. */
+body.eq-hit-1 #battle{animation:eqHit1 .28s ease}
+body.eq-hit-2 #battle{animation:eqHit2 .3s ease}
+body.eq-hit-3 #battle{animation:eqHit3 .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes eqHit1{
+  0%,100%{transform:translate(0) scale(1)}
+  45%{transform:translate(-2px,1px) scale(.992)}
+}
+@keyframes eqHit2{
+  0%,100%{transform:translate(0) scale(1)}
+  30%{transform:translate(3px,-1px) scale(.985)}
+  65%{transform:translate(-2px,1px) scale(1.005)}
+}
+@keyframes eqHit3{
+  0%,100%{transform:translate(0) scale(1)}
+  18%{transform:translate(-4px,1px) scale(.975)}
+  38%{transform:translate(5px,-2px) scale(1.012)}
+  60%{transform:translate(-3px,1px)}
+}
