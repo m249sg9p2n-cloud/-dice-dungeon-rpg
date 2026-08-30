@@ -2522,3 +2522,10 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 .dev-panel{display:grid;gap:10px;padding:12px}.dev-warning{padding:12px;border:1px solid #4aa7ff66;border-radius:12px;background:#12304c66;color:#75c5ff;font-weight:1000;text-align:center}
 .dev-action{min-height:52px;border:1px solid #4f7196;border-radius:12px;background:linear-gradient(180deg,#19314b,#0e1d2c);color:#dff2ff;font-weight:1000;font-size:15px}
 .dev-action:active{transform:scale(.98);filter:brightness(1.2)}
+
+/* v1.0.1 developer mode activation fix */
+#devTapTarget{position:relative;z-index:3;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#devTapTarget *{pointer-events:none}
+#devMode.screen{position:fixed;inset:0;z-index:900;overflow:auto;background:radial-gradient(circle at 50% 0,#14283b,#070a0f 48%)}
+#devMode.screen.hidden{display:none!important}
+#devMode .screen-head{position:sticky;top:0;z-index:2}

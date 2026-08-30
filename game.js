@@ -1176,11 +1176,26 @@
     show("home");
   }
 
-  let devTapCount=0, devTapTimer=null;
+  let devTapCount=0, devTapTimer=null, devHoldTimer=null;
+  function openDevMode(){
+    devTapCount=0;
+    clearTimeout(devTapTimer);
+    clearTimeout(devHoldTimer);
+    try{ if(navigator.vibrate) navigator.vibrate([35,30,80]); }catch(_){}
+    show("devMode");
+  }
   function devTap(){
-    devTapCount++; clearTimeout(devTapTimer);
-    devTapTimer=setTimeout(()=>devTapCount=0,4000);
-    if(devTapCount>=10){ devTapCount=0; show("devMode"); }
+    devTapCount++;
+    clearTimeout(devTapTimer);
+    devTapTimer=setTimeout(()=>devTapCount=0,5000);
+    if(devTapCount>=10) openDevMode();
+  }
+  function devHoldStart(){
+    clearTimeout(devHoldTimer);
+    devHoldTimer=setTimeout(openDevMode,2000);
+  }
+  function devHoldCancel(){
+    clearTimeout(devHoldTimer);
   }
   function giveAllItems(){
     for(const slot of ["weapon","armor"]){
@@ -1212,7 +1227,16 @@
   $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
   $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
   $("#gachaChest")?.addEventListener("click",gachaChestTap);
-  $("#devTapTarget")?.addEventListener("click",devTap);
+  const devTarget=$("#devTapTarget");
+  if(devTarget){
+    devTarget.addEventListener("click",devTap);
+    devTarget.addEventListener("touchstart",devHoldStart,{passive:true});
+    devTarget.addEventListener("touchend",devHoldCancel,{passive:true});
+    devTarget.addEventListener("touchcancel",devHoldCancel,{passive:true});
+    devTarget.addEventListener("pointerdown",devHoldStart);
+    devTarget.addEventListener("pointerup",devHoldCancel);
+    devTarget.addEventListener("pointercancel",devHoldCancel);
+  }
   $$(".dev-action").forEach(b=>b.addEventListener("click",()=>devAction(b.dataset.dev)));
   $$(".dungeon-card[data-dungeon]").forEach(card=>card.addEventListener("click",()=>{
     const id=card.dataset.dungeon;

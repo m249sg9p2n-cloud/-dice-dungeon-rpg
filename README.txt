@@ -7,3 +7,10 @@ Dice Dungeon RPG v1.0.0 — HARDCORE
 ・隠し開発者モード: ホーム「DICE DUNGEON」を4秒以内に10回タップ
   +10,000G / 全ステージ解放 / 全装備入手 / GODガチャ即テスト
 ・未使用リアルgoblin.pngは削除済み
+
+v1.0.1 DEV FIX
+- 開発者モード起動を修正
+- DICE DUNGEONを5秒以内に10回タップで起動
+- さらに2秒長押しでも起動（テスト時の保険）
+- iPhone Safari向け touch/pointer 両対応
+- 起動時に振動
