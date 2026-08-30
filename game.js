@@ -252,11 +252,14 @@
     gachaBusy=true;
     const chest=$("#gachaChest");
     chest?.classList.remove("ready");
-    chest?.classList.add("rattle");
+    chest?.classList.add("rattle","overdrive");
+    $("#gachaTheater")?.classList.add("tension");
+    FX.chestTension(pendingGacha.currentRarity);
     FX.chestRattle();
-    try{if(navigator.vibrate) navigator.vibrate([16,24,16])}catch(_){}
-    await wait(420);
+    try{if(navigator.vibrate) navigator.vibrate([16,24,16,30,18])}catch(_){}
+    await wait(520);
     chest?.classList.remove("rattle");
+    $("#gachaTheater")?.classList.remove("tension");
 
     const cur=RARITY_ORDER.indexOf(pendingGacha.currentRarity);
     const fin=RARITY_ORDER.indexOf(pendingGacha.finalRarity);
@@ -265,8 +268,10 @@
       await playGachaPuchun(RARITY_ORDER[cur+1]);
       pendingGacha.currentRarity=RARITY_ORDER[cur+1];
       setChestRarity(pendingGacha.currentRarity);
-      $("#gachaPrompt").textContent="昇格！ もう一度CHESTをタップ";
-      chest?.classList.add("ready","graded");
+      $("#gachaPrompt").textContent="昇格！ まだ終わらない…";
+      chest?.classList.add("ready","graded","overdrive");
+      $("#gachaTheater")?.classList.add("grade-celebrate");
+      setTimeout(()=>$("#gachaTheater")?.classList.remove("grade-celebrate"),700);
       gachaBusy=false;
       return;
     }
@@ -282,61 +287,65 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()}`;
     layer.innerHTML=`
-      <div class="ref-black"></div>
-      <div class="ref-white"></div>
-      <div class="ref-star">
-        <i class="star-h"></i><i class="star-v"></i><i class="star-core"></i>
+      <div class="v14-white"></div>
+      <div class="v14-black"></div>
+      <div class="v14-cross">
+        <i class="cross-h"></i>
+        <i class="cross-v"></i>
+        <i class="cross-core"></i>
       </div>
-      <div class="ref-line-h"></div>
-      <div class="ref-line-v"></div>
-      <div class="ref-afterglow"></div>
-      <div class="ref-grade">
+      <div class="v14-small-cross">
+        <i class="small-h"></i>
+        <i class="small-v"></i>
+        <i class="small-core"></i>
+      </div>
+      <div class="v14-last-dot"></div>
+      <div class="v14-after-line"></div>
+
+      <div class="v14-grade">
         <div class="grade-rays"></div>
-        <div class="grade-ring a"></div><div class="grade-ring b"></div>
+        <div class="grade-hex"></div>
+        <div class="grade-ring a"></div>
+        <div class="grade-ring b"></div>
         <small>GRADE UP</small>
         <strong>${nextRarity}</strong>
         <em>昇 格</em>
       </div>`;
+
     document.body.appendChild(layer);
 
-    // Reference: game screen remains untouched for most of the beat.
-    await wait(610);
-
-    // Frame 1: hard white discharge.
-    layer.classList.add("flash");
+    // First game's successful feel: no warning, then an unmistakable white cut.
+    await wait(420);
+    layer.classList.add("white-cut");
     FX.puchun();
-    try{if(navigator.vibrate) navigator.vibrate([10,14,26])}catch(_){}
-    await wait(72);
+    try{if(navigator.vibrate) navigator.vibrate([10,14,30])}catch(_){}
+    await wait(78);
 
-    // Frame 2: bright four-point CRT star.
-    layer.classList.add("star");
-    await wait(92);
+    // Full black + large visible cross. Hold long enough for iPhone to actually show it.
+    layer.classList.add("big-cross");
+    await wait(185);
 
-    // Frame 3: star collapses hard — horizontal dominates, vertical remains as a short spike.
-    layer.classList.add("cross");
-    await wait(92);
+    // Shrink to an unmistakable small cross.
+    layer.classList.add("small-cross");
+    await wait(150);
 
-    // Frame 4: only a razor line + tiny vertical center remains.
-    layer.classList.add("line");
-    await wait(115);
+    // Collapse to center point with a short horizontal afterglow.
+    layer.classList.add("point");
+    await wait(155);
 
-    // Frame 5: line fades almost completely.
-    layer.classList.add("fade");
-    await wait(125);
-
-    // Frame 6: dead black. Hold silence.
+    // Dead black, real silence.
     layer.classList.add("dead");
-    await wait(nextRarity==="GOD"?330:245);
+    await wait(nextRarity==="GOD"?360:260);
 
-    // Separate reward event after the CRT is fully dead.
+    // Grade-up is a separate reward beat.
     layer.classList.add("grade-on");
     FX.gradeUp();
     try{
       if(navigator.vibrate){
-        navigator.vibrate(nextRarity==="GOD"?[22,18,65,20,88]:[18,16,54]);
+        navigator.vibrate(nextRarity==="GOD"?[24,20,70,26,95]:[20,18,60]);
       }
     }catch(_){}
-    await wait(nextRarity==="GOD"?1080:820);
+    await wait(nextRarity==="GOD"?1180:900);
 
     layer.classList.add("grade-out");
     await wait(180);
@@ -373,6 +382,7 @@
       <div class="reward-rings"><b></b><b></b><b></b></div>
       <div class="reward-content">
         <div class="reward-rarity">${finalRarity}</div>
+        <div class="reward-rank-copy">${finalRarity==="GOD"?"DIVINE ACQUISITION":finalRarity==="LEGENDARY"?"LEGEND DESCENDS":finalRarity==="EPIC"?"EPIC DROP":"ITEM GET"}</div>
         <div class="reward-new">${stored.isDuplicate?`DUPLICATE ×${stored.count}`:"NEW!"}</div>
         <div class="reward-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
         <h1>${result.item.name}</h1>
@@ -384,6 +394,7 @@
 
     await wait(40);
     layer.classList.add("show");
+    FX.chestBurst(finalRarity);
     try{
       if(navigator.vibrate){
         navigator.vibrate(finalRarity==="GOD" ? [28,18,70,25,90] :

@@ -3264,3 +3264,217 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
   20%{opacity:1}
   100%{transform:translateX(55%) rotate(1deg);opacity:0}
 }
+
+
+/* ==========================================================
+   v1.4.0 GACHA OVERDRIVE
+   First-game successful puchun: WHITE -> BIG CROSS -> SMALL CROSS
+   -> DOT + SHORT AFTERLINE -> BLACK -> GRADE UP.
+   ========================================================== */
+
+#gachaPuchun{
+  position:fixed;inset:0;z-index:1800;overflow:hidden;pointer-events:none;
+  background:transparent;
+}
+#gachaPuchun .v14-white,
+#gachaPuchun .v14-black{
+  position:absolute;inset:0;opacity:0;
+}
+#gachaPuchun .v14-white{background:#fff}
+#gachaPuchun .v14-black{background:#000}
+
+#gachaPuchun .v14-cross,
+#gachaPuchun .v14-small-cross,
+#gachaPuchun .v14-last-dot,
+#gachaPuchun .v14-after-line{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;
+}
+#gachaPuchun .v14-cross{width:100vw;height:100vh}
+#gachaPuchun .v14-cross i,
+#gachaPuchun .v14-small-cross i{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:block;
+}
+
+/* Large cross: horizontal is long, vertical is clearly visible, center is violently bright. */
+#gachaPuchun .cross-h{
+  width:106vw;height:9px;
+  background:linear-gradient(90deg,transparent 0 2%,rgba(255,255,255,.26) 12%,#fff 40%,#fff 60%,rgba(255,255,255,.26) 88%,transparent 98%);
+  box-shadow:0 0 8px #fff,0 0 18px #fff,0 0 34px rgba(255,255,255,.85);
+}
+#gachaPuchun .cross-v{
+  width:9px;height:68vh;
+  background:linear-gradient(180deg,transparent 0 4%,rgba(255,255,255,.25) 15%,#fff 39%,#fff 61%,rgba(255,255,255,.25) 85%,transparent 96%);
+  box-shadow:0 0 8px #fff,0 0 18px #fff,0 0 34px rgba(255,255,255,.85);
+}
+#gachaPuchun .cross-core{
+  width:46px;height:46px;border-radius:50%;background:#fff;
+  box-shadow:0 0 10px #fff,0 0 24px #fff,0 0 52px #fff;
+}
+
+/* Small cross stage. */
+#gachaPuchun .v14-small-cross{width:180px;height:180px}
+#gachaPuchun .small-h{
+  width:150px;height:5px;background:#fff;
+  box-shadow:0 0 7px #fff,0 0 15px rgba(255,255,255,.85);
+}
+#gachaPuchun .small-v{
+  width:5px;height:110px;background:#fff;
+  box-shadow:0 0 7px #fff,0 0 15px rgba(255,255,255,.85);
+}
+#gachaPuchun .small-core{
+  width:24px;height:24px;border-radius:50%;background:#fff;
+  box-shadow:0 0 10px #fff,0 0 22px #fff;
+}
+
+/* Final dot + short horizontal residual. */
+#gachaPuchun .v14-last-dot{
+  width:13px;height:13px;border-radius:50%;background:#fff;
+  box-shadow:0 0 8px #fff,0 0 18px #fff;
+}
+#gachaPuchun .v14-after-line{
+  width:74px;height:3px;background:linear-gradient(90deg,transparent,#fff 28%,#fff 72%,transparent);
+  box-shadow:0 0 7px rgba(255,255,255,.75);
+}
+
+#gachaPuchun.white-cut .v14-white{animation:v14White .078s linear forwards}
+#gachaPuchun.white-cut .v14-black{animation:v14Black .078s linear .062s forwards}
+
+#gachaPuchun.big-cross .v14-cross{
+  opacity:1;animation:v14BigCross .185s cubic-bezier(.08,.76,.15,1) forwards;
+}
+#gachaPuchun.small-cross .v14-cross{display:none}
+#gachaPuchun.small-cross .v14-small-cross{
+  opacity:1;animation:v14SmallCross .15s cubic-bezier(.12,.76,.18,1) forwards;
+}
+#gachaPuchun.point .v14-small-cross{display:none}
+#gachaPuchun.point .v14-last-dot,
+#gachaPuchun.point .v14-after-line{
+  opacity:1;animation:v14Point .155s ease-out forwards;
+}
+#gachaPuchun.dead .v14-white,
+#gachaPuchun.dead .v14-cross,
+#gachaPuchun.dead .v14-small-cross,
+#gachaPuchun.dead .v14-last-dot,
+#gachaPuchun.dead .v14-after-line{display:none}
+#gachaPuchun.dead .v14-black{opacity:1}
+
+@keyframes v14White{
+  0%{opacity:0}
+  10%{opacity:1}
+  100%{opacity:1}
+}
+@keyframes v14Black{from{opacity:0}to{opacity:1}}
+@keyframes v14BigCross{
+  0%{opacity:.1;transform:translate(-50%,-50%) scale(1.22)}
+  26%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(.92)}
+}
+@keyframes v14SmallCross{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(1.7)}
+  25%{opacity:1}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(.92)}
+}
+@keyframes v14Point{
+  0%{opacity:1}
+  68%{opacity:1;transform:translate(-50%,-50%) scale(.92)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.18)}
+}
+
+/* Grade-up after blackout: stronger than previous versions. */
+#gachaPuchun .v14-grade{
+  position:absolute;inset:0;display:grid;place-content:center;text-align:center;opacity:0;
+}
+#gachaPuchun .v14-grade small{
+  font-size:13px;font-weight:1000;letter-spacing:.38em;color:#c8ae65;
+}
+#gachaPuchun .v14-grade strong{
+  display:block;margin-top:6px;font-size:68px;line-height:1;
+  font-weight:1000;font-style:italic;color:#ffd65a;
+  -webkit-text-stroke:2px #692a0d;
+  text-shadow:0 0 14px #ffc32f,0 0 36px #ff7724,0 0 66px rgba(231,64,29,.78);
+}
+#gachaPuchun .v14-grade em{
+  display:block;margin-top:10px;font-style:normal;font-size:14px;font-weight:1000;letter-spacing:.35em;color:#efd37d;
+}
+#gachaPuchun .grade-hex{
+  position:absolute;left:50%;top:50%;width:180px;height:180px;
+  transform:translate(-50%,-50%) rotate(30deg);
+  border:2px solid rgba(255,205,73,.52);
+  box-shadow:0 0 24px rgba(255,177,39,.35);
+  clip-path:polygon(25% 7%,75% 7%,100% 50%,75% 93%,25% 93%,0 50%);
+  animation:v14Hex 2.2s linear infinite;
+}
+#gachaPuchun.grade-on .v14-grade{
+  animation:v14Grade .88s cubic-bezier(.06,.84,.12,1) forwards;
+}
+#gachaPuchun.puchun-rare .v14-grade strong{color:#6cbcff;-webkit-text-stroke-color:#153b64;text-shadow:0 0 15px #55aaff,0 0 34px #2866ca}
+#gachaPuchun.puchun-epic .v14-grade strong{color:#d789ff;-webkit-text-stroke-color:#4a1a67;text-shadow:0 0 15px #c35fff,0 0 36px #722bb7}
+#gachaPuchun.puchun-legendary .v14-grade strong{color:#ffc64d;text-shadow:0 0 15px #ffae29,0 0 42px #ff6022}
+#gachaPuchun.puchun-god .v14-grade strong{font-size:78px;color:#fff174;text-shadow:0 0 18px #ffe23f,0 0 50px #ff9e23,0 0 90px #ed4e2a}
+#gachaPuchun.grade-out{animation:v14GradeOut .18s ease-in forwards}
+
+@keyframes v14Hex{to{transform:translate(-50%,-50%) rotate(390deg)}}
+@keyframes v14Grade{
+  0%{opacity:0;transform:scale(.48) rotate(-4deg)}
+  24%{opacity:1;transform:scale(1.22) rotate(1deg)}
+  50%{transform:scale(.93)}
+  74%{transform:scale(1.04)}
+  100%{opacity:1;transform:scale(1)}
+}
+@keyframes v14GradeOut{to{opacity:0}}
+
+/* ---------- GACHA THEATER OVERDRIVE ---------- */
+.gacha-theater{
+  isolation:isolate;
+}
+.gacha-theater::before{
+  content:"";position:absolute;inset:-15%;
+  background:
+    repeating-conic-gradient(from 0deg at 50% 46%,transparent 0 10deg,rgba(255,189,54,.05) 11deg 12deg,transparent 13deg 22deg);
+  opacity:.0;transform:rotate(0deg);transition:opacity .18s;
+}
+.gacha-theater.tension::before{
+  opacity:1;animation:gachaTheaterSpin 1.1s linear infinite;
+}
+.gacha-theater.tension .gacha-stage-glow{
+  animation:gachaTensionGlow .42s ease-in-out infinite alternate!important;
+}
+.gacha-theater.tension .gacha-grade{
+  letter-spacing:.34em;filter:brightness(1.3);
+}
+.gacha-theater.grade-celebrate{
+  box-shadow:inset 0 0 42px #ffb12d30,0 0 18px #ffb12d22;
+}
+.gacha-chest.overdrive::after{
+  content:"";position:absolute;left:50%;top:48%;width:190px;height:190px;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,transparent 0 12deg,rgba(255,206,83,.13) 13deg 14deg,transparent 15deg 25deg);
+  z-index:-1;animation:chestHaloSpin 2.4s linear infinite;
+}
+@keyframes gachaTheaterSpin{to{transform:rotate(18deg)}}
+@keyframes gachaTensionGlow{from{opacity:.45;transform:translate(-50%,-50%) scale(.92)}to{opacity:1;transform:translate(-50%,-50%) scale(1.20)}}
+@keyframes chestHaloSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* ---------- FULL SCREEN REWARD MAXIMUM ---------- */
+.reward-rank-copy{
+  margin-top:7px;font-size:11px;font-weight:1000;letter-spacing:.24em;color:#ffe88e;
+  text-shadow:0 0 10px #ffb730;
+}
+#gachaRewardFull .reward-content::before{
+  content:"";position:absolute;left:50%;top:45%;width:270px;height:270px;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(255,218,92,.25);
+  clip-path:polygon(50% 0,92% 24%,100% 67%,70% 100%,30% 100%,0 67%,8% 24%);
+  animation:rewardSigil 5s linear infinite;
+}
+#gachaRewardFull.reward-god .reward-content::before{
+  width:330px;height:330px;border-color:rgba(255,241,109,.48);
+  box-shadow:0 0 28px rgba(255,206,56,.26), inset 0 0 28px rgba(216,78,255,.10);
+}
+#gachaRewardFull.reward-god .reward-burst{
+  animation-duration:3.8s;
+}
+#gachaRewardFull.reward-god .reward-stars i{
+  box-shadow:0 0 10px #fff6bd,0 0 22px #ffd53b,0 0 34px #d55cff;
+}
+@keyframes rewardSigil{to{transform:translate(-50%,-50%) rotate(360deg)}}

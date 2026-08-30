@@ -133,25 +133,24 @@
     if(muted) return;
     const c=audio(), t=c.currentTime;
 
-    // Tiny contact snap.
-    tone(155,.032,"square",.055,0,74);
+    // Instant electrical contact.
+    tone(170,.035,"square",.06,0,76);
+    noise(.045,.05,.008,850,5200);
 
-    // Electrical tear.
-    noise(.036,.052,.010,850,5200);
-
-    // CRT whine falls brutally into the floor.
+    // CRT whine falling into shutdown.
     const o=c.createOscillator(), g=c.createGain();
     o.type="sawtooth";
-    o.frequency.setValueAtTime(510,t+.018);
-    o.frequency.exponentialRampToValueAtTime(44,t+.135);
-    g.gain.setValueAtTime(.0001,t+.018);
-    g.gain.exponentialRampToValueAtTime(.060,t+.026);
-    g.gain.exponentialRampToValueAtTime(.0001,t+.145);
+    o.frequency.setValueAtTime(620,t+.015);
+    o.frequency.exponentialRampToValueAtTime(48,t+.17);
+    g.gain.setValueAtTime(.0001,t+.015);
+    g.gain.exponentialRampToValueAtTime(.065,t+.022);
+    g.gain.exponentialRampToValueAtTime(.0001,t+.18);
     o.connect(g); g.connect(c.destination);
-    o.start(t+.018); o.stop(t+.15);
+    o.start(t+.015); o.stop(t+.19);
 
-    // Low "power gone" body. No musical tail.
-    tone(72,.115,"sine",.105,.075,30);
+    // Power-off body.
+    tone(74,.14,"sine",.12,.07,30);
+    tone(42,.18,"sine",.055,.14,29);
   }
   function gradeUp(){
     if(muted) return;
@@ -164,6 +163,25 @@
     tone(120,.18,"sine",.08,0,52);
     const high=rarity==="GOD"||rarity==="LEGENDARY";
     [523.25,659.25,783.99].forEach((f,i)=>tone(f*(high?1.25:1),.22,"triangle",.03,.07+i*.045,f));
+  }
+  function chestTension(rarity="NORMAL"){
+    if(muted) return;
+    const b=hitBus();
+    const high=rarity==="LEGENDARY"||rarity==="GOD";
+    oscTo(b,"sine",72,high?138:112,.42,.10,0);
+    oscTo(b,"triangle",210,high?640:430,.38,.045,.035);
+    noiseTo(b,.30,.028,.02,320,1900);
+    if(high) oscTo(b,"sine",48,35,.48,.10,.08);
+  }
+  function chestBurst(rarity="NORMAL"){
+    if(muted) return;
+    const b=hitBus();
+    const god=rarity==="GOD", leg=rarity==="LEGENDARY";
+    oscTo(b,"sine",god?118:102,36,god?.55:.42,god?.34:.25,0);
+    oscTo(b,"triangle",god?320:250,72,.20,god?.22:.16,0);
+    noiseTo(b,.12,god?.20:.15,0,420,3600);
+    const chord=god?[523.25,659.25,783.99,1046.5]:leg?[440,554.37,659.25]:[329.63,440,523.25];
+    chord.forEach((f,i)=>oscTo(b,"triangle",f,f*1.01,god?.42:.30,god?.052:.04,.10+i*.04));
   }
   function killStinger(){
     if(muted) return;
@@ -178,7 +196,7 @@
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, puchun, gradeUp, chestOpen, killStinger, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, chestTension, chestBurst, puchun, gradeUp, chestOpen, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();
