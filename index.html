@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=074">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=074">
-  <link rel="stylesheet" href="./style.css?v=074">
-  <title>Dice Dungeon RPG v0.7.4</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=075">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=075">
+  <link rel="stylesheet" href="./style.css?v=075">
+  <title>Dice Dungeon RPG v0.7.5</title>
 </head>
 <body>
 <main id="app">
@@ -33,52 +33,37 @@
       </div>
     </article>
 
-    <div class="home-section-title">基礎ステータス</div>
-    <div class="stats-grid">
-      <div class="stat"><span>HP</span><b id="homeHp">75</b></div>
-      <div class="stat"><span>ATK</span><b id="homeAtk">12</b></div>
-      <div class="stat"><span>DEF</span><b id="homeDef">4</b></div>
+    <div class="home-overview">
+      <div class="overview-title">
+        <span>PLAYER STATUS</span>
+        <small>現在の総合ステータス</small>
+      </div>
+      <div class="stats-grid home-stats-clean">
+        <div class="stat"><span>HP</span><b id="homeHp">75</b></div>
+        <div class="stat"><span>ATK</span><b id="homeAtk">12</b></div>
+        <div class="stat"><span>DEF</span><b id="homeDef">4</b></div>
+      </div>
     </div>
 
-    <div class="home-section-title">永続強化</div>
-    <div class="upgrade-grid">
-      <button class="upgrade-card" data-upgrade="hp">
-        <span class="upgrade-icon">❤️</span>
-        <span class="upgrade-main"><b>HP強化</b><small>+5 HP / 1Lv</small></span>
-        <span class="upgrade-side"><em id="hpLv">Lv.0</em><strong id="hpCost">100G</strong></span>
+    <div class="home-menu">
+      <button id="upgradeEntry" class="home-menu-card">
+        <span class="menu-icon">⬆️</span>
+        <span class="menu-copy"><b>強化</b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
+        <span class="menu-arrow">›</span>
       </button>
-      <button class="upgrade-card" data-upgrade="atk">
-        <span class="upgrade-icon">⚔️</span>
-        <span class="upgrade-main"><b>ATK強化</b><small>+1 ATK / 1Lv</small></span>
-        <span class="upgrade-side"><em id="atkLv">Lv.0</em><strong id="atkCost">120G</strong></span>
+
+      <button id="equipmentEntry" class="home-menu-card">
+        <span class="menu-icon">⚔️</span>
+        <span class="menu-copy"><b>装備</b><small id="equipmentSummary">武器・防具を変更</small></span>
+        <span class="menu-arrow">›</span>
       </button>
-      <button class="upgrade-card" data-upgrade="def">
-        <span class="upgrade-icon">🛡️</span>
-        <span class="upgrade-main"><b>DEF強化</b><small>+1 DEF / 1Lv</small></span>
-        <span class="upgrade-side"><em id="defLv">Lv.0</em><strong id="defCost">150G</strong></span>
+
+      <button id="gachaEntry" class="home-menu-card gacha-menu-card">
+        <span class="menu-icon">🎁</span>
+        <span class="menu-copy"><b>装備ガチャ</b><small>GOLDで新しい装備を獲得</small></span>
+        <span class="menu-arrow">›</span>
       </button>
     </div>
-
-    <div class="home-section-title">装備</div>
-    <div class="equipment-row">
-      <button id="weaponEquipBtn" class="equip-card equip-button" data-slot="weapon">
-        <span>武器</span>
-        <b id="weaponName">訓練用の剣</b>
-        <small id="weaponBonus">ATK +0</small>
-      </button>
-      <button id="armorEquipBtn" class="equip-card equip-button" data-slot="armor">
-        <span>防具</span>
-        <b id="armorName">旅人の服</b>
-        <small id="armorBonus">DEF +0</small>
-      </button>
-    </div>
-
-    <div class="home-section-title">装備ガチャ</div>
-    <button id="gachaEntry" class="gacha-entry">
-      <span class="gacha-chest">🎁</span>
-      <span><b>EQUIPMENT GACHA</b><small>GOLDで武器・防具を獲得</small></span>
-      <strong>OPEN →</strong>
-    </button>
 
     <div class="home-section-title">ダンジョン</div>
     <div class="dungeon-list">
@@ -100,7 +85,41 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.7.4 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.7.5 — 正式実装用のゲームループ基盤</p>
+  </section>
+
+  <section id="upgrade" class="screen">
+    <header class="topbar">
+      <button id="upgradeBack" class="back-btn">←</button>
+      <div>
+        <div class="eyebrow">PERMANENT UPGRADE</div>
+        <h1>永続強化</h1>
+      </div>
+      <div class="gold">🪙 <span id="upgradeGold">0</span>G</div>
+    </header>
+
+    <div class="upgrade-intro">
+      <b>冒険者を強化</b>
+      <small>購入した強化はすべてのダンジョンで永続します。</small>
+    </div>
+
+    <div class="upgrade-grid upgrade-screen-grid">
+      <button class="upgrade-card" data-upgrade="hp">
+        <span class="upgrade-icon">❤️</span>
+        <span class="upgrade-main"><b>HP強化</b><small>+5 HP / 1Lv</small></span>
+        <span class="upgrade-side"><em id="hpLv">Lv.0</em><strong id="hpCost">100G</strong></span>
+      </button>
+      <button class="upgrade-card" data-upgrade="atk">
+        <span class="upgrade-icon">⚔️</span>
+        <span class="upgrade-main"><b>ATK強化</b><small>+1 ATK / 1Lv</small></span>
+        <span class="upgrade-side"><em id="atkLv">Lv.0</em><strong id="atkCost">120G</strong></span>
+      </button>
+      <button class="upgrade-card" data-upgrade="def">
+        <span class="upgrade-icon">🛡️</span>
+        <span class="upgrade-main"><b>DEF強化</b><small>+1 DEF / 1Lv</small></span>
+        <span class="upgrade-side"><em id="defLv">Lv.0</em><strong id="defCost">150G</strong></span>
+      </button>
+    </div>
   </section>
 
   <section id="gacha" class="screen">
@@ -154,6 +173,11 @@
       </div>
       <div class="gold">🪙 <span id="equipmentGold">0</span>G</div>
     </header>
+
+    <div class="equip-tabs">
+      <button id="weaponTab" class="equip-tab active" data-slot="weapon">⚔️ 武器</button>
+      <button id="armorTab" class="equip-tab" data-slot="armor">🛡️ 防具</button>
+    </div>
 
     <div class="equip-total">
       <div><span>HP</span><b id="equipTotalHp">75</b></div>
@@ -307,11 +331,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=074"></script>
-<script src="./game.js?v=074"></script>
+<script src="./effects.js?v=075"></script>
+<script src="./game.js?v=075"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=074").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=075").catch(console.error));
 }
 </script>
 </body>

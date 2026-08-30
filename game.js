@@ -236,6 +236,8 @@
     $("#equipmentTitle").textContent=title;
     $("#equipment").dataset.slot=slot;
     $("#equipmentGold").textContent=save.gold;
+    $("#weaponTab")?.classList.toggle("active",slot==="weapon");
+    $("#armorTab")?.classList.toggle("active",slot==="armor");
 
     const totals=totalStats();
     $("#equipTotalHp").textContent=totals.maxHp;
@@ -306,6 +308,8 @@
     recalcBase();
     persist();
     renderHome();
+    const upGold=$("#upgradeGold");
+    if(upGold) upGold.textContent=save.gold;
   }
 
   function renderHome(){
@@ -317,10 +321,12 @@
 
     const weapon=equippedItem("weapon");
     const armor=equippedItem("armor");
-    $("#weaponName").textContent=weapon.name;
-    $("#weaponBonus").textContent=`ATK +${weapon.atk}`;
-    $("#armorName").textContent=armor.name;
-    $("#armorBonus").textContent=`DEF +${armor.def}`;
+    const equipSummary=$("#equipmentSummary");
+    if(equipSummary) equipSummary.textContent=`${weapon.name} / ${armor.name}`;
+    const upSummary=$("#upgradeSummary");
+    if(upSummary) upSummary.textContent=`HP Lv.${save.upgrades.hp} / ATK Lv.${save.upgrades.atk} / DEF Lv.${save.upgrades.def}`;
+    const upGold=$("#upgradeGold");
+    if(upGold) upGold.textContent=save.gold;
 
     for(const type of ["hp","atk","def"]){
       const cfg=UPGRADES[type];
@@ -739,12 +745,13 @@
     $("#multRollBtn").classList.remove("auto-wait");
     document.body.classList.remove("mult-charge-screen");
 
-    const multFx=$("#multFx");
-    multFx.textContent=`×${c}`;
-    multFx.className=`show-mult${c===6?" x6":""}`;
+    // Third die gets sound/weight only. Do NOT layer the old giant multiplier
+    // overlay over the completed equation.
     FX.multiplier(c);
+    $("#multFx").className="";
+    $("#sumBurst").className="sum-burst";
 
-    // Final die: show the completed dice formula clearly once.
+    // Final die: show one clean completed equation, and nothing on top of it.
     await showEquationImpact(3,a,b,c);
 
     // Then explicitly add ATK and reveal the final damage.
@@ -762,7 +769,6 @@
       $("#critical").classList.add("hidden");
     }
 
-    multFx.className="";
     document.body.classList.remove("mult-focus");
     busy=false;
     renderBattle();
@@ -913,10 +919,14 @@
   }
 
   $$(".upgrade-card").forEach(b=>b.addEventListener("click",()=>buyUpgrade(b.dataset.upgrade)));
+  $("#upgradeEntry").addEventListener("click",()=>{renderHome();show("upgrade");});
+  $("#upgradeBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#gachaEntry").addEventListener("click",openGacha);
   $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
   $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
-  $$(".equip-button").forEach(b=>b.addEventListener("click",()=>openEquipment(b.dataset.slot)));
+  $("#equipmentEntry").addEventListener("click",()=>openEquipment("weapon"));
+  $("#weaponTab").addEventListener("click",()=>openEquipment("weapon"));
+  $("#armorTab").addEventListener("click",()=>openEquipment("armor"));
   $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#startBtn").addEventListener("click",startRun);
   $("#attackBtn").addEventListener("click",()=>{
