@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=076">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=076">
-  <link rel="stylesheet" href="./style.css?v=076">
-  <title>Dice Dungeon RPG v0.7.6</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=077">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=077">
+  <link rel="stylesheet" href="./style.css?v=077">
+  <title>Dice Dungeon RPG v0.7.7</title>
 </head>
 <body>
 <main id="app">
@@ -23,6 +23,15 @@
       </div>
       <div class="gold">🪙 <span id="bankGold">0</span>G</div>
     </header>
+
+    <div class="home-brand">
+      <div class="brand-sigil">🎲</div>
+      <div>
+        <b>DICE DUNGEON</b>
+        <small>ROLL • GROW • CONQUER</small>
+      </div>
+      <span class="brand-spark">✦</span>
+    </div>
 
     <article class="hero-card">
       <div class="crest">🎲</div>
@@ -85,7 +94,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.7.6 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.7.7 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -278,9 +287,21 @@
     </div>
     <div class="reward-progress"><span id="rewardBattleText">BATTLE 1 CLEAR</span><b id="rewardGoldText">+25G</b></div>
     <div class="reward-grid">
-      <button class="reward" data-reward="heal"><b>❤️ HP回復</b><span>最大HPの30%回復</span></button>
-      <button class="reward" data-reward="gold"><b>🪙 GOLD</b><span>追加で40G獲得</span></button>
-      <button class="reward" data-reward="atk"><b>⚔️ 攻撃強化</b><span>このラン中 ATK +3</span></button>
+      <button class="reward reward-heal" data-reward="heal">
+        <span class="reward-icon">❤️</span>
+        <span class="reward-copy"><b>HP回復</b><span>最大HPの30%回復</span></span>
+        <em>RECOVER</em>
+      </button>
+      <button class="reward reward-gold" data-reward="gold">
+        <span class="reward-icon">🪙</span>
+        <span class="reward-copy"><b>GOLD</b><span>追加で40G獲得</span></span>
+        <em>BONUS</em>
+      </button>
+      <button class="reward reward-atk" data-reward="atk">
+        <span class="reward-icon">⚔️</span>
+        <span class="reward-copy"><b>攻撃強化</b><span>このラン中 ATK +3</span></span>
+        <em>POWER</em>
+      </button>
     </div>
   </section>
 
@@ -332,11 +353,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=076"></script>
-<script src="./game.js?v=076"></script>
+<script src="./effects.js?v=077"></script>
+<script src="./game.js?v=077"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=076").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=077").catch(console.error));
 }
 </script>
 </body>

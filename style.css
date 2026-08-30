@@ -1676,3 +1676,280 @@ body.enemy-impact-flash::after{
   0%,100%{box-shadow:none}
   45%{box-shadow:0 0 0 1px #e04c5a,0 0 18px #e04c5a45,inset 0 0 18px #e04c5a1e}
 }
+
+
+/* ===== v0.7.7 COLOR UI / readability pass ===== */
+
+/* Keep top-right GOLD clear of the fixed sound button on every screen. */
+.topbar,
+.battle-head{
+  padding-right:48px;
+}
+#soundBtn{
+  width:36px;
+  height:36px;
+  right:10px;
+  top:max(10px,env(safe-area-inset-top));
+  border-color:#5e6472;
+  background:linear-gradient(180deg,#1c2028e8,#0d1016ee);
+  box-shadow:0 5px 14px #0008,inset 0 1px #ffffff14;
+}
+.gold,.run-gold{
+  white-space:nowrap;
+  border-color:#a97d25;
+  background:linear-gradient(180deg,#29200e,#121006);
+  box-shadow:inset 0 0 13px #ffc73b15,0 0 10px #dca32c10;
+  color:#ffd65f;
+}
+
+/* Home: stronger section separation, brighter useful color cues. */
+.home-brand{
+  margin-top:4px;
+  margin-bottom:6px;
+}
+#home .hero-card{
+  border-color:#ad8129;
+  background:
+    radial-gradient(circle at 9% 50%,#f0bc3c17,transparent 34%),
+    linear-gradient(110deg,#29200d,#131721 48%,#10131a);
+}
+#home .hero-card .crest{
+  background:radial-gradient(circle,#493615,#1d160a 70%);
+  border-color:#d5aa41;
+  box-shadow:0 0 18px #f2c84b20,inset 0 0 16px #f1bd311c;
+}
+#home .hero-card h2{color:#fff1b2}
+#home .hero-card p{color:#c2c6d0}
+
+.overview-title{
+  padding-bottom:5px;
+  border-bottom:1px solid #303744;
+}
+.home-stats-clean .stat:nth-child(1){
+  background:linear-gradient(180deg,#10283c,#0d151e);
+  border-color:#2e759e;
+}
+.home-stats-clean .stat:nth-child(2){
+  background:linear-gradient(180deg,#35260b,#181307);
+  border-color:#8b6a22;
+}
+.home-stats-clean .stat:nth-child(3){
+  background:linear-gradient(180deg,#113024,#0c1813);
+  border-color:#287557;
+}
+.home-stats-clean .stat:nth-child(1) span{color:#7acaff}
+.home-stats-clean .stat:nth-child(2) span{color:#f4c958}
+.home-stats-clean .stat:nth-child(3) span{color:#7ee0ac}
+.home-stats-clean .stat:nth-child(1) b{color:#b8e4ff}
+.home-stats-clean .stat:nth-child(2) b{color:#ffe48b}
+.home-stats-clean .stat:nth-child(3) b{color:#a9f1c8}
+
+#upgradeEntry{
+  background:
+    linear-gradient(90deg,#132d43 0%,#121923 42%,#0e1117 100%);
+  border-color:#2b6690;
+}
+#equipmentEntry{
+  background:
+    linear-gradient(90deg,#37280d 0%,#1b180f 42%,#0f1115 100%);
+  border-color:#846824;
+}
+#gachaEntry{
+  background:
+    linear-gradient(90deg,#321744 0%,#1c1324 42%,#0f1015 100%);
+  border-color:#754496;
+}
+#upgradeEntry .menu-arrow{color:#72c8ff}
+#equipmentEntry .menu-arrow{color:#f0cb63}
+#gachaEntry .menu-arrow{color:#d990ff}
+#upgradeEntry .menu-tag{color:#8bd0ff;border-color:#316b92;background:#10263a}
+#equipmentEntry .menu-tag{color:#f0ce71;border-color:#70571f;background:#2c210c}
+#gachaEntry .menu-tag{color:#e0a2ff;border-color:#734292;background:#2a1238}
+
+#home .home-section-title{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#b7bdca;
+}
+#home .home-section-title::before{
+  content:"";
+  width:18px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,#d8b64c,transparent);
+}
+#home .dungeon-card:not(.locked){
+  border-color:#a17927;
+  background:
+    radial-gradient(circle at 5% 50%,#efbf3919,transparent 28%),
+    linear-gradient(90deg,#2c230d,#141821 50%,#10131a);
+}
+#home .dungeon-code{
+  color:#ffd666;
+  text-shadow:0 0 10px #e7ae2c35;
+}
+#home .clear-badge{
+  border-color:#765d27;
+  background:#211a0b;
+  color:#d7bd70;
+}
+#home .clear-badge.cleared{
+  border-color:#287c53;
+  background:#0d2a1d;
+  color:#7af1ad;
+}
+.record-row>div:first-child{
+  border-color:#2a7252;
+  background:linear-gradient(180deg,#10291f,#0d1512);
+}
+.record-row>div:last-child{
+  border-color:#775f25;
+  background:linear-gradient(180deg,#2a210d,#141209);
+}
+.record-row>div:first-child b{color:#7ce5a9}
+.record-row>div:last-child b{color:#f2cd62}
+
+/* Reward screen becomes an actual three-choice color moment. */
+#reward{
+  background:
+    radial-gradient(circle at 50% 0%,#2d244118,transparent 34%),
+    radial-gradient(circle at 12% 70%,#3d9f6d0b,transparent 28%),
+    radial-gradient(circle at 88% 70%,#c27d1c0c,transparent 28%),
+    #090b0f;
+}
+#reward .center-title{
+  margin-top:8vh;
+}
+#reward .center-title .eyebrow{
+  color:#86ddff;
+}
+#reward .center-title h2{
+  margin-bottom:5px;
+  font-size:27px;
+  text-shadow:0 0 16px #9e87ff1c;
+}
+.reward-progress{
+  border-color:#6c5830;
+  background:linear-gradient(90deg,#161a22,#241d0c);
+  box-shadow:inset 0 0 16px #f2be3510;
+}
+.reward-grid{
+  gap:11px;
+  margin-top:18px;
+}
+.reward{
+  position:relative;
+  min-height:82px;
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  align-items:center;
+  gap:11px;
+  padding:11px 13px;
+  border-radius:18px;
+  text-align:left;
+  overflow:hidden;
+  isolation:isolate;
+  box-shadow:0 9px 22px #0005,inset 0 1px #ffffff18;
+  transition:transform .12s,filter .12s;
+}
+.reward:active{
+  transform:scale(.975);
+  filter:brightness(1.14);
+}
+.reward::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  opacity:.72;
+}
+.reward-icon{
+  display:grid!important;
+  place-items:center;
+  width:46px;height:46px;
+  margin:0!important;
+  border-radius:14px;
+  font-size:24px!important;
+  box-shadow:inset 0 0 16px #ffffff10,0 0 12px #0003;
+}
+.reward-copy{
+  display:block!important;
+  min-width:0;
+  margin:0!important;
+}
+.reward-copy b{
+  display:block;
+  font-size:17px;
+}
+.reward-copy span{
+  display:block;
+  margin-top:4px!important;
+  font-size:11px!important;
+}
+.reward>em{
+  align-self:start;
+  margin-top:3px;
+  padding:3px 6px;
+  border-radius:7px;
+  font-style:normal;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.reward-heal{
+  border-color:#27875d;
+  background:linear-gradient(100deg,#123b2c,#101b18 52%,#0d1212);
+}
+.reward-heal::before{
+  background:radial-gradient(circle at 12% 50%,#46e79a26,transparent 30%);
+}
+.reward-heal .reward-icon{
+  background:#163e2e;
+  border:1px solid #2b9868;
+}
+.reward-heal .reward-copy b{color:#89efb7}
+.reward-heal .reward-copy span{color:#9ccdb2}
+.reward-heal>em{color:#84eab2;border:1px solid #287a59;background:#102c21}
+
+.reward-gold{
+  border-color:#a87b25;
+  background:linear-gradient(100deg,#49370d,#211b0c 52%,#12110c);
+}
+.reward-gold::before{
+  background:radial-gradient(circle at 12% 50%,#ffd34a28,transparent 30%);
+}
+.reward-gold .reward-icon{
+  background:#47350d;
+  border:1px solid #b38b30;
+}
+.reward-gold .reward-copy b{color:#ffe176}
+.reward-gold .reward-copy span{color:#d9c483}
+.reward-gold>em{color:#f6d56a;border:1px solid #8a6824;background:#33270d}
+
+.reward-atk{
+  border-color:#a54738;
+  background:linear-gradient(100deg,#4a1d1b,#271414 52%,#121011);
+}
+.reward-atk::before{
+  background:radial-gradient(circle at 12% 50%,#ff6a4b27,transparent 30%);
+}
+.reward-atk .reward-icon{
+  background:#471d19;
+  border:1px solid #af4a3b;
+}
+.reward-atk .reward-copy b{color:#ff9a80}
+.reward-atk .reward-copy span{color:#d8a096}
+.reward-atk>em{color:#ff9980;border:1px solid #913d32;background:#341514}
+
+/* Upgrade also gets clearer stat identities. */
+#upgrade .upgrade-card[data-upgrade="hp"]{
+  border-color:#317aa4;
+  background:linear-gradient(100deg,#14334a,#111820);
+}
+#upgrade .upgrade-card[data-upgrade="atk"]{
+  border-color:#9a7224;
+  background:linear-gradient(100deg,#3a2a0d,#17150e);
+}
+#upgrade .upgrade-card[data-upgrade="def"]{
+  border-color:#31815e;
+  background:linear-gradient(100deg,#15372a,#111a16);
+}
