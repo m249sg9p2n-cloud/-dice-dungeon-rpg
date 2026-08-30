@@ -653,15 +653,63 @@
     box.className="attack-calc-impact";
   }
 
+  function playJuicyHitSound(dmg){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      const ac=window.__diceAudioCtx||(window.__diceAudioCtx=new AC());
+      if(ac.state==="suspended") ac.resume();
+      const t=ac.currentTime, strong=dmg>=55, critical=dmg>=90;
+      const master=ac.createGain(); master.gain.setValueAtTime(.0001,t); master.gain.exponentialRampToValueAtTime(.48,t+.008); master.gain.exponentialRampToValueAtTime(.0001,t+(critical?.72:strong?.55:.42)); master.connect(ac.destination);
+
+      // Deep body: fast pitch dive = "ドン" rather than a cheap beep.
+      const sub=ac.createOscillator(), sg=ac.createGain();
+      sub.type="sine"; sub.frequency.setValueAtTime(critical?115:strong?105:96,t); sub.frequency.exponentialRampToValueAtTime(42,t+.22);
+      sg.gain.setValueAtTime(.75,t); sg.gain.exponentialRampToValueAtTime(.0001,t+.34);
+      sub.connect(sg); sg.connect(master); sub.start(t); sub.stop(t+.36);
+
+      // Punch layer.
+      const punch=ac.createOscillator(), pg=ac.createGain();
+      punch.type="triangle"; punch.frequency.setValueAtTime(220,t); punch.frequency.exponentialRampToValueAtTime(72,t+.11);
+      pg.gain.setValueAtTime(.42,t); pg.gain.exponentialRampToValueAtTime(.0001,t+.16);
+      punch.connect(pg); pg.connect(master); punch.start(t); punch.stop(t+.18);
+
+      // Short filtered noise = impact/crack.
+      const len=Math.floor(ac.sampleRate*.14), buf=ac.createBuffer(1,len,ac.sampleRate), data=buf.getChannelData(0);
+      for(let i=0;i<len;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+      const noise=ac.createBufferSource(), bp=ac.createBiquadFilter(), ng=ac.createGain();
+      noise.buffer=buf; bp.type="bandpass"; bp.frequency.value=strong?950:760; bp.Q.value=.75;
+      ng.gain.setValueAtTime(.34,t); ng.gain.exponentialRampToValueAtTime(.0001,t+.13);
+      noise.connect(bp); bp.connect(ng); ng.connect(master); noise.start(t);
+
+      // Rewarding high shimmer for stronger hits.
+      if(strong){
+        [523.25,659.25,783.99].forEach((f,i)=>{
+          const o=ac.createOscillator(), g=ac.createGain();
+          o.type="sine"; o.frequency.value=f*(critical?1.25:1);
+          const st=t+.045+i*.025; g.gain.setValueAtTime(.0001,st); g.gain.exponentialRampToValueAtTime(.12,st+.012); g.gain.exponentialRampToValueAtTime(.0001,st+.22);
+          o.connect(g); g.connect(master); o.start(st); o.stop(st+.24);
+        });
+      }
+      if(critical){
+        const o=ac.createOscillator(), g=ac.createGain();
+        o.type="sine"; o.frequency.setValueAtTime(62,t+.08); o.frequency.exponentialRampToValueAtTime(31,t+.55);
+        g.gain.setValueAtTime(.28,t+.08); g.gain.exponentialRampToValueAtTime(.0001,t+.62);
+        o.connect(g); g.connect(master); o.start(t+.08); o.stop(t+.64);
+      }
+    }catch(_){}
+  }
+
   function playAttackJuice(dmg){
     document.querySelector("#attackJuice")?.remove();
     const layer=document.createElement("div"); layer.id="attackJuice";
     const strong=dmg>=55, critical=dmg>=90;
-    layer.innerHTML=`<div class="attack-dark"></div><div class="attack-flash"></div>
+    layer.innerHTML=`<div class="attack-dark"></div><div class="attack-core"></div><div class="attack-sparks"><i style="--a:0deg"></i><i style="--a:30deg"></i><i style="--a:60deg"></i><i style="--a:90deg"></i><i style="--a:120deg"></i><i style="--a:150deg"></i><i style="--a:180deg"></i><i style="--a:210deg"></i><i style="--a:240deg"></i><i style="--a:270deg"></i><i style="--a:300deg"></i><i style="--a:330deg"></i></div>
     <div class="attack-ray" style="--r:-18deg"></div><div class="attack-ray" style="--r:21deg"></div><div class="attack-ray" style="--r:62deg"></div>
     <div class="attack-ring"></div><div class="attack-impact ${critical?"critical":strong?"strong":""}">${dmg}</div>
     <div class="attack-label">${critical?"DEVASTATING!!":strong?"HEAVY HIT!":"HIT!"}</div>`;
     document.body.appendChild(layer);
+    playJuicyHitSound(dmg);
     const stage=document.querySelector(".enemy-stage"), battle=document.querySelector("#battle");
     stage?.classList.remove("attack-hit"); battle?.classList.remove("attack-screen-shake");
     void stage?.offsetWidth; stage?.classList.add("attack-hit"); battle?.classList.add("attack-screen-shake");

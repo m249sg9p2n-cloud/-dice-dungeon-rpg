@@ -2228,3 +2228,16 @@ body.enemy-impact-flash::after{
 @keyframes enemyHitKnock{22%{transform:translateY(-5px) scale(1.08)}55%{transform:translateY(3px) scale(.94)}100%{transform:scale(1)}}
 @keyframes enemyBurst{0%{opacity:0;transform:scale(.3)}18%{opacity:1}100%{opacity:0;transform:scale(1.7)}}
 @keyframes screenHit{18%{transform:translate(-4px,2px)}35%{transform:translate(5px,-2px)}55%{transform:translate(-3px,1px)}75%{transform:translate(2px)}100%{transform:translate(0)}}
+
+/* ===== v0.7.12 IMPACT & SOUND PASS ===== */
+/* No full-screen white flash: use a localized warm impact instead. */
+.attack-flash{display:none!important}
+.attack-dark{background:radial-gradient(circle at 50% 38%,transparent 0 18%,#0000 30%,#0008 100%)!important;animation:atkDark12 .48s ease-out!important}
+.attack-core{position:absolute;left:50%;top:38%;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%);background:#fff0a6;box-shadow:0 0 14px #ffd14d,0 0 34px #ff7a32,0 0 62px #d7332c;animation:atkCore12 .42s ease-out forwards}
+.attack-sparks{position:absolute;left:50%;top:38%;width:1px;height:1px}
+.attack-sparks i{position:absolute;width:5px;height:34px;border-radius:8px;background:linear-gradient(#fff3a9,#ffb42f,transparent);transform-origin:50% 100%;transform:rotate(var(--a)) translateY(-12px) scaleY(.2);opacity:0;animation:spark12 .5s ease-out forwards}
+.attack-impact{color:#ffe777!important;text-shadow:0 0 8px #ffc72f,0 0 22px #ff6a2b,0 0 40px #b82d27,-3px 3px 0 #661c18!important}
+.attack-ray{height:6px!important;background:linear-gradient(90deg,transparent,#ff8a2e,#ffd85a,#ff8a2e,transparent)!important}
+@keyframes atkDark12{0%{opacity:.62}100%{opacity:0}}
+@keyframes atkCore12{0%{opacity:0;transform:translate(-50%,-50%) scale(.15)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}100%{opacity:0;transform:translate(-50%,-50%) scale(5.5)}}
+@keyframes spark12{0%{opacity:0;transform:rotate(var(--a)) translateY(-8px) scaleY(.15)}18%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(-92px) scaleY(1)}}
