@@ -1953,3 +1953,175 @@ body.enemy-impact-flash::after{
   border-color:#31815e;
   background:linear-gradient(100deg,#15372a,#111a16);
 }
+
+
+/* ===== v0.7.8 COLOR UI PHASE 2 ===== */
+
+/* Battle: keep hierarchy, add functional colors. */
+#battle{
+  background:
+    radial-gradient(circle at 50% 18%,#50361618,transparent 25%),
+    radial-gradient(circle at 8% 65%,#2372b10d,transparent 27%),
+    #090b0f;
+}
+.battle-count{color:#ffd86e;text-shadow:0 0 10px #e6b33128}
+.enemy-card{
+  border-color:#513e2350;
+  background:linear-gradient(180deg,#111720,#0b0e13);
+  box-shadow:inset 0 0 28px #d29b2410;
+}
+.enemy-name{color:#fff0bd}
+.enemy-level{color:#d6ae48}
+.enemy-hp .bar,.enemy-hp-bar{
+  box-shadow:0 0 12px #e64b4525;
+}
+.next-attack{
+  border-color:#a57b2d!important;
+  background:linear-gradient(180deg,#30230c,#171207)!important;
+  color:#f4cc61!important;
+  box-shadow:0 0 12px #d7a22a13,inset 0 0 12px #f3c63c0b;
+}
+.player-hp{
+  color:#9bd7ff;
+}
+.player-hp .bar,.player-hp-bar{
+  box-shadow:0 0 12px #409ff02b;
+}
+.roll-hint{
+  color:#f2cd68!important;
+  text-shadow:0 0 10px #e4b73c20;
+}
+.dice-formula{
+  color:#c7cbd4;
+}
+.dice-formula .op,
+.dice-operator{
+  color:#e8bb48!important;
+  text-shadow:0 0 10px #dfaa2d35;
+}
+.stat-mini,.battle-stat{
+  border-color:#394251!important;
+  background:linear-gradient(180deg,#151a23,#0d1016)!important;
+}
+.stat-mini:first-child,.battle-stat:first-child{
+  border-color:#876a26!important;
+  background:linear-gradient(180deg,#2d240e,#131108)!important;
+}
+.stat-mini:first-child b,.battle-stat:first-child b{color:#ffe076!important}
+.stat-mini:last-child b,.battle-stat:last-child b{color:#8de5b4!important}
+.action-button,.roll-button,#actionBtn{
+  border-color:#d2a33c!important;
+  background:linear-gradient(180deg,#ffd85a,#c58b12)!important;
+  color:#171006!important;
+  box-shadow:0 8px 24px #d99b2738,inset 0 1px #fff1a3!important;
+}
+.action-button.attack-ready,#actionBtn.attack-ready{
+  border-color:#df5a51!important;
+  background:linear-gradient(180deg,#ff7466,#b9272d)!important;
+  color:white!important;
+  box-shadow:0 8px 26px #e43b443e,inset 0 1px #ffb3ac!important;
+}
+.ready-damage{
+  border-color:#a77d2e!important;
+  background:
+    radial-gradient(circle at 50% 50%,#e9b62d18,transparent 55%),
+    linear-gradient(180deg,#19160d,#0d0e10)!important;
+  box-shadow:0 0 24px #e2aa2920,inset 0 0 20px #dba82a0d!important;
+}
+.ready-damage .ready-label{color:#e8c35d!important}
+.ready-damage .ready-value{
+  color:#ffd761!important;
+  text-shadow:0 0 9px #ffcf4c,0 0 24px #d9941e!important;
+}
+.kill-preview{
+  color:#ff645c!important;
+  text-shadow:0 0 10px #ff3c3c40;
+}
+
+/* Equipment screen: weapon=gold, armor=green/blue. */
+#equipment{
+  background:
+    radial-gradient(circle at 15% 15%,#d9a62a0d,transparent 26%),
+    radial-gradient(circle at 85% 55%,#3b9b720b,transparent 30%),
+    #090b0f;
+}
+.equip-total>div:nth-child(1){
+  border-color:#3179a2;background:linear-gradient(180deg,#102a3e,#0c151d);
+}
+.equip-total>div:nth-child(2){
+  border-color:#8b6a24;background:linear-gradient(180deg,#35270c,#171309);
+}
+.equip-total>div:nth-child(3){
+  border-color:#2f7d5c;background:linear-gradient(180deg,#123326,#0c1813);
+}
+.equip-total>div:nth-child(1) b{color:#a9dcff}
+.equip-total>div:nth-child(2) b{color:#ffe077}
+.equip-total>div:nth-child(3) b{color:#9ce8bd}
+.equip-tab:first-child.active{
+  border-color:#b58a2c!important;
+  background:linear-gradient(180deg,#392c0e,#171308)!important;
+  color:#f3d06a!important;
+}
+.equip-tab:last-child.active{
+  border-color:#367e61!important;
+  background:linear-gradient(180deg,#16372b,#0d1914)!important;
+  color:#8fe2b5!important;
+}
+
+/* Gacha: each tier gets a distinct identity. */
+#gacha{
+  background:
+    radial-gradient(circle at 50% 9%,#7547a914,transparent 30%),
+    #090b0f;
+}
+.gacha-card,.gacha-pull{
+  transition:transform .12s,filter .12s;
+}
+.gacha-pull:active{transform:scale(.975);filter:brightness(1.12)}
+.gacha-pull[data-tier="normal"]{
+  border-color:#56739a!important;
+  background:linear-gradient(180deg,#263a53,#111a26)!important;
+  color:#b9d9ff!important;
+}
+.gacha-pull[data-tier="rare"]{
+  border-color:#8e5bc1!important;
+  background:linear-gradient(180deg,#40245c,#1d1029)!important;
+  color:#e0b4ff!important;
+}
+.gacha-pull[data-tier="epic"]{
+  border-color:#b5842c!important;
+  background:linear-gradient(180deg,#49350d,#201707)!important;
+  color:#ffe078!important;
+}
+
+/* Boss reward / result: make the climax visually distinct. */
+#bossReward,#result{
+  background:
+    radial-gradient(circle at 50% 15%,#d3a12b18,transparent 30%),
+    radial-gradient(circle at 50% 70%,#7444b30c,transparent 35%),
+    #090b0f;
+}
+.boss-box,.mult-box{
+  border-color:#9d7628!important;
+  background:linear-gradient(180deg,#2d230e,#11100b)!important;
+  box-shadow:0 8px 22px #0005,inset 0 0 18px #e9b53210!important;
+}
+.boss-box:hover,.mult-box:hover{
+  filter:brightness(1.12);
+}
+.result-card{
+  border-color:#806426!important;
+  background:linear-gradient(180deg,#201a0d,#0e1014)!important;
+  box-shadow:inset 0 0 26px #e1ad2d0d!important;
+}
+
+/* Generic rarity color language for collection/gacha item cards. */
+[data-rarity="NORMAL"]{--rar:#8aa0b7}
+[data-rarity="RARE"]{--rar:#55a8ff}
+[data-rarity="EPIC"]{--rar:#b56cff}
+[data-rarity="LEGENDARY"]{--rar:#ffae3d}
+[data-rarity="GOD"]{--rar:#ffd84e}
+.item-card[data-rarity]{
+  border-color:color-mix(in srgb,var(--rar) 60%,#30343b)!important;
+  box-shadow:inset 3px 0 var(--rar),0 5px 14px #0003!important;
+}
