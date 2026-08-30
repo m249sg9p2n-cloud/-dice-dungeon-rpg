@@ -20,12 +20,44 @@
     weapon:{
       training_sword:{id:"training_sword",name:"訓練用の剣",rarity:"NORMAL",atk:0,def:0,desc:"冒険者が最初に持つ剣。"},
       iron_sword:{id:"iron_sword",name:"鉄の剣",rarity:"NORMAL",atk:3,def:0,desc:"扱いやすい鉄製の剣。"},
-      hunter_blade:{id:"hunter_blade",name:"狩人の刃",rarity:"RARE",atk:6,def:0,desc:"軽く鋭い実戦向けの刃。"}
+      bronze_axe:{id:"bronze_axe",name:"青銅の斧",rarity:"NORMAL",atk:4,def:0,desc:"重さを活かした素朴な斧。"},
+      soldier_spear:{id:"soldier_spear",name:"兵士の槍",rarity:"NORMAL",atk:4,def:0,desc:"標準的な長槍。"},
+      heavy_blade:{id:"heavy_blade",name:"重鉄の大剣",rarity:"NORMAL",atk:5,def:0,desc:"振りは遅いが威力は高い。"},
+
+      hunter_blade:{id:"hunter_blade",name:"狩人の刃",rarity:"RARE",atk:6,def:0,desc:"軽く鋭い実戦向けの刃。"},
+      knight_sword:{id:"knight_sword",name:"騎士の剣",rarity:"RARE",atk:7,def:0,desc:"騎士団で使われる上質な剣。"},
+      berserk_axe:{id:"berserk_axe",name:"狂戦士の斧",rarity:"RARE",atk:8,def:0,desc:"攻撃に特化した巨大斧。"},
+      moon_spear:{id:"moon_spear",name:"月影の槍",rarity:"RARE",atk:9,def:0,desc:"淡い光を宿す細身の槍。"},
+
+      flame_dragon:{id:"flame_dragon",name:"炎竜剣",rarity:"EPIC",atk:11,def:0,skill:"龍炎",desc:"③が6ならダイス部分をもう一度加算。"},
+      triple_star:{id:"triple_star",name:"三連星",rarity:"EPIC",atk:10,def:0,skill:"TRIPLE",desc:"111〜555のゾロ目で最終ダメージ×2.5。"},
+      adversity_blade:{id:"adversity_blade",name:"逆境の魔剣",rarity:"EPIC",atk:12,def:0,skill:"反転",desc:"③が1なら6として扱う。"},
+
+      fate_eater:{id:"fate_eater",name:"運命喰らい",rarity:"LEGENDARY",atk:15,def:0,skill:"DOUBLE",desc:"①=②なら③を2回振り高い方を採用、最終×1.5。"},
+      heavenly_greatsword:{id:"heavenly_greatsword",name:"天命の大剣",rarity:"LEGENDARY",atk:17,def:0,skill:"HIGH ROLL",desc:"全ダイス4以上で最終×2。"},
+
+      divine_dice_sword:{id:"divine_dice_sword",name:"神骰剣・天命",rarity:"GOD",atk:22,def:0,skill:"DIVINE STRAIGHT",desc:"123/234/345/456で最終ダメージ×3。"}
     },
     armor:{
-      traveler_clothes:{id:"traveler_clothes",name:"旅人の服",rarity:"NORMAL",atk:0,def:0,desc:"動きやすい旅装。"},
+      traveler_clothes:{id:"traveler_clothes",name:"旅人の服",rarity:"NORMAL",atk:0,def:0,desc:"冒険者の基本装備。"},
       leather_armor:{id:"leather_armor",name:"革の鎧",rarity:"NORMAL",atk:0,def:2,desc:"軽量な革製防具。"},
-      guard_mail:{id:"guard_mail",name:"守備隊の鎧",rarity:"RARE",atk:0,def:4,desc:"守備隊で使われる堅牢な鎧。"}
+      iron_mail:{id:"iron_mail",name:"鉄の鎧",rarity:"NORMAL",atk:0,def:3,desc:"頑丈な鉄製防具。"},
+      soldier_mail:{id:"soldier_mail",name:"兵士の鎧",rarity:"NORMAL",atk:0,def:3,desc:"兵士向けの標準防具。"},
+      tower_armor:{id:"tower_armor",name:"重装甲",rarity:"NORMAL",atk:0,def:4,desc:"重いが防御力に優れる。"},
+
+      guard_mail:{id:"guard_mail",name:"守備隊の鎧",rarity:"RARE",atk:0,def:5,desc:"守備隊で使われる堅牢な鎧。"},
+      silver_mail:{id:"silver_mail",name:"白銀の鎧",rarity:"RARE",atk:0,def:6,desc:"白銀に輝く上質な防具。"},
+      thorn_armor:{id:"thorn_armor",name:"荊棘の鎧",rarity:"RARE",atk:0,def:7,desc:"鋭い棘で覆われた鎧。"},
+      magic_coat:{id:"magic_coat",name:"魔導外套",rarity:"RARE",atk:0,def:8,desc:"魔力を編み込んだ外套。"},
+
+      indomitable:{id:"indomitable",name:"不屈の鎧",rarity:"EPIC",atk:0,def:10,skill:"不屈",desc:"致死ダメージをHP1で耐える。1戦1回。"},
+      purification:{id:"purification",name:"浄化の聖衣",rarity:"EPIC",atk:0,def:9,skill:"浄化",desc:"最初のデバフを無効化しHPを回復。"},
+      gambler_cloak:{id:"gambler_cloak",name:"賭博師の外套",rarity:"EPIC",atk:0,def:9,skill:"LUCKY SIX",desc:"③が6なら最大HPの15%回復。"},
+
+      fate_armor:{id:"fate_armor",name:"運命の鎧",rarity:"LEGENDARY",atk:0,def:13,skill:"運命改変",desc:"敵に固定されたダイスを6へ変える。"},
+      phoenix_armor:{id:"phoenix_armor",name:"不死鳥の鎧",rarity:"LEGENDARY",atk:0,def:14,skill:"REBIRTH",desc:"1ランに1度、HP50%で復活。"},
+
+      aegis:{id:"aegis",name:"神護・アイギス",rarity:"GOD",atk:0,def:18,skill:"AEGIS",desc:"致死攻撃を無効化し、次の③を6にする。"}
     }
   };
 
@@ -56,9 +88,10 @@
       base:{...BASE_STATS},
       upgrades:{hp:0,atk:0,def:0},
       inventory:{
-        weapon:["training_sword","iron_sword","hunter_blade"],
-        armor:["traveler_clothes","leather_armor","guard_mail"]
+        weapon:["training_sword"],
+        armor:["traveler_clothes"]
       },
+      duplicates:{},
       equipped:{weapon:"training_sword",armor:"traveler_clothes"},
       clears:{"1-1":0},
       records:{"1-1":{bestRunGold:0}},
@@ -77,10 +110,11 @@
         base:{...BASE_STATS,...(parsed.base||{})},
         upgrades:{hp:0,atk:0,def:0,...(parsed.upgrades||{})},
         inventory:{
-          weapon:["training_sword","iron_sword","hunter_blade"],
-          armor:["traveler_clothes","leather_armor","guard_mail"],
+          weapon:["training_sword"],
+          armor:["traveler_clothes"],
           ...(parsed.inventory||{})
         },
+        duplicates:{...(parsed.duplicates||{})},
         equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
         clears:{"1-1":0,...(parsed.clears||{})},
         records:{"1-1":{bestRunGold:0},...(parsed.records||{})},
@@ -105,6 +139,77 @@
   function show(id){
     $$(".screen").forEach(s => s.classList.toggle("active", s.id===id));
     window.scrollTo(0,0);
+  }
+
+  const GACHA = {
+    normal:{cost:300, rates:[["NORMAL",55],["RARE",28],["EPIC",12],["LEGENDARY",4],["GOD",1]]},
+    rare:{cost:900, rates:[["RARE",70],["EPIC",22],["LEGENDARY",7],["GOD",1]]},
+    epic:{cost:2500, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
+  };
+
+  function allEquipment(){
+    return [
+      ...Object.values(EQUIPMENT.weapon).map(item=>({slot:"weapon",item})),
+      ...Object.values(EQUIPMENT.armor).map(item=>({slot:"armor",item}))
+    ];
+  }
+
+  function rollRarity(rates){
+    const n=Math.random()*100;
+    let acc=0;
+    for(const [rarity,rate] of rates){
+      acc+=rate;
+      if(n<acc) return rarity;
+    }
+    return rates[rates.length-1][0];
+  }
+
+  function openGacha(){
+    $("#gachaGold").textContent=save.gold;
+    $("#gachaResult").classList.add("hidden");
+    $("#gachaResult").innerHTML="";
+    show("gacha");
+  }
+
+  function pullGacha(tier){
+    const cfg=GACHA[tier];
+    if(!cfg || save.gold<cfg.cost){
+      const btn=document.querySelector(`.gacha-pull[data-tier="${tier}"]`);
+      btn?.classList.add("cant-buy");
+      setTimeout(()=>btn?.classList.remove("cant-buy"),420);
+      return;
+    }
+
+    save.gold-=cfg.cost;
+    const rarity=rollRarity(cfg.rates);
+    const pool=allEquipment().filter(x=>x.item.rarity===rarity);
+    const result=pool[Math.floor(Math.random()*pool.length)];
+    const owned=save.inventory[result.slot] || (save.inventory[result.slot]=[]);
+    const isDuplicate=owned.includes(result.item.id);
+
+    if(!isDuplicate){
+      owned.push(result.item.id);
+      save.duplicates[result.item.id]=1;
+    }else{
+      save.duplicates[result.item.id]=(save.duplicates[result.item.id]||1)+1;
+    }
+
+    persist();
+    $("#gachaGold").textContent=save.gold;
+    renderHome();
+
+    const el=$("#gachaResult");
+    const stat=result.slot==="weapon" ? `ATK +${result.item.atk}` : `DEF +${result.item.def}`;
+    const count=save.duplicates[result.item.id]||1;
+    el.className=`gacha-result ${rarityClass(rarity)}`;
+    el.innerHTML=`
+      <div class="result-rarity">${rarity}</div>
+      <div class="result-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
+      <h2>${result.item.name}</h2>
+      <b>${stat}</b>
+      ${result.item.skill?`<strong>《${result.item.skill}》</strong>`:""}
+      <small>${isDuplicate?`DUPLICATE ×${count}`:"NEW!"}</small>
+    `;
   }
 
   function equippedItem(slot){
@@ -284,12 +389,17 @@
         label.classList.toggle("visible",Boolean(value));
         label.classList.toggle("six",i===2 && value===6);
       }
-      const isNext=state.nextDie===i && !busy;
-      d.classList.toggle("locked",!isNext);
-      d.classList.toggle("ready",isNext);
-      d.disabled=!isNext;
     });
-    document.body.classList.toggle("mult-dim",state.nextDie===2 && !busy);
+
+    const pairReady=state.nextDie===0 && !busy;
+    const multReady=state.nextDie===2 && !busy;
+    $("#pairRollBtn").disabled=!pairReady;
+    $("#pairRollBtn").classList.toggle("locked",!pairReady);
+    $("#pairRollBtn").classList.toggle("ready",pairReady);
+    $("#multRollBtn").disabled=!multReady;
+    $("#multRollBtn").classList.toggle("locked",!multReady);
+    $("#multRollBtn").classList.toggle("ready",multReady);
+    document.body.classList.toggle("mult-dim",multReady);
   }
 
   function renderEnemyArt(enemy){
@@ -350,8 +460,9 @@
       ghost.style.width="0";
       hpbar.classList.remove("kill-preview");
       $("#attackBtn").disabled=true;
-      const labels=["①","②","③ 倍率"];
-      $("#instruction").textContent=`${labels[state.nextDie]}のダイスをタップ！`;
+      if(state.nextDie===0) $("#instruction").textContent="前半ダイスをタップ！";
+      else if(state.nextDie===2) $("#instruction").textContent="倍率ダイスをタップ！";
+      else $("#instruction").textContent="ROLLING…";
     }
     $("#critical").classList.add("hidden");
   }
@@ -386,73 +497,96 @@
     renderBattle();
   }
 
-  async function rollDie(index,btn){
-    if(busy || index!==state.nextDie) return;
-    busy=true;
-    renderBattle();
-
-    const mult=index===2;
-    const duration=mult?820:620;
-    btn.classList.remove("land");
-    void btn.offsetWidth;
-    btn.classList.add("rolling");
+  async function animateOneDie(index, visualDie, mult=false, extraDelay=0){
+    if(extraDelay) await wait(extraDelay);
+    const duration=mult?900:560;
+    visualDie.classList.remove("land");
+    void visualDie.offsetWidth;
+    visualDie.classList.add("rolling");
     FX.rollDie(mult);
-
-    const face=btn.querySelector(".die-face");
+    const face=visualDie.querySelector(".die-face");
     const resultLabel=document.querySelector(`.roll-number[data-result="${index}"]`);
     if(resultLabel){
       resultLabel.textContent="";
       resultLabel.classList.remove("visible","six");
     }
-
     const start=performance.now();
     let step=0;
     while(performance.now()-start < duration-55){
       drawFace(face,1+Math.floor(Math.random()*6));
       step++;
-      await wait(Math.min(82,42+step*4));
+      await wait(Math.min(76,38+step*4));
     }
-
     const value=1+Math.floor(Math.random()*6);
     state.dice[index]=value;
-    state.nextDie++;
     drawFace(face,value);
-
     if(resultLabel){
       resultLabel.textContent=value;
       resultLabel.classList.add("visible");
       if(mult && value===6) resultLabel.classList.add("six");
     }
-
-    await wait(45);
-    btn.classList.remove("rolling");
-    btn.classList.add("land");
+    await wait(38);
+    visualDie.classList.remove("rolling");
+    visualDie.classList.add("land");
     FX.land(mult);
-    await wait(90);
+    setTimeout(()=>visualDie.classList.remove("land"),160);
+    return value;
+  }
 
+  async function rollPair(){
+    if(busy || state.nextDie!==0) return;
+    busy=true;
+    renderBattle();
+    const dice=$$(".die");
+    const [a,b]=await Promise.all([
+      animateOneDie(0,dice[0],false,0),
+      animateOneDie(1,dice[1],false,115)
+    ]);
+    state.nextDie=2;
+    const sum=$("#sumBurst");
+    sum.textContent=`${a} + ${b} = ${a+b}`;
+    sum.className="sum-burst show";
+    document.body.classList.add("pair-impact");
+    FX.attack(false);
+    await wait(220);
+    document.body.classList.remove("pair-impact");
+    setTimeout(()=>sum.className="sum-burst",520);
     busy=false;
     renderBattle();
-    setTimeout(()=>btn.classList.remove("land"),150);
+    $("#multRollBtn").classList.add("charge");
+    await wait(260);
+    $("#multRollBtn").classList.remove("charge");
+  }
 
-    if(mult){
-      const multFx=$("#multFx");
-      multFx.textContent=`×${value}`;
-      multFx.className=`show-mult${value===6?" x6":""}`;
-      FX.multiplier(value);
-      document.body.classList.add(value>=5?"big-shake":"shake");
-      setTimeout(()=>{
-        multFx.className="";
-        document.body.classList.remove("shake","big-shake");
-      },560);
-
-      if(state.dice.every(v=>v===6)){
-        await wait(220);
-        $("#critical").classList.remove("hidden");
-        FX.critical666();
-        await wait(760);
-        $("#critical").classList.add("hidden");
-      }
+  async function rollMultiplier(){
+    if(busy || state.nextDie!==2) return;
+    busy=true;
+    renderBattle();
+    const die=$$(".die")[2];
+    document.body.classList.add("mult-focus");
+    $("#instruction").textContent="倍率抽選…";
+    await wait(180);
+    const value=await animateOneDie(2,die,true,0);
+    state.nextDie=3;
+    const multFx=$("#multFx");
+    multFx.textContent=`×${value}`;
+    multFx.className=`show-mult${value===6?" x6":""}`;
+    FX.multiplier(value);
+    const impact=value>=5?"big-shake":"shake";
+    document.body.classList.add(impact);
+    if(value>=4) document.body.classList.add("gold-pulse");
+    await wait(value===6?620:450);
+    multFx.className="";
+    document.body.classList.remove("shake","big-shake","gold-pulse","mult-focus");
+    if(state.dice.every(v=>v===6)){
+      await wait(120);
+      $("#critical").classList.remove("hidden");
+      FX.critical666();
+      await wait(760);
+      $("#critical").classList.add("hidden");
     }
+    busy=false;
+    renderBattle();
   }
 
   async function attack(){
@@ -597,10 +731,14 @@
   }
 
   $$(".upgrade-card").forEach(b=>b.addEventListener("click",()=>buyUpgrade(b.dataset.upgrade)));
+  $("#gachaEntry").addEventListener("click",openGacha);
+  $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
+  $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
   $$(".equip-button").forEach(b=>b.addEventListener("click",()=>openEquipment(b.dataset.slot)));
   $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#startBtn").addEventListener("click",startRun);
-  $$(".die").forEach((b,i)=>b.addEventListener("click",()=>rollDie(i,b)));
+  $("#pairRollBtn").addEventListener("click",rollPair);
+  $("#multRollBtn").addEventListener("click",rollMultiplier);
   $("#attackBtn").addEventListener("click",attack);
   $$(".reward").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));
