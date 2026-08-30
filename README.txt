@@ -14,3 +14,9 @@ v1.0.1 DEV FIX
 - さらに2秒長押しでも起動（テスト時の保険）
 - iPhone Safari向け touch/pointer 両対応
 - 起動時に振動
+
+v1.0.2 DEV VISIBILITY FIX
+- 原因: devMode に class="hidden" が残っており、画面切替後も display:none!important が勝っていた
+- devMode を通常の screen と同じ方式に修正
+- active 時は必ず表示
+- openDevMode() 側でも hidden を除去する二重安全策

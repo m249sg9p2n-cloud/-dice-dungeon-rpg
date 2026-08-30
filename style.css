@@ -2529,3 +2529,10 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #devMode.screen{position:fixed;inset:0;z-index:900;overflow:auto;background:radial-gradient(circle at 50% 0,#14283b,#070a0f 48%)}
 #devMode.screen.hidden{display:none!important}
 #devMode .screen-head{position:sticky;top:0;z-index:2}
+
+/* v1.0.2 dev screen visibility fix */
+#devMode.screen{display:none;position:fixed;inset:0;z-index:900;overflow:auto}
+#devMode.screen.active{display:flex!important;flex-direction:column}
+#devMode .screen-head{display:flex;align-items:center;justify-content:space-between;padding:6px 0 14px}
+#devMode .screen-head h2{margin:0;font-size:18px}
+#devMode .screen-head span{font-size:10px;font-weight:1000;letter-spacing:.18em;color:#73c4ff}

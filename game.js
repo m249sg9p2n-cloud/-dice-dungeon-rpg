@@ -1182,7 +1182,10 @@
     clearTimeout(devTapTimer);
     clearTimeout(devHoldTimer);
     try{ if(navigator.vibrate) navigator.vibrate([35,30,80]); }catch(_){}
+    const dev=$("#devMode");
+    dev?.classList.remove("hidden");
     show("devMode");
+    dev?.classList.add("active");
   }
   function devTap(){
     devTapCount++;
