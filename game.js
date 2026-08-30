@@ -459,7 +459,14 @@
     renderEnemyArt(e);
     $("#enemyName").textContent=e.name;
     $("#enemyLv").textContent=`Lv.${e.lv}`;
-    $("#nextAttack").textContent=currentAttack();
+    const shownEnemyAtk=currentAttack();
+    $("#nextAttack").textContent=shownEnemyAtk;
+    const battleEl=$("#battle");
+    battleEl?.classList.toggle("boss-battle",!!e.boss || state.battle===4);
+    const danger=shownEnemyAtk>=30?"deadly":shownEnemyAtk>=20?"high":shownEnemyAtk>=14?"mid":"low";
+    if(battleEl) battleEl.dataset.danger=danger;
+    const dangerLabel=$("#dangerLabel");
+    if(dangerLabel) dangerLabel.textContent=danger==="deadly"?"DANGER!":danger==="high"?"HIGH":danger==="mid"?"CAUTION":"WATCH";
 
     const enemyPct=Math.max(0,state.enemyHp/e.hp);
     $("#enemyHpText").textContent=`${Math.max(0,state.enemyHp)} / ${e.hp}`;

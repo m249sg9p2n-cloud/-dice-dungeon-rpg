@@ -1,11 +1,5 @@
-Dice Dungeon RPG v0.7.8 — COLOR UI PHASE 2
-
-v0.7.7の「色で役割を分ける」方向をゲーム全体へ拡張。
-
-- 戦闘: 敵/危険=赤、NEXT ATTACK=黄、PLAYER HP=青、ATK=金、DEF=緑。
-- 通常ROLLボタン=金、ダメージ確定後の攻撃状態=赤。
-- FINAL DAMAGEは金の主役表示を強化。
-- 装備画面: 武器=金、防具=緑、HP/ATK/DEFも色分け。
-- ガチャ: Normal=青系、Rare+=紫系、Epic+=金系。
-- ボス報酬/リザルト: ゴールドの特別感を強化。
-- 画面の構造や操作位置は変えず、v0.7.7の見やすさを維持。
+Dice Dungeon RPG v0.7.9 — 戦闘ステージ演出版
+- 敵エリアに軽量CSSの森背景（月・木・霧・地面・足元オーラ）
+- NEXT ATTACKをWATCH / CAUTION / HIGH / DANGER!で危険度カラー化
+- 5戦目BOSSは赤黒い背景・赤い月・赤オーラへ自動変化
+- 既存のダイス演出・操作・COLOR UIは維持

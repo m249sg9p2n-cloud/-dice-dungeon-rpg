@@ -2125,3 +2125,31 @@ body.enemy-impact-flash::after{
   border-color:color-mix(in srgb,var(--rar) 60%,#30343b)!important;
   box-shadow:inset 3px 0 var(--rar),0 5px 14px #0003!important;
 }
+
+/* ===== v0.7.9 BATTLE STAGE ===== */
+.enemy-stage{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#101a22,#0b1114 58%,#090c0d)!important}
+.stage-scenery{position:absolute;z-index:-1;inset:0;overflow:hidden;pointer-events:none}
+.stage-scenery::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 34%,#8abda516,transparent 28%),linear-gradient(180deg,#17262a,#10191a 50%,#090d0d)}
+.stage-moon{position:absolute;width:66px;height:66px;right:12%;top:17px;border-radius:50%;background:radial-gradient(circle at 38% 35%,#e3eee5,#8caf9f 58%,#48685e 72%,transparent 74%);opacity:.18;box-shadow:0 0 32px #a9d7c44a}
+.stage-tree{position:absolute;bottom:13px;width:58px;height:118px;opacity:.26}
+.stage-tree::before{content:"";position:absolute;left:25px;bottom:0;width:8px;height:84px;border-radius:60% 30% 20% 30%;background:#06100e;transform:rotate(5deg)}
+.stage-tree::after{content:"";position:absolute;left:2px;top:3px;width:54px;height:61px;border-radius:48%;background:radial-gradient(circle at 30% 35%,#10251d 0 24%,transparent 25%),radial-gradient(circle at 65% 40%,#0c211a 0 28%,transparent 29%),radial-gradient(circle at 48% 70%,#0a1b16 0 31%,transparent 32%)}
+.tree-left{left:-3px;transform:scale(1.18)}.tree-right{right:0;transform:scale(.92) scaleX(-1)}
+.enemy-ground{position:absolute;left:17%;right:17%;bottom:13px;height:22px;border-radius:50%;background:radial-gradient(ellipse,#000b,#24402b55 45%,transparent 72%)}
+.enemy-aura{position:absolute;left:50%;bottom:15px;width:142px;height:42px;transform:translateX(-50%);border-radius:50%;border:1px solid #65b98225;background:radial-gradient(ellipse,#5da9741f,transparent 68%);box-shadow:0 0 22px #4fa56c1b;animation:enemyAura79 2.3s ease-in-out infinite}
+@keyframes enemyAura79{0%,100%{transform:translateX(-50%) scale(.92);opacity:.5}50%{transform:translateX(-50%) scale(1.08);opacity:.95}}
+.stage-fog{position:absolute;height:23px;width:155px;border-radius:50%;background:linear-gradient(90deg,transparent,#c2e0d213,transparent);filter:blur(5px);opacity:.7}
+.fog-a{left:-45px;bottom:26px;animation:fog79 7s ease-in-out infinite alternate}.fog-b{right:-55px;bottom:58px;animation:fog79 9s ease-in-out infinite alternate-reverse}
+@keyframes fog79{from{transform:translateX(-12px)}to{transform:translateX(38px)}}
+.enemy-art{position:relative;z-index:2;filter:drop-shadow(0 8px 6px #0009) drop-shadow(0 0 8px #78a97620)}
+.next{border-color:#a57b2d!important;background:linear-gradient(180deg,#30230c,#171207)!important;color:#f4cc61!important;box-shadow:0 0 12px #d7a22a13,inset 0 0 12px #f3c63c0b}
+.next em{display:block;margin-top:1px;font-style:normal;font-size:6px;font-weight:1000;letter-spacing:.12em;opacity:.72}
+#battle[data-danger="high"] .next{border-color:#c75b35!important;background:linear-gradient(180deg,#3b1c0f,#1b100a)!important;color:#ff9e62!important;box-shadow:0 0 18px #e9633535}
+#battle[data-danger="deadly"] .next{border-color:#e3474d!important;background:linear-gradient(180deg,#46141a,#210b0f)!important;color:#ff7377!important;box-shadow:0 0 22px #f03b4850;animation:danger79 1s ease-in-out infinite}
+@keyframes danger79{50%{transform:scale(1.025);box-shadow:0 0 28px #f03b4864}}
+#battle.boss-battle .enemy-stage{background:linear-gradient(180deg,#281619,#140f12 58%,#0a0b0d)!important}
+#battle.boss-battle .stage-scenery::before{background:radial-gradient(circle at 50% 34%,#cf50391e,transparent 30%),linear-gradient(180deg,#2b1719,#161013 52%,#0a0c0d)}
+#battle.boss-battle .stage-moon{background:radial-gradient(circle at 38% 35%,#ffd7bd,#c97c65 58%,#713b3a 72%,transparent 74%);box-shadow:0 0 36px #e14b3e55;opacity:.27}
+#battle.boss-battle .enemy-aura{border-color:#e34c3c45;background:radial-gradient(ellipse,#dc3d312d,transparent 68%);box-shadow:0 0 30px #df3f3538}
+#battle.boss-battle .enemy-name b{color:#ffad91!important;text-shadow:0 0 12px #e94a3c3d}
+#battle.boss-battle .enemy-art{filter:drop-shadow(0 8px 6px #000a) drop-shadow(0 0 13px #df4d3d36)}
