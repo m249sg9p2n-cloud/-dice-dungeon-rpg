@@ -124,6 +124,30 @@
       noiseTo(b,.12,.07,.27,650,4200);
     }
   }
+  function chestRattle(){
+    if(muted) return;
+    noise(.055,.045,0,500,2200); tone(180,.06,"square",.025,0,130);
+    noise(.045,.035,.075,620,2500); tone(160,.05,"square",.022,.075,120);
+  }
+  function puchun(){
+    if(muted) return;
+    const c=audio(), t=c.currentTime;
+    tone(140,.055,"square",.055,0,58);
+    tone(84,.11,"sine",.08,.045,32);
+    noise(.045,.035,.01,300,1100);
+  }
+  function gradeUp(){
+    if(muted) return;
+    [392,523.25,659.25,783.99].forEach((f,i)=>tone(f,.17,"triangle",.032,.03+i*.045,f*1.01));
+    tone(92,.24,"sine",.07,.02,46);
+  }
+  function chestOpen(rarity="NORMAL"){
+    if(muted) return;
+    noise(.10,.06,0,420,3200);
+    tone(120,.18,"sine",.08,0,52);
+    const high=rarity==="GOD"||rarity==="LEGENDARY";
+    [523.25,659.25,783.99].forEach((f,i)=>tone(f*(high?1.25:1),.22,"triangle",.03,.07+i*.045,f));
+  }
   function killStinger(){
     if(muted) return;
     const b=hitBus();
@@ -137,7 +161,7 @@
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, killStinger, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, chestRattle, puchun, gradeUp, chestOpen, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();

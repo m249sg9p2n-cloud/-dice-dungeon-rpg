@@ -65,12 +65,25 @@
     "1-1": {
       id:"1-1",
       name:"ゴブリンの森",
+      mission:"4戦を突破し、5戦目のゴブリンキングを倒せ。",
       enemies:[
         {name:"ゴブリン", image:"enemy_01_goblin.png", hp:48, attacks:[8,10,12], gold:25, lv:1},
         {name:"ゴブリン弓兵", image:"enemy_02_goblin_archer.png", hp:58, attacks:[8,8,16], gold:35, lv:2},
         {name:"ゴブリン戦士", image:"enemy_03_goblin_warrior.png", hp:82, attacks:[12,14,14], gold:45, lv:3},
         {name:"ゴブリン隊長", image:"enemy_04_goblin_captain.png", hp:105, attacks:[12,16,24], gold:60, lv:4},
         {name:"ゴブリンキング", image:"enemy_05_goblin_king.png", hp:155, attacks:[12,18,12,35], gold:120, lv:5, boss:true}
+      ]
+    },
+    "1-2": {
+      id:"1-2",
+      name:"毒蜘蛛の洞窟",
+      mission:"毒の洞窟を進み、最深部の大毒蜘蛛を倒せ。",
+      enemies:[
+        {name:"洞窟コウモリ", image:"enemy_06_cave_bat.png", hp:72, attacks:[10,12,14], gold:40, lv:6},
+        {name:"子蜘蛛", image:"enemy_07_baby_spider.png", hp:88, attacks:[10,14,16], gold:50, lv:7},
+        {name:"毒蜘蛛", image:"enemy_08_poison_spider.png", hp:110, attacks:[12,16,20], gold:65, lv:8},
+        {name:"大蜘蛛", image:"enemy_09_giant_spider.png", hp:138, attacks:[14,18,26], gold:85, lv:9},
+        {name:"大毒蜘蛛", image:"enemy_10_queen_spider.png", hp:205, attacks:[14,20,16,38], gold:165, lv:10, boss:true}
       ]
     }
   };
@@ -93,8 +106,8 @@
       },
       duplicates:{},
       equipped:{weapon:"training_sword",armor:"traveler_clothes"},
-      clears:{"1-1":0},
-      records:{"1-1":{bestRunGold:0}},
+      clears:{"1-1":0,"1-2":0},
+      records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0}},
       unlocked:["1-1"]
     };
   }
@@ -116,8 +129,8 @@
         },
         duplicates:{...(parsed.duplicates||{})},
         equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
-        clears:{"1-1":0,...(parsed.clears||{})},
-        records:{"1-1":{bestRunGold:0},...(parsed.records||{})},
+        clears:{"1-1":0,"1-2":0,...(parsed.clears||{})},
+        records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},...(parsed.records||{})},
         unlocked:Array.isArray(parsed.unlocked) ? parsed.unlocked : ["1-1"]
       };
     }catch{
@@ -130,6 +143,8 @@
   let state = null;
   let busy = false;
   let lastClear = null;
+  let pendingGacha = null;
+  let gachaBusy = false;
 
   function persist(){
     localStorage.setItem(SAVE_KEY, JSON.stringify(save));
@@ -164,15 +179,45 @@
     return rates[rates.length-1][0];
   }
 
+  const RARITY_ORDER=["NORMAL","RARE","EPIC","LEGENDARY","GOD"];
+
   function openGacha(){
     $("#gachaGold").textContent=save.gold;
     $("#gachaResult").classList.add("hidden");
     $("#gachaResult").innerHTML="";
+    $("#gachaTheater")?.classList.add("hidden");
+    pendingGacha=null;
+    gachaBusy=false;
     show("gacha");
+  }
+
+  function gachaBaseRarity(tier){
+    return tier==="epic"?"EPIC":tier==="rare"?"RARE":"NORMAL";
+  }
+
+  function setChestRarity(rarity){
+    const chest=$("#gachaChest");
+    const grade=$("#gachaGrade");
+    if(!chest) return;
+    chest.className=`gacha-chest chest-${rarity.toLowerCase()}`;
+    if(grade) grade.textContent=rarity;
+  }
+
+  function storeGachaResult(result){
+    const owned=save.inventory[result.slot] || (save.inventory[result.slot]=[]);
+    const isDuplicate=owned.includes(result.item.id);
+    if(!isDuplicate){
+      owned.push(result.item.id);
+      save.duplicates[result.item.id]=1;
+    }else{
+      save.duplicates[result.item.id]=(save.duplicates[result.item.id]||1)+1;
+    }
+    return {isDuplicate,count:save.duplicates[result.item.id]||1};
   }
 
   function pullGacha(tier){
     const cfg=GACHA[tier];
+    if(gachaBusy || pendingGacha) return;
     if(!cfg || save.gold<cfg.cost){
       const btn=document.querySelector(`.gacha-pull[data-tier="${tier}"]`);
       btn?.classList.add("cant-buy");
@@ -184,32 +229,98 @@
     const rarity=rollRarity(cfg.rates);
     const pool=allEquipment().filter(x=>x.item.rarity===rarity);
     const result=pool[Math.floor(Math.random()*pool.length)];
-    const owned=save.inventory[result.slot] || (save.inventory[result.slot]=[]);
-    const isDuplicate=owned.includes(result.item.id);
-
-    if(!isDuplicate){
-      owned.push(result.item.id);
-      save.duplicates[result.item.id]=1;
-    }else{
-      save.duplicates[result.item.id]=(save.duplicates[result.item.id]||1)+1;
-    }
-
+    pendingGacha={
+      tier,
+      result,
+      finalRarity:rarity,
+      currentRarity:gachaBaseRarity(tier)
+    };
     persist();
     $("#gachaGold").textContent=save.gold;
     renderHome();
 
+    $("#gachaResult").classList.add("hidden");
+    $("#gachaResult").innerHTML="";
+    $("#gachaTheater")?.classList.remove("hidden");
+    $("#gachaPrompt").textContent="CHESTをタップ";
+    setChestRarity(pendingGacha.currentRarity);
+    $("#gachaChest")?.classList.add("ready");
+    FX.chestRattle();
+  }
+
+  async function gachaChestTap(){
+    if(!pendingGacha || gachaBusy) return;
+    gachaBusy=true;
+    const chest=$("#gachaChest");
+    chest?.classList.remove("ready");
+    chest?.classList.add("rattle");
+    FX.chestRattle();
+    try{if(navigator.vibrate) navigator.vibrate([16,24,16])}catch(_){}
+    await wait(420);
+    chest?.classList.remove("rattle");
+
+    const cur=RARITY_ORDER.indexOf(pendingGacha.currentRarity);
+    const fin=RARITY_ORDER.indexOf(pendingGacha.finalRarity);
+
+    if(cur<fin){
+      await playGachaPuchun(RARITY_ORDER[cur+1]);
+      pendingGacha.currentRarity=RARITY_ORDER[cur+1];
+      setChestRarity(pendingGacha.currentRarity);
+      $("#gachaPrompt").textContent="昇格！ もう一度CHESTをタップ";
+      chest?.classList.add("ready","graded");
+      gachaBusy=false;
+      return;
+    }
+
+    await revealGachaResult();
+    gachaBusy=false;
+  }
+
+  async function playGachaPuchun(nextRarity){
+    document.querySelector("#gachaPuchun")?.remove();
+    const layer=document.createElement("div");
+    layer.id="gachaPuchun";
+    layer.className=`puchun-${nextRarity.toLowerCase()}`;
+    layer.innerHTML=`<div class="crt-line"></div><div class="grade-ripple"></div><div class="grade-copy"><small>GRADE UP</small><strong>${nextRarity}</strong></div>`;
+    document.body.appendChild(layer);
+    FX.puchun();
+    await wait(300);
+    layer.classList.add("grade-on");
+    FX.gradeUp();
+    try{if(navigator.vibrate) navigator.vibrate([22,32,52])}catch(_){}
+    await wait(620);
+    layer.remove();
+  }
+
+  async function revealGachaResult(){
+    const {result,finalRarity}=pendingGacha;
+    const chest=$("#gachaChest");
+    chest?.classList.add("opening");
+    FX.chestOpen(finalRarity);
+    try{if(navigator.vibrate) navigator.vibrate(finalRarity==="GOD"?[28,16,70]:[24,14,42])}catch(_){}
+    await wait(560);
+
+    const stored=storeGachaResult(result);
+    persist();
+    renderHome();
+
     const el=$("#gachaResult");
     const stat=result.slot==="weapon" ? `ATK +${result.item.atk}` : `DEF +${result.item.def}`;
-    const count=save.duplicates[result.item.id]||1;
-    el.className=`gacha-result ${rarityClass(rarity)}`;
+    el.className=`gacha-result ${rarityClass(finalRarity)} reveal`;
     el.innerHTML=`
-      <div class="result-rarity">${rarity}</div>
+      <div class="result-rarity">${finalRarity}</div>
       <div class="result-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
       <h2>${result.item.name}</h2>
       <b>${stat}</b>
       ${result.item.skill?`<strong>《${result.item.skill}》</strong>`:""}
-      <small>${isDuplicate?`DUPLICATE ×${count}`:"NEW!"}</small>
+      <small>${stored.isDuplicate?`DUPLICATE ×${stored.count}`:"NEW!"}</small>
     `;
+    $("#gachaPrompt").textContent="召喚完了！";
+    $("#gachaTheater")?.classList.add("finished");
+    await wait(450);
+    pendingGacha=null;
+    chest?.classList.remove("opening","graded");
+    $("#gachaTheater")?.classList.add("hidden");
   }
 
   function equippedItem(slot){
@@ -364,12 +475,34 @@
       }
     }
 
-    const clears=save.clears["1-1"]||0;
+    if(!save.unlocked.includes(selectedDungeonId)) selectedDungeonId="1-1";
+    const selected=DUNGEONS[selectedDungeonId] || DUNGEONS["1-1"];
+    $("#missionTitle").textContent=`${selected.id} ${selected.name}`;
+    $("#missionText").textContent=selected.mission||"全5戦を突破せよ。";
+    $("#startBtn").textContent=`${selected.id}へ出撃`;
+
+    $$(".dungeon-card[data-dungeon]").forEach(card=>{
+      const id=card.dataset.dungeon;
+      const unlocked=save.unlocked.includes(id);
+      card.disabled=!unlocked;
+      card.classList.toggle("locked",!unlocked);
+      card.classList.toggle("selected",id===selectedDungeonId);
+      const badge=card.querySelector(".clear-badge,.dungeon-badge");
+      if(badge){
+        const c=save.clears[id]||0;
+        badge.textContent=!unlocked?"🔒":c>0?`CLEAR ×${c}`:"未CLEAR";
+        badge.classList.toggle("cleared",unlocked && c>0);
+      }
+    });
+
+    const clears=save.clears[selectedDungeonId]||0;
     $("#clearCount").textContent=clears;
-    $("#bestRunGold").textContent=`${save.records["1-1"]?.bestRunGold||0}G`;
+    $("#bestRunGold").textContent=`${save.records[selectedDungeonId]?.bestRunGold||0}G`;
     const badge=$("#clearBadge");
-    badge.textContent=clears>0 ? `CLEAR ×${clears}` : "未CLEAR";
-    badge.classList.toggle("cleared",clears>0);
+    if(badge){
+      badge.textContent=clears>0 ? `CLEAR ×${clears}` : "未CLEAR";
+      badge.classList.toggle("cleared",clears>0);
+    }
   }
 
   function currentDungeon(){ return DUNGEONS[state.dungeonId]; }
@@ -462,6 +595,7 @@
     const shownEnemyAtk=currentAttack();
     $("#nextAttack").textContent=shownEnemyAtk;
     const battleEl=$("#battle");
+    if(battleEl) battleEl.dataset.stage=state.dungeonId;
     battleEl?.classList.toggle("boss-battle",!!e.boss || state.battle===4);
     const danger=shownEnemyAtk>=30?"deadly":shownEnemyAtk>=20?"high":shownEnemyAtk>=14?"mid":"low";
     if(battleEl) battleEl.dataset.danger=danger;
@@ -1012,6 +1146,9 @@
 
     save.gold+=total;
     save.clears[state.dungeonId]=(save.clears[state.dungeonId]||0)+1;
+    if(state.dungeonId==="1-1" && !save.unlocked.includes("1-2")){
+      save.unlocked.push("1-2");
+    }
     const record=save.records[state.dungeonId] || {bestRunGold:0};
     record.bestRunGold=Math.max(record.bestRunGold,total);
     save.records[state.dungeonId]=record;
@@ -1050,6 +1187,13 @@
   $("#gachaEntry").addEventListener("click",openGacha);
   $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
   $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
+  $("#gachaChest")?.addEventListener("click",gachaChestTap);
+  $$(".dungeon-card[data-dungeon]").forEach(card=>card.addEventListener("click",()=>{
+    const id=card.dataset.dungeon;
+    if(!save.unlocked.includes(id)) return;
+    selectedDungeonId=id;
+    renderHome();
+  }));
   $("#equipmentEntry").addEventListener("click",()=>openEquipment("weapon"));
   $("#weaponTab").addEventListener("click",()=>openEquipment("weapon"));
   $("#armorTab").addEventListener("click",()=>openEquipment("armor"));

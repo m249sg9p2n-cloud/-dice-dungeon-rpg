@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=0810">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=0810">
-  <link rel="stylesheet" href="./style.css?v=0810">
-  <title>Dice Dungeon RPG v0.8.1</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=0900">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=0900">
+  <link rel="stylesheet" href="./style.css?v=0900">
+  <title>Dice Dungeon RPG v0.9.0</title>
 </head>
 <body>
 <main id="app">
@@ -37,8 +37,8 @@
       <div class="crest">🎲</div>
       <div>
         <div class="eyebrow">CURRENT MISSION</div>
-        <h2>1-1 ゴブリンの森</h2>
-        <p>4戦を突破し、5戦目のゴブリンキングを倒せ。</p>
+        <h2 id="missionTitle">1-1 ゴブリンの森</h2>
+        <p id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</p>
       </div>
     </article>
 
@@ -81,10 +81,10 @@
         <span class="dungeon-info"><b>ゴブリンの森</b><small>全5戦 / BOSS ゴブリンキング</small></span>
         <span id="clearBadge" class="clear-badge">未CLEAR</span>
       </button>
-      <button class="dungeon-card locked" disabled>
+      <button class="dungeon-card locked" data-dungeon="1-2" disabled>
         <span class="dungeon-code">1-2</span>
-        <span class="dungeon-info"><b>毒蜘蛛の洞窟</b><small>COMING SOON</small></span>
-        <span class="lock-mark">🔒</span>
+        <span class="dungeon-info"><b>毒蜘蛛の洞窟</b><small>全5戦 / BOSS 大毒蜘蛛</small></span>
+        <span class="clear-badge dungeon-badge">🔒</span>
       </button>
     </div>
 
@@ -94,7 +94,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.8.1 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.9.0 — ガチャ演出 + 1-2 毒蜘蛛の洞窟</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -158,6 +158,15 @@
       <span>GOD <b>1%</b></span>
     </div>
 
+    <div id="gachaTheater" class="gacha-theater hidden" aria-live="polite">
+      <div class="gacha-stage-glow"></div>
+      <button id="gachaChest" class="gacha-chest chest-normal" type="button">
+        <span class="chest-lid"></span><span class="chest-body"></span><span class="chest-lock">◆</span>
+      </button>
+      <div id="gachaPrompt" class="gacha-prompt">CHESTをタップ</div>
+      <div id="gachaGrade" class="gacha-grade">NORMAL</div>
+    </div>
+
     <div class="gacha-buttons">
       <button class="gacha-pull primary" data-tier="normal">
         <span>通常召喚</span><b>300G</b><small>全レアリティ</small>
@@ -171,7 +180,7 @@
     </div>
 
     <div id="gachaResult" class="gacha-result hidden"></div>
-    <p class="note">※今回はガチャ基盤版。プチュン昇格演出は次段階で実装。</p>
+    <p class="note">CHESTをタップ。昇格時はプチュン → CHESTが1段階豪華に変化。</p>
   </section>
 
   <section id="equipment" class="screen">
@@ -358,11 +367,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=0810"></script>
-<script src="./game.js?v=0810"></script>
+<script src="./effects.js?v=0900"></script>
+<script src="./game.js?v=0900"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=0810").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=0900").catch(console.error));
 }
 </script>
 </body>

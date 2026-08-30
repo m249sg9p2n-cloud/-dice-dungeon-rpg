@@ -2435,3 +2435,63 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
   .rush-speedlines,.rush-band,.rush-count{display:none!important}
   .rush-title{animation:none!important}
 }
+
+
+/* ===== v0.9.0 GACHA THEATER ===== */
+.gacha-theater{position:relative;min-height:270px;margin:12px 0 14px;border:1px solid #5b4526;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 50% 44%,#5f452025,transparent 36%),linear-gradient(180deg,#15121c,#090b10);box-shadow:inset 0 0 35px #0009}
+.gacha-theater.hidden{display:none}
+.gacha-stage-glow{position:absolute;left:50%;top:48%;width:190px;height:80px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse,#d59b3226,transparent 68%);filter:blur(6px);animation:gachaGlow 1.5s ease-in-out infinite}
+.gacha-chest{position:absolute;left:50%;top:46%;width:126px;height:92px;transform:translate(-50%,-50%);border:0;background:none;padding:0;filter:drop-shadow(0 14px 12px #000a);transition:filter .18s,transform .18s}
+.gacha-chest .chest-body{position:absolute;left:8px;right:8px;bottom:5px;height:55px;border:4px solid var(--chestEdge);border-radius:10px 10px 14px 14px;background:linear-gradient(90deg,var(--chestDark),var(--chestMid) 50%,var(--chestDark));box-shadow:inset 0 0 16px #0007,0 0 18px var(--chestGlow)}
+.gacha-chest .chest-lid{position:absolute;left:4px;right:4px;top:5px;height:42px;border:4px solid var(--chestEdge);border-radius:15px 15px 8px 8px;background:linear-gradient(90deg,var(--chestDark),var(--chestMid),var(--chestDark));transform-origin:50% 100%;box-shadow:inset 0 0 13px #0006}
+.gacha-chest .chest-lock{position:absolute;z-index:4;left:50%;top:51%;transform:translate(-50%,-50%);display:grid;place-items:center;width:27px;height:31px;border:3px solid var(--chestEdge);border-radius:7px;background:#17120d;color:var(--chestEdge);font-size:13px;box-shadow:0 0 12px var(--chestGlow)}
+.chest-normal{--chestEdge:#9aa7b8;--chestMid:#596879;--chestDark:#303946;--chestGlow:#8eabc044}
+.chest-rare{--chestEdge:#5dadff;--chestMid:#296cb5;--chestDark:#14365f;--chestGlow:#4ca7ff66}
+.chest-epic{--chestEdge:#c37bff;--chestMid:#7636b4;--chestDark:#34145e;--chestGlow:#b855ff77}
+.chest-legendary{--chestEdge:#ffbd45;--chestMid:#bc6d13;--chestDark:#58320d;--chestGlow:#ff9d2a88}
+.chest-god{--chestEdge:#ffe866;--chestMid:#e79e18;--chestDark:#6a3508;--chestGlow:#ffe45aaa;filter:drop-shadow(0 0 15px #ffd64199) drop-shadow(0 15px 14px #000a)}
+.gacha-chest.ready{animation:chestReady .9s ease-in-out infinite}
+.gacha-chest.rattle{animation:chestRattle .42s linear}
+.gacha-chest.graded{animation:chestGrade .55s cubic-bezier(.1,.8,.2,1)}
+.gacha-chest.opening .chest-lid{animation:chestOpen .52s cubic-bezier(.1,.8,.2,1) forwards}
+.gacha-prompt{position:absolute;left:0;right:0;bottom:27px;text-align:center;font-weight:1000;color:#f4d583;font-size:13px;letter-spacing:.06em;text-shadow:0 0 10px #b47722}
+.gacha-grade{position:absolute;left:0;right:0;top:18px;text-align:center;font-size:12px;font-weight:1000;letter-spacing:.22em;color:#d8caa7}
+#gachaPuchun{position:fixed;inset:0;z-index:1200;background:#020305;pointer-events:none;overflow:hidden}
+#gachaPuchun .crt-line{position:absolute;left:0;right:0;top:50%;height:3px;background:#d8c768;box-shadow:0 0 12px #ffdb4b;animation:crtCollapse .30s ease-in forwards}
+#gachaPuchun .grade-ripple{position:absolute;left:50%;top:50%;width:30px;height:30px;border:3px solid #ffb62d;border-radius:50%;transform:translate(-50%,-50%) scale(.2);opacity:0}
+#gachaPuchun .grade-copy{position:absolute;inset:0;display:grid;place-content:center;text-align:center;opacity:0;transform:scale(.65)}
+#gachaPuchun .grade-copy small{font-size:13px;font-weight:1000;letter-spacing:.34em;color:#c9aa58}
+#gachaPuchun .grade-copy strong{font-size:50px;font-style:italic;font-weight:1000;color:#ffd45a;-webkit-text-stroke:2px #6a3510;text-shadow:0 0 18px #ff8a24}
+#gachaPuchun.grade-on .grade-ripple{animation:gradeRipple .55s ease-out forwards}
+#gachaPuchun.grade-on .grade-copy{animation:gradeCopy .58s cubic-bezier(.1,.8,.2,1) forwards}
+#gachaPuchun.puchun-rare .grade-copy strong{color:#63b5ff} #gachaPuchun.puchun-epic .grade-copy strong{color:#c877ff}
+#gachaPuchun.puchun-legendary .grade-copy strong{color:#ffb843} #gachaPuchun.puchun-god .grade-copy strong{color:#ffe96a;text-shadow:0 0 18px #ffce28,0 0 38px #ff7a20}
+.gacha-result.reveal{animation:gachaReveal .58s cubic-bezier(.08,.82,.12,1)}
+@keyframes gachaGlow{50%{transform:translate(-50%,-50%) scale(1.15);opacity:.75}}
+@keyframes chestReady{50%{transform:translate(-50%,-52%) scale(1.025)}}
+@keyframes chestRattle{0%,100%{transform:translate(-50%,-50%)}20%{transform:translate(-56%,-50%) rotate(-3deg)}40%{transform:translate(-44%,-50%) rotate(3deg)}60%{transform:translate(-54%,-50%) rotate(-2deg)}80%{transform:translate(-46%,-50%) rotate(2deg)}}
+@keyframes chestGrade{0%{transform:translate(-50%,-50%) scale(.82);filter:brightness(.8)}35%{transform:translate(-50%,-50%) scale(1.18);filter:brightness(1.5)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes chestOpen{0%{transform:rotateX(0)}70%,100%{transform:translateY(-10px) rotateX(74deg)}}
+@keyframes crtCollapse{0%{transform:scaleX(1);opacity:1}70%{transform:scaleX(.08);opacity:1}100%{transform:scaleX(0);opacity:0}}
+@keyframes gradeRipple{0%{opacity:1;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(15)}}
+@keyframes gradeCopy{0%{opacity:0;transform:scale(.55)}24%{opacity:1;transform:scale(1.18)}55%{transform:scale(.94)}100%{opacity:0;transform:scale(1.04)}}
+@keyframes gachaReveal{0%{opacity:0;transform:scale(.72) translateY(12px)}35%{opacity:1;transform:scale(1.08)}100%{transform:scale(1)}}
+
+/* ===== v0.9.0 1-2 CAVE STAGE ===== */
+#battle[data-stage="1-2"] .enemy-stage{background:linear-gradient(180deg,#171526,#0d0c16 58%,#07080c)!important}
+#battle[data-stage="1-2"] .stage-scenery::before{background:
+ radial-gradient(circle at 23% 30%,#7144a52b,transparent 18%),
+ radial-gradient(circle at 78% 36%,#5aa14719,transparent 17%),
+ linear-gradient(180deg,#211b31,#11101b 55%,#08090d)!important}
+#battle[data-stage="1-2"] .stage-moon{display:none!important}
+#battle[data-stage="1-2"] .stage-tree::before{background:#0d0a15!important;width:15px!important;height:95px!important;border-radius:50% 50% 20% 20%!important}
+#battle[data-stage="1-2"] .stage-tree::after{background:radial-gradient(ellipse at 50% 80%,#241b35 0 48%,transparent 50%)!important}
+#battle[data-stage="1-2"] .enemy-ground{background:radial-gradient(ellipse,#000c,#56376b44 44%,transparent 72%)!important}
+#battle[data-stage="1-2"] .enemy-aura{border-color:#9b68c845!important;background:radial-gradient(ellipse,#7548a82b,transparent 68%)!important;box-shadow:0 0 28px #7847ae33!important}
+#battle[data-stage="1-2"] .stage-fog{background:linear-gradient(90deg,transparent,#a77ac02a,transparent)!important}
+#battle[data-stage="1-2"] .enemy-img{filter:drop-shadow(0 8px 7px #000b) drop-shadow(0 0 8px #7c4daa55)!important}
+#battle[data-stage="1-2"].boss-battle .enemy-stage{background:linear-gradient(180deg,#281230,#140c19 58%,#08070d)!important}
+#battle[data-stage="1-2"].boss-battle .enemy-aura{border-color:#ef56d866!important;background:radial-gradient(ellipse,#e13ecb2e,transparent 68%)!important;box-shadow:0 0 32px #e545cc44!important}
+
+.dungeon-card.locked{opacity:.58}
+.dungeon-card:not(.locked){cursor:pointer}
