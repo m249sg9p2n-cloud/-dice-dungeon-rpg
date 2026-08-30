@@ -277,15 +277,57 @@
 
   async function playGachaPuchun(nextRarity){
     document.querySelector("#gachaPuchun")?.remove();
-    const layer=document.createElement("div"); layer.id="gachaPuchun"; layer.className=`puchun-${nextRarity.toLowerCase()}`;
-    layer.innerHTML=`<div class="puchun-black"></div><div class="crt-dot"></div><div class="crt-line"></div>
-      <div class="grade-ripple ripple2"></div><div class="grade-ripple"></div>
-      <div class="grade-copy"><small>GRADE UP</small><strong>${nextRarity}</strong><em>昇格</em></div>`;
-    document.body.appendChild(layer); FX.puchun();
-    try{if(navigator.vibrate) navigator.vibrate([18,35,18])}catch(_){}
-    await wait(430); layer.classList.add("grade-on"); FX.gradeUp();
-    try{if(navigator.vibrate) navigator.vibrate([24,25,62])}catch(_){}
-    await wait(nextRarity==="GOD"?930:760); layer.classList.add("grade-out"); await wait(180); layer.remove();
+
+    const layer=document.createElement("div");
+    layer.id="gachaPuchun";
+    layer.className=`puchun-${nextRarity.toLowerCase()}`;
+    layer.innerHTML=`
+      <div class="puchun-pre"></div>
+      <div class="puchun-white"></div>
+      <div class="puchun-black"></div>
+      <div class="crt-bloom"></div>
+      <div class="crt-beam"></div>
+      <div class="crt-dot"></div>
+      <div class="grade-after">
+        <div class="grade-halo halo-a"></div>
+        <div class="grade-halo halo-b"></div>
+        <small>GRADE UP</small>
+        <strong>${nextRarity}</strong>
+        <em>昇 格</em>
+      </div>`;
+    document.body.appendChild(layer);
+
+    // 0.00–0.50s: leave the game visible. The "puchun" feels sudden because nothing telegraphs it.
+    await wait(500);
+
+    layer.classList.add("cut");
+    FX.puchun();
+    try{if(navigator.vibrate) navigator.vibrate([12,16,28])}catch(_){}
+
+    // 0.50–0.58s: very short warm-white discharge.
+    await wait(80);
+
+    // 0.58–0.93s: black screen + bright CRT bloom compresses into one horizontal beam.
+    layer.classList.add("collapse");
+    await wait(350);
+
+    // 0.93–1.07s: beam collapses to a dot.
+    layer.classList.add("dot");
+    await wait(140);
+
+    // 1.07–1.30s: true darkness / near silence.
+    layer.classList.add("dead");
+    await wait(230);
+
+    // After the exact power-off beat, reveal the game's own grade-up reward.
+    layer.classList.add("grade-on");
+    FX.gradeUp();
+    try{if(navigator.vibrate) navigator.vibrate([26,22,58])}catch(_){}
+    await wait(nextRarity==="GOD"?980:760);
+
+    layer.classList.add("grade-out");
+    await wait(180);
+    layer.remove();
   }
 
   async function revealGachaResult(){
