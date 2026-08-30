@@ -391,15 +391,14 @@
       }
     });
 
-    const pairReady=state.nextDie===0 && !busy;
-    const multReady=state.nextDie===2 && !busy;
-    $("#pairRollBtn").disabled=!pairReady;
-    $("#pairRollBtn").classList.toggle("locked",!pairReady);
-    $("#pairRollBtn").classList.toggle("ready",pairReady);
-    $("#multRollBtn").disabled=!multReady;
-    $("#multRollBtn").classList.toggle("locked",!multReady);
-    $("#multRollBtn").classList.toggle("ready",multReady);
-    document.body.classList.toggle("mult-dim",multReady);
+    const ready=state.nextDie===0 && !busy;
+    $("#pairRollBtn").disabled=!ready;
+    $("#pairRollBtn").classList.toggle("locked",!ready);
+    $("#pairRollBtn").classList.toggle("ready",ready);
+
+    $("#multRollBtn").classList.toggle("auto-wait",busy && state.nextDie===2);
+    $("#multRollBtn").classList.add("locked");
+    document.body.classList.toggle("mult-dim",state.nextDie===2 && busy);
   }
 
   function renderEnemyArt(enemy){
@@ -460,8 +459,8 @@
       ghost.style.width="0";
       hpbar.classList.remove("kill-preview");
       $("#attackBtn").disabled=true;
-      if(state.nextDie===0) $("#instruction").textContent="前半ダイスをタップ！";
-      else if(state.nextDie===2) $("#instruction").textContent="倍率ダイスをタップ！";
+      if(state.nextDie===0) $("#instruction").textContent="タップしてROLL！";
+      else if(state.nextDie===2) $("#instruction").textContent="倍率チャージ…";
       else $("#instruction").textContent="ROLLING…";
     }
     $("#critical").classList.add("hidden");
@@ -533,58 +532,112 @@
     return value;
   }
 
+  function multiplierTone(value){
+    return {
+      1:{cls:"impact-1",label:"×1"},
+      2:{cls:"impact-2",label:"×2"},
+      3:{cls:"impact-3",label:"×3"},
+      4:{cls:"impact-4",label:"×4"},
+      5:{cls:"impact-5",label:"×5"},
+      6:{cls:"impact-6",label:"×6"}
+    }[value];
+  }
+
+  async function showRollImpact(value){
+    const tone=multiplierTone(value);
+    const box=$("#rollImpact");
+    const num=$("#impactNumber");
+
+    box.className=`roll-impact show ${tone.cls}`;
+    num.textContent=tone.label;
+
+    document.body.classList.add(`screen-hit-${value}`);
+    if(value>=4) document.body.classList.add("impact-shake");
+    if(value>=5) document.body.classList.add("impact-heavy");
+
+    try{
+      if(navigator.vibrate){
+        if(value===6) navigator.vibrate([30,30,70]);
+        else if(value>=4) navigator.vibrate(35);
+        else navigator.vibrate(18);
+      }
+    }catch(_){}
+
+    await wait(value===6?700:value>=4?520:400);
+
+    document.body.classList.remove(
+      "screen-hit-1","screen-hit-2","screen-hit-3",
+      "screen-hit-4","screen-hit-5","screen-hit-6",
+      "impact-shake","impact-heavy"
+    );
+    box.className="roll-impact";
+  }
+
   async function rollPair(){
     if(busy || state.nextDie!==0) return;
+
     busy=true;
+    state.dice=[0,0,0];
     renderBattle();
+    $("#instruction").textContent="ROLL!";
+
     const dice=$$(".die");
+
+    // First tap rolls ① and ② automatically.
     const [a,b]=await Promise.all([
       animateOneDie(0,dice[0],false,0),
-      animateOneDie(1,dice[1],false,115)
+      animateOneDie(1,dice[1],false,105)
     ]);
+
     state.nextDie=2;
+
     const sum=$("#sumBurst");
     sum.textContent=`${a} + ${b} = ${a+b}`;
     sum.className="sum-burst show";
     document.body.classList.add("pair-impact");
     FX.attack(false);
-    await wait(220);
-    document.body.classList.remove("pair-impact");
-    setTimeout(()=>sum.className="sum-burst",520);
-    busy=false;
-    renderBattle();
-    $("#multRollBtn").classList.add("charge");
-    await wait(260);
-    $("#multRollBtn").classList.remove("charge");
-  }
 
-  async function rollMultiplier(){
-    if(busy || state.nextDie!==2) return;
-    busy=true;
-    renderBattle();
-    const die=$$(".die")[2];
-    document.body.classList.add("mult-focus");
-    $("#instruction").textContent="倍率抽選…";
-    await wait(180);
-    const value=await animateOneDie(2,die,true,0);
+    await wait(210);
+    document.body.classList.remove("pair-impact");
+    setTimeout(()=>sum.className="sum-burst",500);
+
+    // The third die is automatic, but gets a deliberate suspense pause.
+    $("#instruction").textContent="倍率チャージ…";
+    $("#multRollBtn").classList.add("charge","auto-wait");
+    document.body.classList.add("mult-focus","mult-charge-screen");
+
+    await wait(420);
+
+    $("#multRollBtn").classList.remove("charge");
+    $("#instruction").textContent="倍率抽選！";
+
+    const value=await animateOneDie(2,dice[2],true,0);
     state.nextDie=3;
+
+    $("#multRollBtn").classList.remove("auto-wait");
+    document.body.classList.remove("mult-charge-screen");
+
     const multFx=$("#multFx");
     multFx.textContent=`×${value}`;
     multFx.className=`show-mult${value===6?" x6":""}`;
     FX.multiplier(value);
-    const impact=value>=5?"big-shake":"shake";
-    document.body.classList.add(impact);
-    if(value>=4) document.body.classList.add("gold-pulse");
-    await wait(value===6?620:450);
-    multFx.className="";
-    document.body.classList.remove("shake","big-shake","gold-pulse","mult-focus");
+
+    // Large, color-coded "DEN!" result hit.
+    await showRollImpact(value);
+
     if(state.dice.every(v=>v===6)){
-      await wait(120);
+      await wait(80);
       $("#critical").classList.remove("hidden");
       FX.critical666();
+      document.body.classList.add("critical-flash");
       await wait(760);
+      document.body.classList.remove("critical-flash");
       $("#critical").classList.add("hidden");
     }
+
+    multFx.className="";
+    document.body.classList.remove("mult-focus");
+
     busy=false;
     renderBattle();
   }
@@ -738,7 +791,6 @@
   $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#startBtn").addEventListener("click",startRun);
   $("#pairRollBtn").addEventListener("click",rollPair);
-  $("#multRollBtn").addEventListener("click",rollMultiplier);
   $("#attackBtn").addEventListener("click",attack);
   $$(".reward").forEach(b=>b.addEventListener("click",()=>chooseReward(b.dataset.reward)));
   $$(".box").forEach(b=>b.addEventListener("click",()=>chooseBox(b)));

@@ -725,3 +725,147 @@ body.gold-pulse .dice-panel{box-shadow:inset 0 0 38px #ffbf2d16}
   #home .dungeon-card{min-height:40px}
   #home .home-start{min-height:40px}
 }
+
+
+/* ===== v0.7.2 one-tap dice + impact juice ===== */
+.auto-zone{
+  pointer-events:none;
+}
+.auto-zone.auto-wait .die{
+  opacity:1;
+  animation:autoReadyPulse .46s ease-in-out infinite alternate;
+}
+@keyframes autoReadyPulse{
+  from{transform:translateY(0) scale(1);filter:drop-shadow(0 0 5px #d5a83c55)}
+  to{transform:translateY(-3px) scale(1.045);filter:drop-shadow(0 0 16px #ffcf58bb)}
+}
+body.mult-charge-screen .dice-panel{
+  box-shadow:inset 0 0 45px #e5ad3422,0 0 20px #d8a72a18;
+}
+body.mult-charge-screen .die-mult{
+  animation:multPreShake .14s linear infinite;
+}
+@keyframes multPreShake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  25%{transform:translateX(-1.5px) rotate(-1deg)}
+  75%{transform:translateX(1.5px) rotate(1deg)}
+}
+
+/* Full-screen-ish result stamp above the dice. */
+.roll-impact{
+  position:fixed;
+  inset:0;
+  z-index:80;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  overflow:hidden;
+}
+.roll-impact.show{display:flex}
+.impact-number{
+  position:relative;
+  z-index:4;
+  font-size:clamp(88px,28vw,132px);
+  line-height:.82;
+  font-weight:1000;
+  letter-spacing:-.08em;
+  font-style:italic;
+  -webkit-text-stroke:2px rgba(255,255,255,.55);
+  text-shadow:
+    0 5px 0 rgba(0,0,0,.5),
+    0 0 18px currentColor,
+    0 0 42px currentColor;
+  animation:impactNumberIn .42s cubic-bezier(.1,.95,.18,1.35) both;
+}
+.impact-den{
+  position:absolute;
+  z-index:5;
+  top:58%;
+  left:50%;
+  transform:translateX(-50%) rotate(-7deg);
+  font-weight:1000;
+  font-size:24px;
+  letter-spacing:.12em;
+  color:#fff;
+  -webkit-text-stroke:1px #111;
+  text-shadow:0 3px 0 #000,0 0 12px currentColor;
+  animation:denIn .38s .07s cubic-bezier(.1,.9,.15,1.4) both;
+}
+.impact-ring{
+  position:absolute;
+  width:90px;height:90px;
+  border-radius:50%;
+  border:5px solid currentColor;
+  opacity:.9;
+}
+.ring-a{animation:ringBlast .55s ease-out both}
+.ring-b{animation:ringBlast .72s .05s ease-out both}
+@keyframes impactNumberIn{
+  0%{opacity:0;transform:scale(2.1) rotate(-8deg)}
+  38%{opacity:1;transform:scale(.82) rotate(2deg)}
+  60%{transform:scale(1.12) rotate(-1deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes denIn{
+  0%{opacity:0;transform:translateX(-50%) scale(2) rotate(-12deg)}
+  55%{opacity:1;transform:translateX(-50%) scale(.82) rotate(-5deg)}
+  100%{opacity:1;transform:translateX(-50%) scale(1) rotate(-7deg)}
+}
+@keyframes ringBlast{
+  from{opacity:.85;transform:scale(.2)}
+  to{opacity:0;transform:scale(6)}
+}
+
+/* 1–6 all have a distinct visual identity. */
+.roll-impact.impact-1{color:#aab3c2;background:radial-gradient(circle,#71809622 0%,#090b10aa 42%,transparent 68%)}
+.roll-impact.impact-2{color:#52c7ff;background:radial-gradient(circle,#2aaee82c 0%,#07121baa 42%,transparent 68%)}
+.roll-impact.impact-3{color:#61e88c;background:radial-gradient(circle,#35d76e2b 0%,#07140daa 42%,transparent 68%)}
+.roll-impact.impact-4{color:#c178ff;background:radial-gradient(circle,#9c4fe435 0%,#11091aaa 42%,transparent 68%)}
+.roll-impact.impact-5{color:#ff7a32;background:radial-gradient(circle,#f35d2440 0%,#1b0b06b8 42%,transparent 70%)}
+.roll-impact.impact-6{color:#ffd84a;background:
+  radial-gradient(circle,#fff2a05a 0%,#ffb51733 24%,#211500c9 52%,#050506dd 72%)}
+.roll-impact.impact-6 .impact-number{
+  font-size:clamp(108px,34vw,158px);
+  -webkit-text-stroke:3px #fff1a6;
+  text-shadow:0 7px 0 #6f3900,0 0 18px #fff1a8,0 0 52px #ffbf22,0 0 90px #ff7b00;
+}
+.roll-impact.impact-6 .impact-den{font-size:30px;color:#fff3bb}
+
+/* Screen response grows with the multiplier. */
+body.screen-hit-1 .battle-screen{animation:screenTapSmall .20s ease}
+body.screen-hit-2 .battle-screen{animation:screenTapSmall .22s ease}
+body.screen-hit-3 .battle-screen{animation:screenTapMedium .25s ease}
+body.screen-hit-4 .battle-screen{animation:screenTapMedium .28s ease}
+body.screen-hit-5 .battle-screen{animation:screenTapHeavy .34s ease}
+body.screen-hit-6 .battle-screen{animation:screenTapSix .48s cubic-bezier(.2,.8,.2,1)}
+@keyframes screenTapSmall{0%,100%{transform:scale(1)}45%{transform:scale(.994)}}
+@keyframes screenTapMedium{0%,100%{transform:scale(1)}35%{transform:scale(.985)}65%{transform:scale(1.008)}}
+@keyframes screenTapHeavy{
+  0%,100%{transform:translate(0) scale(1)}
+  20%{transform:translate(-3px,1px) scale(.98)}
+  45%{transform:translate(3px,-1px) scale(1.012)}
+  70%{transform:translate(-1px,1px) scale(1.004)}
+}
+@keyframes screenTapSix{
+  0%{transform:scale(1);filter:brightness(1)}
+  12%{transform:scale(.97);filter:brightness(.45)}
+  28%{transform:translate(-5px,1px) scale(1.018);filter:brightness(1.7)}
+  45%{transform:translate(5px,-2px) scale(1.01)}
+  65%{transform:translate(-2px,1px)}
+  100%{transform:translate(0) scale(1);filter:brightness(1)}
+}
+body.impact-heavy::after{
+  content:"";
+  position:fixed;inset:0;z-index:75;pointer-events:none;
+  background:radial-gradient(circle at 50% 55%,#fff8c844,transparent 45%);
+  animation:heavyFlash .36s ease-out both;
+}
+@keyframes heavyFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+body.critical-flash::after{
+  content:"";
+  position:fixed;inset:0;z-index:95;pointer-events:none;
+  background:#ffe169;
+  animation:criticalFlash .32s ease-out both;
+}
+@keyframes criticalFlash{0%{opacity:0}25%{opacity:.8}100%{opacity:0}}

@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=071">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=071">
-  <link rel="stylesheet" href="./style.css?v=071">
-  <title>Dice Dungeon RPG v0.7.1</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=072">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=072">
+  <link rel="stylesheet" href="./style.css?v=072">
+  <title>Dice Dungeon RPG v0.7.2</title>
 </head>
 <body>
 <main id="app">
@@ -100,7 +100,7 @@
     </div>
 
     <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v0.7.1 — 正式実装用のゲームループ基盤</p>
+    <p class="note">v0.7.2 — 正式実装用のゲームループ基盤</p>
   </section>
 
   <section id="gacha" class="screen">
@@ -196,10 +196,10 @@
     </section>
 
     <section class="dice-panel">
-      <div id="instruction" class="instruction">前半ダイスをタップ！</div>
+      <div id="instruction" class="instruction">タップしてROLL！</div>
 
       <div class="dice-row two-step">
-        <button id="pairRollBtn" class="pair-roll-zone" aria-label="前半2個のダイスを振る">
+        <button id="pairRollBtn" class="pair-roll-zone" aria-label="3個のダイスをまとめて振る">
           <div class="die-slot"><div class="roll-number" data-result="0"></div><div class="die die-normal" data-index="0">
             <span class="die-body"><span class="die-face" data-face="0"></span></span><small>①</small></div></div>
           <div class="op">＋</div>
@@ -207,12 +207,18 @@
             <span class="die-body"><span class="die-face" data-face="0"></span></span><small>②</small></div></div>
         </button>
         <div class="op mult-op">×</div>
-        <button id="multRollBtn" class="mult-roll-zone locked" aria-label="倍率ダイスを振る">
+        <div id="multRollBtn" class="mult-roll-zone auto-zone locked" aria-label="倍率ダイスは自動で振られます">
           <div class="die-slot mult-slot"><div class="roll-number mult-number" data-result="2"></div><div class="die die-mult" data-index="2">
             <span class="die-body"><span class="die-face" data-face="0"></span></span><small>③ MULTIPLIER</small></div></div>
-        </button>
+        </div>
       </div>
       <div id="sumBurst" class="sum-burst"></div>
+      <div id="rollImpact" class="roll-impact" aria-hidden="true">
+        <div class="impact-ring ring-a"></div>
+        <div class="impact-ring ring-b"></div>
+        <div id="impactNumber" class="impact-number"></div>
+        <div class="impact-den">デン！</div>
+      </div>
 
       <div id="formula" class="formula">( ? + ? ) × ? + ATK 12</div>
       <div id="forecast" class="forecast"></div>
@@ -288,11 +294,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=071"></script>
-<script src="./game.js?v=071"></script>
+<script src="./effects.js?v=072"></script>
+<script src="./game.js?v=072"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=071").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=072").catch(console.error));
 }
 </script>
 </body>
