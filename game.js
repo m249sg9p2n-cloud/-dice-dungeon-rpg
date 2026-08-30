@@ -282,48 +282,60 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()}`;
     layer.innerHTML=`
-      <div class="puchun-pre"></div>
-      <div class="puchun-white"></div>
-      <div class="puchun-black"></div>
-      <div class="crt-bloom"></div>
-      <div class="crt-beam"></div>
-      <div class="crt-dot"></div>
-      <div class="grade-after">
-        <div class="grade-halo halo-a"></div>
-        <div class="grade-halo halo-b"></div>
+      <div class="p-screen-cut"></div>
+      <div class="p-white-core"></div>
+      <div class="p-black"></div>
+      <div class="p-crt-glow"></div>
+      <div class="p-crt-bar-h"></div>
+      <div class="p-crt-bar-v"></div>
+      <div class="p-crt-line-h"></div>
+      <div class="p-crt-line-v"></div>
+      <div class="p-crt-dot"></div>
+      <div class="p-grade">
+        <div class="p-grade-rays"></div>
+        <div class="p-grade-ring ring-a"></div>
+        <div class="p-grade-ring ring-b"></div>
         <small>GRADE UP</small>
         <strong>${nextRarity}</strong>
         <em>昇 格</em>
       </div>`;
     document.body.appendChild(layer);
 
-    // 0.00–0.50s: leave the game visible. The "puchun" feels sudden because nothing telegraphs it.
-    await wait(500);
+    // 無予告で一瞬溜める
+    await wait(360);
 
-    layer.classList.add("cut");
+    // 電源断
+    layer.classList.add("power-cut");
     FX.puchun();
-    try{if(navigator.vibrate) navigator.vibrate([12,16,28])}catch(_){}
+    try{if(navigator.vibrate) navigator.vibrate([8,18,30])}catch(_){}
 
-    // 0.50–0.58s: very short warm-white discharge.
-    await wait(80);
+    await wait(65);
 
-    // 0.58–0.93s: black screen + bright CRT bloom compresses into one horizontal beam.
-    layer.classList.add("collapse");
-    await wait(350);
+    // 中央の大発光
+    layer.classList.add("crt-bloom");
+    await wait(210);
 
-    // 0.93–1.07s: beam collapses to a dot.
-    layer.classList.add("dot");
-    await wait(140);
+    // 横と縦へ押し潰されて十字になる
+    layer.classList.add("crt-cross-bar");
+    await wait(165);
 
-    // 1.07–1.30s: true darkness / near silence.
+    // 十字線へ細く収束
+    layer.classList.add("crt-cross-line");
+    await wait(125);
+
+    // 十字の中心へ一気に収束
+    layer.classList.add("crt-dot");
+    await wait(110);
+
+    // 本当の暗闇
     layer.classList.add("dead");
-    await wait(230);
+    await wait(nextRarity==="GOD"?390:285);
 
-    // After the exact power-off beat, reveal the game's own grade-up reward.
+    // 暗闇から昇格告知
     layer.classList.add("grade-on");
     FX.gradeUp();
-    try{if(navigator.vibrate) navigator.vibrate([26,22,58])}catch(_){}
-    await wait(nextRarity==="GOD"?980:760);
+    try{if(navigator.vibrate) navigator.vibrate(nextRarity==="GOD"?[22,20,70,26,95]:[20,18,60])}catch(_){}
+    await wait(nextRarity==="GOD"?1120:880);
 
     layer.classList.add("grade-out");
     await wait(180);
@@ -336,30 +348,67 @@
     chest?.classList.add("opening");
     FX.chestOpen(finalRarity);
     try{if(navigator.vibrate) navigator.vibrate(finalRarity==="GOD"?[28,16,70]:[24,14,42])}catch(_){}
-    await wait(560);
+    await wait(520);
 
     const stored=storeGachaResult(result);
     persist();
     renderHome();
 
-    const el=$("#gachaResult");
+    // Hide the small inline result and use a full-screen showcase.
+    $("#gachaResult")?.classList.add("hidden");
+    document.querySelector("#gachaRewardFull")?.remove();
+
     const stat=result.slot==="weapon" ? `ATK +${result.item.atk}` : `DEF +${result.item.def}`;
-    el.className=`gacha-result ${rarityClass(finalRarity)} reveal`;
-    el.innerHTML=`
-      <div class="result-rarity">${finalRarity}</div>
-      <div class="result-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
-      <h2>${result.item.name}</h2>
-      <b>${stat}</b>
-      ${result.item.skill?`<strong>《${result.item.skill}》</strong>`:""}
-      <small>${stored.isDuplicate?`DUPLICATE ×${stored.count}`:"NEW!"}</small>
-    `;
+    const skill=result.item.skill ? `《${result.item.skill}》` : "";
+    const rarity=finalRarity.toLowerCase();
+
+    const layer=document.createElement("div");
+    layer.id="gachaRewardFull";
+    layer.className=`reward-${rarity}`;
+    layer.innerHTML=`
+      <div class="reward-bg"></div>
+      <div class="reward-stars">${Array.from({length:30},(_,i)=>`<i style="--x:${(i*37)%100}%;--y:${(i*61)%100}%;--d:${(i%7)*90}ms;--s:${3+(i%5)}px"></i>`).join("")}</div>
+      <div class="reward-burst"></div>
+      <div class="reward-rings"><b></b><b></b><b></b></div>
+      <div class="reward-content">
+        <div class="reward-rarity">${finalRarity}</div>
+        <div class="reward-new">${stored.isDuplicate?`DUPLICATE ×${stored.count}`:"NEW!"}</div>
+        <div class="reward-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
+        <h1>${result.item.name}</h1>
+        <div class="reward-stat">${stat}</div>
+        ${skill?`<div class="reward-skill">${skill}</div>`:""}
+        <button id="rewardCloseBtn" type="button">TAP TO CONTINUE</button>
+      </div>`;
+    document.body.appendChild(layer);
+
+    await wait(40);
+    layer.classList.add("show");
+    try{
+      if(navigator.vibrate){
+        navigator.vibrate(finalRarity==="GOD" ? [28,18,70,25,90] :
+                          finalRarity==="LEGENDARY" ? [24,16,65] :
+                          finalRarity==="EPIC" ? [18,14,50] : [14,10,34]);
+      }
+    }catch(_){}
+
+    await new Promise(resolve=>{
+      $("#rewardCloseBtn")?.addEventListener("click",resolve,{once:true});
+      layer.addEventListener("click",e=>{
+        if(e.target===layer || e.target.classList.contains("reward-bg")) resolve();
+      },{once:true});
+    });
+
+    layer.classList.add("hide-out");
+    await wait(220);
+    layer.remove();
+
     $("#gachaPrompt").textContent="召喚完了！";
     $("#gachaTheater")?.classList.add("finished");
-    await wait(450);
     pendingGacha=null;
     chest?.classList.remove("opening","graded");
     $("#gachaTheater")?.classList.add("hidden");
   }
+
 
   function equippedItem(slot){
     const id=save.equipped?.[slot];
