@@ -653,6 +653,22 @@
     box.className="attack-calc-impact";
   }
 
+  function playAttackJuice(dmg){
+    document.querySelector("#attackJuice")?.remove();
+    const layer=document.createElement("div"); layer.id="attackJuice";
+    const strong=dmg>=55, critical=dmg>=90;
+    layer.innerHTML=`<div class="attack-dark"></div><div class="attack-flash"></div>
+    <div class="attack-ray" style="--r:-18deg"></div><div class="attack-ray" style="--r:21deg"></div><div class="attack-ray" style="--r:62deg"></div>
+    <div class="attack-ring"></div><div class="attack-impact ${critical?"critical":strong?"strong":""}">${dmg}</div>
+    <div class="attack-label">${critical?"DEVASTATING!!":strong?"HEAVY HIT!":"HIT!"}</div>`;
+    document.body.appendChild(layer);
+    const stage=document.querySelector(".enemy-stage"), battle=document.querySelector("#battle");
+    stage?.classList.remove("attack-hit"); battle?.classList.remove("attack-screen-shake");
+    void stage?.offsetWidth; stage?.classList.add("attack-hit"); battle?.classList.add("attack-screen-shake");
+    try{if(navigator.vibrate) navigator.vibrate(critical?[35,25,65]:strong?[25,18,45]:[18,12,28])}catch(_){}
+    setTimeout(()=>{stage?.classList.remove("attack-hit");battle?.classList.remove("attack-screen-shake");layer.remove()},650);
+  }
+
   async function launchDamageToEnemy(dmg){
     const source=$("#readyDamageNumber");
     const enemy=$("#enemyArt");
@@ -677,6 +693,8 @@
     flyer.style.opacity="1";
 
     await wait(430);
+    playAttackJuice(dmg);
+    await wait(dmg>=90?170:dmg>=55?135:100);
 
     enemy.classList.remove("damage-impact");
     void enemy.offsetWidth;
