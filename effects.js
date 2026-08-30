@@ -109,6 +109,21 @@
       [523.25,659.25,783.99,1046.5].forEach((f,i)=>oscTo(b,"triangle",f,f*1.01,.19,.035,.20+i*.055));
     }
   }
+  function attackFanfare(dmg=0, lethal=false){
+    if(muted) return;
+    const b=hitBus(), critical=dmg>=90, strong=dmg>=55;
+    // "期待 -> 解放 -> ご褒美" as a short musical phrase, not a single beep.
+    const base=critical?392:strong?329.63:293.66;
+    [1,1.25,1.5].forEach((m,i)=>oscTo(b,"triangle",base*m,base*m*1.02,.15,.032,.02+i*.045));
+    if(strong){
+      [523.25,659.25,783.99].forEach((f,i)=>oscTo(b,"sine",f,f,.28,.042,.18+i*.045));
+      oscTo(b,"sine",88,38,.38,.16,.12);
+    }
+    if(critical || lethal){
+      [659.25,783.99,1046.5,1318.5].forEach((f,i)=>oscTo(b,"triangle",f,f*1.01,.24,.04,.28+i*.055));
+      noiseTo(b,.12,.07,.27,650,4200);
+    }
+  }
   function killStinger(){
     if(muted) return;
     const b=hitBus();
@@ -122,7 +137,7 @@
   function critical666(){ tone(58,.30,"sawtooth",.09); noise(.20,.08,.06,50,500); tone(390,.13,"square",.05,.23,720); tone(760,.20,"triangle",.075,.37,1500); }
   function reward(){ tone(600,.07,"triangle",.035); tone(830,.10,"triangle",.045,.08,1050); }
 
-  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, playerImpact, killStinger, enemyAttack, defeat, critical666, reward };
+  window.FX = { audio, rollDie, land, multiplier, attack, attackCharge, attackFanfare, playerImpact, killStinger, enemyAttack, defeat, critical666, reward };
 
   if(soundBtn){
     const paint=()=>soundBtn.textContent=muted?"🔇":"🔊"; paint();

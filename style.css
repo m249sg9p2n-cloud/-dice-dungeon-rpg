@@ -2391,3 +2391,47 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
   #attackJuice .impact-sparks i,#attackJuice .impact-cross{display:none}
   #battle.attack-screen-v8,.enemy-stage.attack-hit-v8,#enemyArt.attack-knock-v8{animation:none!important}
 }
+
+
+/* ==========================================================
+   v0.8.1 SLOT RUSH — whole-screen choreography
+   Inspired by the density/tempo of modern pachislot presentation,
+   while keeping original graphics and avoiding full-white flashes.
+   ========================================================== */
+#slotRushPrelude{position:fixed;inset:0;z-index:965;pointer-events:none;overflow:hidden;background:rgba(4,0,8,.16)}
+.rush-vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,transparent 0 18%,rgba(37,0,8,.22) 44%,rgba(0,0,0,.72) 100%);animation:rushVig .42s ease-out both}
+.rush-speedlines{position:absolute;inset:-35%;background:repeating-conic-gradient(from 0deg at 50% 42%,transparent 0deg 3deg,rgba(255,103,26,.12) 3.3deg 3.9deg,transparent 4.2deg 7deg);animation:rushSpin .36s linear infinite}
+.rush-band{position:absolute;left:-25%;width:150%;height:58px;background:linear-gradient(90deg,transparent,#7d1518 18%,#e04a20 48%,#ffb32d 52%,#b5221c 78%,transparent);opacity:.76;filter:drop-shadow(0 0 10px #d63820)}
+.band1{top:27%;transform:rotate(-9deg);animation:rushBandA .38s ease-out both}.band2{top:54%;transform:rotate(8deg);animation:rushBandB .38s ease-out both}
+.rush-title{position:absolute;left:50%;top:38%;width:100%;transform:translate(-50%,-50%);text-align:center;animation:rushTitle .42s cubic-bezier(.06,.82,.12,1) both}
+.rush-title small{display:block;font-size:12px;font-weight:900;letter-spacing:.28em;color:#ff9f2c;text-shadow:0 0 9px #bd231e;margin-bottom:3px}
+.rush-title strong{display:block;font-size:44px;font-style:italic;font-weight:1000;letter-spacing:.04em;color:#ffd553;-webkit-text-stroke:2px #6c160e;text-shadow:0 5px 0 #451009,0 0 15px #ff7a21,0 0 34px #c91e1d}
+.rush-strong .rush-title strong{font-size:52px}.rush-critical .rush-title strong,.rush-lethal .rush-title strong{font-size:60px}
+.rush-count{position:absolute;left:50%;top:55%;transform:translateX(-50%);display:flex;gap:30px;font-size:31px;font-weight:1000;font-style:italic;color:#ffb72e;text-shadow:0 0 12px #db3320}
+.rush-count span{opacity:0;animation:rushCount .3s ease-out forwards}.rush-count span:nth-child(2){animation-delay:70ms}.rush-count span:nth-child(3){animation-delay:140ms}
+#slotRushPrelude.rush-release{animation:rushRelease .10s ease-out both}
+.rush-release .rush-title strong{transform:scale(1.13)}
+.rush-release .rush-speedlines{filter:saturate(1.5) brightness(1.25)}
+
+#attackJuice .impact-kanji{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%) rotate(-7deg);font-size:43px;font-weight:1000;font-style:italic;color:#ff9a25;-webkit-text-stroke:2px #5d130d;text-shadow:0 4px 0 #3e0d08,0 0 16px #df2d1f;opacity:0;animation:impactKanji .58s cubic-bezier(.08,.82,.12,1) both}
+#attackJuice.tier-strong .impact-kanji{font-size:52px} #attackJuice.tier-critical .impact-kanji,#attackJuice.lethal .impact-kanji{font-size:61px;color:#ffc23c}
+#attackJuice .impact-bonus{position:absolute;left:50%;top:52%;transform:translateX(-50%);font-size:16px;font-weight:1000;font-style:italic;letter-spacing:.12em;color:#ffda58;text-shadow:0 0 11px #e63a20;animation:impactBonus .72s ease-out both}
+#attackJuice.tier-critical .impact-number,#attackJuice.lethal .impact-number{animation:v8Number .62s cubic-bezier(.08,.82,.12,1) both, impactPulse .12s ease-in-out 2 .13s}
+#attackJuice.tier-critical .impact-ring,#attackJuice.lethal .impact-ring{border-color:#ffb62c;box-shadow:0 0 20px #ff9c25,0 0 48px #c92120,inset 0 0 14px #ff5d24}
+#attackJuice.tier-critical .impact-vignette,#attackJuice.lethal .impact-vignette{background:radial-gradient(circle at 50% 36%,transparent 0 14%,rgba(86,8,9,.16) 29%,rgba(0,0,0,.72) 100%)}
+
+@keyframes rushVig{0%{opacity:0}30%{opacity:1}100%{opacity:.88}}
+@keyframes rushSpin{to{transform:rotate(9deg) scale(1.03)}}
+@keyframes rushBandA{0%{opacity:0;transform:translateX(-55%) rotate(-9deg)}100%{opacity:.76;transform:translateX(0) rotate(-9deg)}}
+@keyframes rushBandB{0%{opacity:0;transform:translateX(55%) rotate(8deg)}100%{opacity:.76;transform:translateX(0) rotate(8deg)}}
+@keyframes rushTitle{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2) skewX(-10deg)}30%{opacity:1;transform:translate(-50%,-50%) scale(.86) skewX(3deg)}58%{transform:translate(-50%,-50%) scale(1.08)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes rushCount{0%{opacity:0;transform:translateY(12px) scale(1.8)}35%{opacity:1;transform:translateY(0) scale(.82)}100%{opacity:.75;transform:scale(1)}}
+@keyframes rushRelease{0%{opacity:1;filter:saturate(1)}100%{opacity:0;filter:saturate(1.5) brightness(1.2)}}
+@keyframes impactKanji{0%,12%{opacity:0;transform:translate(-50%,-50%) rotate(-14deg) scale(2.3)}28%{opacity:1;transform:translate(-50%,-50%) rotate(-5deg) scale(.82)}52%{transform:translate(-50%,-50%) rotate(-7deg) scale(1.08)}100%{opacity:0;transform:translate(-50%,-66%) rotate(-7deg) scale(1)}}
+@keyframes impactBonus{0%,32%{opacity:0;transform:translate(-50%,8px) scale(.7)}48%{opacity:1;transform:translate(-50%,0) scale(1.15)}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-10px)}}
+@keyframes impactPulse{50%{filter:brightness(1.35) saturate(1.3);transform:translate(-50%,-50%) scale(1.08)}}
+
+@media (prefers-reduced-motion:reduce){
+  .rush-speedlines,.rush-band,.rush-count{display:none!important}
+  .rush-title{animation:none!important}
+}

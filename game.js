@@ -659,6 +659,30 @@
     return "normal";
   }
 
+  async function playSlotRushPrelude(dmg, lethal=false){
+    const tier=attackTier(dmg);
+    document.querySelector("#slotRushPrelude")?.remove();
+    const layer=document.createElement("div");
+    layer.id="slotRushPrelude";
+    layer.className=`rush-${tier}${lethal?" rush-lethal":""}`;
+    const title=lethal?"FINISH CHANCE":tier==="critical"?"OVER DRIVE":tier==="strong"?"BURST ATTACK":"ATTACK";
+    const sub=lethal?"決着の一撃":tier==="critical"?"MAXIMUM IMPACT":tier==="strong"?"POWER CHARGE":"LOCK ON";
+    layer.innerHTML=`
+      <div class="rush-vignette"></div>
+      <div class="rush-speedlines"></div>
+      <div class="rush-band band1"></div><div class="rush-band band2"></div>
+      <div class="rush-title"><small>${sub}</small><strong>${title}</strong></div>
+      <div class="rush-count"><span>3</span><span>2</span><span>1</span></div>
+    `;
+    document.body.appendChild(layer);
+    FX.attackFanfare(dmg,lethal);
+    try{if(navigator.vibrate) navigator.vibrate(tier==="critical"||lethal?[10,55,10,55,16]:[10,45,10])}catch(_){}
+    await wait(tier==="critical"||lethal?410:tier==="strong"?315:205);
+    layer.classList.add("rush-release");
+    await wait(90);
+    layer.remove();
+  }
+
   async function playAttackJuice(dmg, lethal=false){
     document.querySelector("#attackJuice")?.remove();
     const tier=attackTier(dmg);
@@ -680,8 +704,10 @@
       <div class="impact-ring ring-a"></div>
       <div class="impact-ring ring-b"></div>
       <div class="impact-sparks">${sparks}</div>
+      <div class="impact-kanji">${lethal?"撃破":tier==="critical"?"激震":tier==="strong"?"炸裂":"衝撃"}</div>
       <div class="impact-number">${dmg}</div>
       <div class="impact-word">${lethal?"FINISH!!":tier==="critical"?"CRUSH!!":tier==="strong"?"SMASH!!":"HIT!"}</div>
+      <div class="impact-bonus">${tier==="critical"?"MAXIMUM!!":tier==="strong"?"EXCELLENT!":""}</div>
     `;
     document.body.appendChild(layer);
 
@@ -728,6 +754,9 @@
     const tier=attackTier(dmg);
     const sr=source.getBoundingClientRect();
     const er=enemy.getBoundingClientRect();
+
+    // pachislot-inspired "期待 -> 解放" beat before the projectile launches
+    await playSlotRushPrelude(dmg,lethal);
 
     // anticipation: compress the damage number for one beat before releasing it
     $("#readyDamage")?.classList.add("attack-primed",`tier-${tier}`);
