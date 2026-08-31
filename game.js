@@ -166,7 +166,7 @@
   const GACHA = {
     normal:{cost:300, rates:[["NORMAL",55],["RARE",28],["EPIC",12],["LEGENDARY",4],["GOD",1]]},
     rare:{cost:900, rates:[["RARE",70],["EPIC",22],["LEGENDARY",7],["GOD",1]]},
-    epic:{cost:2610, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
+    epic:{cost:2500, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
   };
 
   function allEquipment(){
@@ -223,9 +223,14 @@
   function setChestRarity(rarity){
     const chest=$("#gachaChest");
     const grade=$("#gachaGrade");
+    const theater=$("#gachaTheater");
+    const title=$("#summonRarityTitle");
     if(!chest) return;
-    chest.className=`gacha-chest chest-${rarity.toLowerCase()}`;
+    const key=rarity.toLowerCase();
+    chest.className=`gacha-chest chest-${key}`;
+    if(theater) theater.dataset.rarity=key;
     if(grade) grade.textContent=rarity;
+    if(title) title.textContent=rarity;
   }
 
   function storeGachaResult(result){
@@ -278,15 +283,24 @@
 
     $("#gachaResult").classList.add("hidden");
     $("#gachaResult").innerHTML="";
-    $("#gachaTheater")?.classList.remove("hidden");
-    $("#gachaPrompt").textContent="CHESTをタップ";
+    const theater=$("#gachaTheater");
+    theater?.classList.remove("hidden","summon-ready");
+    theater?.classList.add("summon-enter");
+    $("#gachaPrompt").textContent="召喚陣を展開中…";
     setChestRarity(pendingGacha.currentRarity);
-    $("#gachaChest")?.classList.add("ready");
+    $("#gachaChest")?.classList.remove("ready");
     FX.chestRattle();
+    setTimeout(()=>{
+      theater?.classList.remove("summon-enter");
+      theater?.classList.add("summon-ready");
+      $("#gachaPrompt").textContent="CHESTをタップ";
+      $("#gachaChest")?.classList.add("ready");
+      try{if(navigator.vibrate) navigator.vibrate([10,18,24])}catch(_){}
+    },620);
   }
 
   async function gachaChestTap(){
-    if(!pendingGacha || gachaBusy) return;
+    if(!pendingGacha || gachaBusy || !$("#gachaTheater")?.classList.contains("summon-ready")) return;
     gachaBusy=true;
     const chest=$("#gachaChest");
     chest?.classList.remove("ready");
@@ -306,7 +320,7 @@
       await playGachaPuchun(RARITY_ORDER[cur+1]);
       pendingGacha.currentRarity=RARITY_ORDER[cur+1];
       setChestRarity(pendingGacha.currentRarity);
-      $("#gachaPrompt").textContent="昇格！ まだ終わらない…";
+      $("#gachaPrompt").textContent="昇格成功 ─ さらに上位へ…";
       chest?.classList.add("ready","graded","overdrive");
       $("#gachaTheater")?.classList.add("grade-celebrate");
       setTimeout(()=>$("#gachaTheater")?.classList.remove("grade-celebrate"),700);
@@ -325,7 +339,7 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
     layer.innerHTML=`
-      <video class="exact-puchun-video" src="puchun_exact.mp4?v=2610" preload="auto" playsinline muted></video>
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=3000" preload="auto" playsinline muted></video>
       <div class="exact-grade">
         <div class="grade-rays"></div>
         <div class="grade-hex"></div>
@@ -408,7 +422,12 @@
         <div class="reward-rarity">${finalRarity}</div>
         <div class="reward-rank-copy">${finalRarity==="GOD"?"DIVINE ACQUISITION":finalRarity==="LEGENDARY"?"LEGEND DESCENDS":finalRarity==="EPIC"?"EPIC DROP":"ITEM GET"}</div>
         <div class="reward-new">${stored.isDuplicate?`DUPLICATE ×${stored.count}`:"NEW!"}</div>
-        <div class="reward-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
+        <div class="reward-artifact">
+          <span class="artifact-corner c1"></span><span class="artifact-corner c2"></span>
+          <span class="artifact-corner c3"></span><span class="artifact-corner c4"></span>
+          <div class="reward-icon">${result.slot==="weapon"?"⚔️":"🛡️"}</div>
+        </div>
+        <small class="reward-type">${result.slot==="weapon"?"WEAPON":"ARMOR"}</small>
         <h1>${result.item.name}</h1>
         <div class="reward-stat">${stat}</div>
         ${skill?`<div class="reward-skill">${skill}</div>`:""}

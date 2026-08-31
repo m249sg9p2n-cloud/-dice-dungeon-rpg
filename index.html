@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=2610">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=2610">
-  <link rel="stylesheet" href="./style.css?v=2610">
-  <title>Dice Dungeon RPG v2.6.1</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=3000">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=3000">
+  <link rel="stylesheet" href="./style.css?v=3000">
+  <title>Dice Dungeon RPG v3.0.0</title>
 </head>
 <body>
 <main id="app">
@@ -24,9 +24,10 @@
       <div class="gold">🪙 <span id="bankGold">0</span>G</div>
     </header>
 
-    <div class="home-brand" id="devTapTarget">
+    <div class="home-brand premium-brand" id="devTapTarget">
       <div class="brand-sigil">🎲</div>
-      <div><b>DICE DUNGEON</b><small>ROLL • GROW • CONQUER</small></div>
+      <div class="brand-copy"><b>DICE DUNGEON</b><small>ROLL • GROW • CONQUER</small></div>
+      <div class="brand-rank"><span>ADVENTURER</span><strong id="homeRankMini">CONQUEROR</strong></div>
       <span class="brand-spark">✦</span>
     </div>
 
@@ -46,27 +47,27 @@
     </div>
 
     <div class="home-menu home-menu-grid">
-      <button id="dungeonEntry" class="home-menu-card home-main-card">
+      <button id="dungeonEntry" class="home-menu-card home-main-card menu-dungeon">
         <span class="menu-icon">🏰</span>
         <span class="menu-copy"><b>出撃 <em class="menu-tag">DUNGEON</em></b><small id="homeMissionSummary">1-1 ゴブリンの森</small></span>
         <span class="menu-arrow">›</span>
       </button>
-      <button id="upgradeEntry" class="home-menu-card">
+      <button id="upgradeEntry" class="home-menu-card menu-upgrade">
         <span class="menu-icon">⬆️</span>
         <span class="menu-copy"><b>強化 <em class="menu-tag">POWER UP</em></b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
         <span class="menu-arrow">›</span>
       </button>
-      <button id="equipmentEntry" class="home-menu-card">
+      <button id="equipmentEntry" class="home-menu-card menu-equipment">
         <span class="menu-icon">⚔️</span>
         <span class="menu-copy"><b>装備 <em class="menu-tag">GEAR</em></b><small id="equipmentSummary">武器・防具を変更</small></span>
         <span class="menu-arrow">›</span>
       </button>
-      <button id="gachaEntry" class="home-menu-card gacha-menu-card">
+      <button id="gachaEntry" class="home-menu-card gacha-menu-card menu-gacha">
         <span class="menu-icon">🎁</span>
         <span class="menu-copy"><b>ガチャ <em class="menu-tag hot">GACHA</em></b><small>装備を召喚</small></span>
         <span class="menu-arrow">›</span>
       </button>
-      <button id="recordEntry" class="home-menu-card">
+      <button id="recordEntry" class="home-menu-card menu-records">
         <span class="menu-icon">📖</span>
         <span class="menu-copy"><b>戦績 <em class="menu-tag">RECORD</em></b><small>冒険記録を確認</small></span>
         <span class="menu-arrow">›</span>
@@ -78,7 +79,7 @@
       <small id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</small>
     </div>
 
-    <p class="note">v2.6.1 — iPHONE NO-SCROLL</p>
+    <p class="note">v3.0.0 — iPHONE NO-SCROLL</p>
   </section>
 
   <section id="dungeonSelect" class="screen compact-screen">
@@ -180,20 +181,35 @@
     <div class="gacha-banner">
       <div class="gacha-big-chest">🎁</div>
       <div>
-        <b>武器・防具 全30種</b>
-        <small>NORMAL / RARE / EPIC / LEGENDARY / GOD</small>
+        <b>PREMIUM EQUIPMENT SUMMON</b>
+        <small>武器・防具 全30種 ─ 最高位 GOD を狙え</small>
       </div>
     </div>
 
     <button id="gachaInfoEntry" class="gacha-info-entry">召喚情報・確率・履歴 <span>›</span></button>
 
-    <div id="gachaTheater" class="gacha-theater hidden" aria-live="polite">
-      <div class="gacha-stage-glow"></div>
-      <button id="gachaChest" class="gacha-chest chest-normal" type="button">
-        <span class="chest-lid"></span><span class="chest-body"></span><span class="chest-lock">◆</span>
-      </button>
-      <div id="gachaPrompt" class="gacha-prompt">CHESTをタップ</div>
-      <div id="gachaGrade" class="gacha-grade">NORMAL</div>
+    <div id="gachaTheater" class="gacha-theater premium-theater hidden" aria-live="polite" data-rarity="normal">
+      <div class="summon-space">
+        <div class="summon-stars"></div>
+        <div class="summon-vignette"></div>
+        <div class="summon-pillar pillar-l"></div>
+        <div class="summon-pillar pillar-r"></div>
+        <div class="summon-rune rune-a"></div>
+        <div class="summon-rune rune-b"></div>
+        <div class="summon-sigil"><span>✦</span><i></i><b></b></div>
+        <div class="summon-beam"></div>
+        <div class="gacha-stage-glow"></div>
+        <div class="summon-title"><small>ARCANE EQUIPMENT SUMMON</small><b id="summonRarityTitle">NORMAL</b></div>
+        <button id="gachaChest" class="gacha-chest chest-normal" type="button">
+          <span class="chest-aura"></span>
+          <span class="chest-wing wing-l"></span><span class="chest-wing wing-r"></span>
+          <span class="chest-lid"></span><span class="chest-body"></span><span class="chest-lock">◆</span>
+          <span class="chest-gem"></span>
+        </button>
+        <div class="summon-pedestal"><i></i><b></b></div>
+        <div id="gachaPrompt" class="gacha-prompt">CHESTをタップ</div>
+        <div id="gachaGrade" class="gacha-grade">NORMAL</div>
+      </div>
     </div>
 
     <div class="gacha-buttons">
@@ -204,7 +220,7 @@
         <span>RARE以上確定</span><b>900G</b><small>RARE / EPIC / LEGENDARY / GOD</small>
       </button>
       <button class="gacha-pull epic-pull" data-tier="epic">
-        <span>EPIC以上確定</span><b>2610G</b><small>EPIC / LEGENDARY / GOD</small>
+        <span>EPIC以上確定</span><b>2500G</b><small>EPIC / LEGENDARY / GOD</small>
       </button>
     </div>
 
@@ -442,11 +458,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=2610"></script>
-<script src="./game.js?v=2610"></script>
+<script src="./effects.js?v=3000"></script>
+<script src="./game.js?v=3000"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2610").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=3000").catch(console.error));
 }
 </script>
 </body>
