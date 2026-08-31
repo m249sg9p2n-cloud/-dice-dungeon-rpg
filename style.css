@@ -3585,7 +3585,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #runResult .center-title h2{letter-spacing:.03em}
 .boss-result strong{filter:drop-shadow(0 0 11px #ffb432)}
 
-/* ========== v3.5.0 RE:BIRTH FULL QUALITY PASS ========== */
+/* ========== v4.0.0 RE:BIRTH FULL QUALITY PASS ========== */
 .legacy-panel{margin:10px 0 12px;padding:11px;border:1px solid #303a4e;border-radius:13px;background:linear-gradient(145deg,#111722,#090d14);box-shadow:inset 0 0 22px #78b7ff05}
 .legacy-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}.legacy-head span{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#8290a7}.legacy-head small{font-size:8px;color:#58647a}
 .legacy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.legacy-grid div{text-align:center;padding:6px 2px;border-radius:8px;background:#090d14;border:1px solid #202a39}.legacy-grid span{display:block;font-size:6.5px;letter-spacing:.08em;color:#66758c;font-weight:900}.legacy-grid b{font-size:13px;color:#d7e6f7}
@@ -3605,7 +3605,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 
 /* =========================================================
-   v3.5.0 EXACT PUCHUN
+   v4.0.0 EXACT PUCHUN
    The licensed source video is rendered directly so timing,
    flare shape and CRT collapse remain frame-exact.
    ========================================================= */
@@ -3643,7 +3643,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 
 /* ==========================================================
-   v3.5.0 iPHONE NO-SCROLL
+   v4.0.0 iPHONE NO-SCROLL
    Every game screen is locked to the visual viewport.
    Dense information is moved behind tap navigation/pagination.
    ========================================================== */
@@ -3870,7 +3870,7 @@ body{position:fixed;inset:0}
 
 
 /* ==========================================================
-   v3.5.0 PREMIUM ASCENSION
+   v4.0.0 PREMIUM ASCENSION
    Premium readability + richer home + cinematic gacha.
    Still strictly one iPhone viewport / zero page scrolling.
    ========================================================== */
@@ -4108,7 +4108,7 @@ body{position:fixed;inset:0}
 
 
 /* ==========================================================
-   v3.5.0 GRAND LUXURY
+   v4.0.0 GRAND LUXURY
    Dark ≠ dull. Jewel color, metallic depth, larger typography.
    100dvh / no-scroll remains non-negotiable.
    ========================================================== */
@@ -4295,3 +4295,33 @@ body{position:fixed;inset:0}
   .home-menu-grid .menu-copy small{font-size:9px!important}
   .home-menu-grid .menu-icon{width:38px!important;height:38px!important;font-size:22px!important}
 }
+
+/* ===== v4.0 REAL GAME EVOLUTION ===== */
+body,button{font-family:"Avenir Next","Hiragino Sans","Yu Gothic",system-ui,sans-serif!important}
+#home{background:radial-gradient(circle at 12% 15%,#168fe13d,transparent 27%),radial-gradient(circle at 88% 20%,#f4b52e35,transparent 29%),radial-gradient(circle at 50% 88%,#b738e430,transparent 32%),linear-gradient(180deg,#111b29,#080d14 56%,#06090e)!important}
+.grand-brand{background:linear-gradient(110deg,#50340b,#192a3e 40%,#111a27 68%,#50340b)!important;border-color:#e4b84d!important}
+.grand-brand .brand-copy b{font-family:Georgia,"Times New Roman",serif!important;font-size:20px!important}.home-menu-grid .jp-title{font-size:20px!important;font-weight:900!important}
+.menu-dungeon{background:linear-gradient(115deg,#704007,#1a222d 63%)!important}.menu-upgrade{background:linear-gradient(115deg,#075583,#111e2c 63%)!important}.menu-equipment{background:linear-gradient(115deg,#735207,#1d1910 63%)!important}.menu-gacha{background:linear-gradient(115deg,#70187c,#291331 63%)!important}.menu-records{background:linear-gradient(115deg,#365575,#161e29 63%)!important}
+
+/* Equipment is readable, still no-scroll */
+.equipment-list{gap:6px!important}
+.inventory-item{min-height:82px!important;padding:9px 11px!important;border-radius:14px!important;background:linear-gradient(135deg,#192638,#0c121b)!important}
+.inventory-item .inv-top b{font-size:15px!important}.inventory-item .inv-stats{font-size:15px!important}.inventory-item small{font-size:11.5px!important;line-height:1.35!important;opacity:1!important;color:#dfe9f6!important}
+.forge-dock{display:flex;align-items:center;gap:8px;padding:7px 8px;border:1px solid #8e6926;border-radius:13px;background:linear-gradient(115deg,#2e210a,#111923);box-shadow:inset 0 1px #ffe9a52b}
+.forge-dock-copy{flex:1;min-width:0}.forge-dock-copy small{display:block;font-size:7px;letter-spacing:.22em;color:#e2b74d}.forge-dock-copy b{font-size:15px;color:#ffe28a}.forge-dock-copy span{display:block;font-size:9px;color:#c8d3e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#forgeBtn{width:94px;min-height:42px;border:1px solid #e4b441;border-radius:10px;background:linear-gradient(#845a13,#3d2706);color:#fff0ad;font-weight:900;box-shadow:inset 0 1px #fff3a54b,0 4px 12px #0008}#forgeBtn span{font-size:17px;margin-right:5px}#forgeBtn:disabled{filter:grayscale(1);opacity:.42}
+
+/* Forge full-screen impact */
+.synthesis-cinematic,.rarity-cinematic{position:fixed;inset:0;z-index:20000;display:grid;place-items:center;overflow:hidden;background:#000}.synthesis-cinematic.hidden,.rarity-cinematic.hidden{display:none!important}
+.forge-rays{position:absolute;width:150vmax;height:150vmax;background:repeating-conic-gradient(#ffc84a18 0 3deg,transparent 3deg 14deg);animation:v4spin 8s linear infinite}.forge-ring{position:absolute;border:2px dashed #e6b446;border-radius:50%;box-shadow:0 0 35px #d99b31}.forge-ring.ring1{width:260px;height:260px;animation:v4spin 4s linear infinite}.forge-ring.ring2{width:190px;height:190px;animation:v4spin 2.7s linear infinite reverse}@keyframes v4spin{to{transform:rotate(360deg)}}
+.forge-core{position:relative;text-align:center;color:#ffe9a3}.forge-core>small{font-size:9px;letter-spacing:.28em}.forge-materials{display:flex;justify-content:center;align-items:center;gap:14px;margin:20px}.forge-materials i{width:46px;height:58px;border:2px solid #d8a63e;border-radius:8px;background:linear-gradient(145deg,#6d4a16,#171209);box-shadow:0 0 20px #e7ad36}.forge-hammer{font-size:70px;filter:drop-shadow(0 0 18px #ffb42d)}.forge-core strong{display:block;font:900 34px Georgia,serif;letter-spacing:.09em;text-shadow:0 0 22px #ffae28}.forge-core em{display:block;font-style:normal;font-size:12px;font-weight:900;margin-top:8px}.synthesis-cinematic.play .forge-hammer{animation:v4hammer 1.2s cubic-bezier(.2,.8,.2,1)}@keyframes v4hammer{0%{transform:translate(80px,-100px) rotate(-55deg);opacity:0}60%{opacity:1;transform:translate(0) rotate(-25deg)}68%{transform:scale(1.6) rotate(-25deg);filter:brightness(5) drop-shadow(0 0 45px #fff)}100%{transform:rotate(-25deg)}}
+
+/* exact puchun -> black beat -> one-letter rarity cut-in */
+.rarity-cinematic{background:radial-gradient(circle,#10151d,#000 58%);color:#75b9ff}.rarity-flare{position:absolute;width:2px;height:2px;border-radius:50%;box-shadow:0 0 80px 35px currentColor;opacity:0}.rarity-cinematic.play .rarity-flare{animation:v4flare .7s 1.35s both}@keyframes v4flare{50%{opacity:.85;transform:scale(3)}100%{opacity:.15;transform:scale(7)}}
+.rarity-letters{position:relative;z-index:2;display:flex;justify-content:center;gap:.01em;max-width:98vw}.rarity-letters span{font:900 clamp(32px,10vw,58px) Georgia,serif;color:#fff;opacity:0;transform:translateX(-45px) scale(1.8);filter:blur(10px);text-shadow:0 0 12px currentColor,0 0 35px currentColor}.rarity-cinematic.play .rarity-letters span{animation:v4letter .48s cubic-bezier(.12,.82,.22,1) calc(.68s + var(--i)*.135s) forwards}@keyframes v4letter{45%{opacity:1;transform:translateX(8px) scale(1.08);filter:none}100%{opacity:1;transform:none;filter:none}}
+.rarity-final{position:absolute;z-index:3;top:61%;font:900 10px Georgia,serif;letter-spacing:.5em;opacity:0}.rarity-cinematic.play .rarity-final{animation:v4final .7s 1.8s forwards}@keyframes v4final{from{opacity:0;transform:translateY(15px);letter-spacing:1em}to{opacity:.85;transform:none;letter-spacing:.5em}}
+.rarity-cinematic[data-rarity="RARE"]{color:#5ea9ff}.rarity-cinematic[data-rarity="EPIC"]{color:#c45fff}.rarity-cinematic[data-rarity="LEGENDARY"]{color:#ffc52e}.rarity-cinematic[data-rarity="GOD"]{color:#fff38b}
+
+/* Gacha: brighter, more physical */
+#gacha{background:radial-gradient(circle at 50% 30%,#581f7042,transparent 35%),linear-gradient(180deg,#191021,#080910)!important}.premium-theater{border-color:#9562ae!important;box-shadow:inset 0 0 75px #984bb640,0 9px 25px #000c!important}#gachaChest.gacha-chest{width:132px!important;height:96px!important;filter:drop-shadow(0 14px 9px #000b)}#gacha .gacha-pull{min-height:58px!important;border-width:1.5px!important}#gacha .gacha-pull b{font-size:20px!important}
+@media(max-height:720px){.home-menu-grid .jp-title{font-size:18px!important}.inventory-item{min-height:70px!important;padding:7px 9px!important}.inventory-item small{font-size:10.5px!important}.forge-dock{padding:5px 7px}}

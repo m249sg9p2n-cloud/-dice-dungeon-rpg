@@ -104,6 +104,7 @@
         armor:["traveler_clothes"]
       },
       duplicates:{},
+      forgeLevels:{},
       equipped:{weapon:"training_sword",armor:"traveler_clothes"},
       clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0},
       records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0}},
@@ -130,6 +131,7 @@
           ...(parsed.inventory||{})
         },
         duplicates:{...(parsed.duplicates||{})},
+        forgeLevels:{...(parsed.forgeLevels||{})},
         equipped:{weapon:"training_sword",armor:"traveler_clothes",...(parsed.equipped||{})},
         clears:{"1-1":0,"1-2":0,"1-3":0,"1-4":0,...(parsed.clears||{})},
         records:{"1-1":{bestRunGold:0},"1-2":{bestRunGold:0},"1-3":{bestRunGold:0},"1-4":{bestRunGold:0},...(parsed.records||{})},
@@ -151,6 +153,7 @@
   let pendingGacha = null;
   let gachaBusy = false;
   let equipmentPage = 0;
+  let forgeSelection=null;
   const EQUIPMENT_PAGE_SIZE = 4;
 
   function persist(){
@@ -318,6 +321,7 @@
 
     if(cur<fin){
       await playGachaPuchun(RARITY_ORDER[cur+1]);
+      await playRarityCutInV4(RARITY_ORDER[cur+1]);
       pendingGacha.currentRarity=RARITY_ORDER[cur+1];
       setChestRarity(pendingGacha.currentRarity);
       $("#gachaPrompt").textContent="昇格成功 ─ さらに上位へ…";
@@ -339,7 +343,7 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
     layer.innerHTML=`
-      <video class="exact-puchun-video" src="puchun_exact.mp4?v=3500" preload="auto" playsinline muted></video>
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=4000" preload="auto" playsinline muted></video>
       <div class="exact-grade">
         <div class="grade-rays"></div>
         <div class="grade-hex"></div>
@@ -466,10 +470,7 @@
 
 
   function enhancementLevel(id){
-    const count=Math.max(1,Number(save.duplicates?.[id]||1));
-    if(count>=9) return 2;
-    if(count>=3) return 1;
-    return 0;
+    return Math.max(0,Math.min(2,Number(save.forgeLevels?.[id]||0)));
   }
 
   function enhancementLabel(id){
@@ -552,7 +553,8 @@
       const curValue=slot==="weapon"?enhancedValue(current,"atk"):enhancedValue(current,"def");
       const delta=value-curValue;
       const count=save.duplicates[item.id]||1;
-      const progress=enhancementLevel(item.id)===2?"MAX ++":enhancementLevel(item.id)===1?`++まで ${Math.max(0,9-count)}個`:`+まで ${Math.max(0,3-count)}個`;
+      const lv=enhancementLevel(item.id);
+      const progress=lv>=2?"合成 MAX":count>=3?"合成可能":"合成素材 "+count+"/3";
       const btn=document.createElement("button");
       btn.className=`inventory-item ${rarityClass(item.rarity)} ${equipped?"equipped":""}`;
       btn.innerHTML=`
@@ -566,7 +568,11 @@
         <small class="copy-count">所持 ×${count} • ${progress}</small>
         <small class="power-delta">${equipped?"CURRENT":delta>=0?`▲ ${slot==="weapon"?"ATK":"DEF"} +${delta}`:`▼ ${slot==="weapon"?"ATK":"DEF"} ${delta}`}</small>
       `;
-      btn.addEventListener("click",()=>equipItem(slot,id));
+      btn.addEventListener("click",()=>{
+        equipItem(slot,id);
+        forgeSelection={slot,id};
+        updateForgeDock();
+      });
       list.appendChild(btn);
     }
 
@@ -586,6 +592,49 @@
     persist();
     renderHome();
     openEquipment(slot,equipmentPage);
+  }
+
+
+  function updateForgeDock(){
+    const btn=$("#forgeBtn"), hint=$("#forgeHint");
+    if(!btn||!hint) return;
+    if(!forgeSelection){btn.disabled=true;hint.textContent="装備を選んで合成";return;}
+    const {slot,id}=forgeSelection;
+    const item=EQUIPMENT[slot]?.[id];
+    const count=Number(save.duplicates?.[id]||0);
+    const lv=enhancementLevel(id);
+    if(!item){btn.disabled=true;hint.textContent="装備を選んで合成";return;}
+    if(lv>=2){btn.disabled=true;hint.textContent=`${item.name}：MAX ++`;return;}
+    btn.disabled=count<3;
+    hint.textContent=count>=3?`${item.name} ×3 → ${lv===0?"+":"++"}`:`${item.name}　素材 ${count}/3`;
+  }
+
+  async function playForgeCinematic(item,newLv){
+    const o=$("#synthesisCinematic");
+    if(!o) return;
+    $("#forgeItemName").textContent=`${item.name} ${newLv===2?"++":"+"}`;
+    o.classList.remove("hidden","play"); void o.offsetWidth; o.classList.add("play");
+    FX?.puchun?.();
+    navigator.vibrate?.([30,50,90,70,150]);
+    await wait(2350);
+    o.classList.add("hidden"); o.classList.remove("play");
+  }
+
+  async function synthesizeSelected(){
+    if(!forgeSelection) return;
+    const {slot,id}=forgeSelection;
+    const item=EQUIPMENT[slot]?.[id];
+    const count=Number(save.duplicates?.[id]||0);
+    const lv=enhancementLevel(id);
+    if(!item||lv>=2||count<3){updateForgeDock();return;}
+    save.duplicates[id]=count-3;
+    save.forgeLevels[id]=lv+1;
+    persist();
+    await playForgeCinematic(item,lv+1);
+    renderHome();
+    openEquipment(slot,equipmentPage);
+    forgeSelection={slot,id};
+    updateForgeDock();
   }
 
   function upgradeCost(type){
@@ -1760,4 +1809,18 @@
   recalcBase();
   persist();
   renderHome();
+
+  $("#forgeBtn")?.addEventListener("click",()=>synthesizeSelected());
+
+  async function playRarityCutInV4(rarity){
+    const o=$("#rarityCinematic"), box=$("#rarityLetters"), final=$("#rarityFinal");
+    if(!o||!box||!final) return;
+    rarity=String(rarity||"RARE").toUpperCase();
+    o.dataset.rarity=rarity; box.innerHTML=""; final.textContent=rarity;
+    [...rarity].forEach((c,i)=>{const s=document.createElement("span");s.textContent=c;s.style.setProperty("--i",i);box.appendChild(s);});
+    o.classList.remove("hidden","play"); void o.offsetWidth; o.classList.add("play");
+    await wait(2100+rarity.length*135);
+    o.classList.add("hidden"); o.classList.remove("play");
+  }
+
 })();

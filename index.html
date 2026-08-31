@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=3500">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=3500">
-  <link rel="stylesheet" href="./style.css?v=3500">
-  <title>Dice Dungeon RPG v3.5.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=4000">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=4000">
+  <link rel="stylesheet" href="./style.css?v=4000">
+  <title>Dice Dungeon RPG v4.0.0</title>
 </head>
 <body>
 <main id="app">
@@ -79,7 +79,7 @@
       <small id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</small>
     </div>
 
-    <p class="note">v3.5.0 — iPHONE NO-SCROLL</p>
+    <p class="note">v4.0.0 — iPHONE NO-SCROLL</p>
   </section>
 
   <section id="dungeonSelect" class="screen compact-screen">
@@ -277,13 +277,17 @@
     </div>
 
     <div id="equipmentList" class="equipment-list"></div>
+    <div class="forge-dock">
+      <div class="forge-dock-copy"><small>BLACKSMITH</small><b>装備合成</b><span id="forgeHint">装備を選んで合成</span></div>
+      <button id="forgeBtn" type="button" disabled><span>⚒</span><b>合成</b></button>
+    </div>
     <div class="equip-pager">
       <button id="equipPrev" type="button">‹</button>
       <span id="equipPage">1 / 1</span>
       <button id="equipNext" type="button">›</button>
     </div>
 
-    <p class="note">タップすると装備。装備効果は次の出撃から反映。</p>
+    <p class="note">装備をタップで選択・装備。同じ装備を3個集めると合成できます。</p>
   </section>
 
   <section id="battle" class="screen battle-screen">
@@ -458,12 +462,13 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=3500"></script>
-<script src="./game.js?v=3500"></script>
+<script src="./effects.js?v=4000"></script>
+<script src="./game.js?v=4000"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=3500").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=4000").catch(console.error));
 }
 </script>
-</body>
+<div id="synthesisCinematic" class="synthesis-cinematic hidden"><div class="forge-rays"></div><div class="forge-ring ring1"></div><div class="forge-ring ring2"></div><div class="forge-core"><small>ARCANE BLACKSMITH</small><div class="forge-materials"><i></i><b>×3</b><i></i></div><div class="forge-hammer">⚒</div><strong id="forgeTitle">SYNTHESIS</strong><em id="forgeItemName">EQUIPMENT ASCENDED</em></div></div>
+<div id="rarityCinematic" class="rarity-cinematic hidden"><div class="rarity-flare"></div><div id="rarityLetters" class="rarity-letters"></div><div id="rarityFinal" class="rarity-final"></div></div></body>
 </html>
