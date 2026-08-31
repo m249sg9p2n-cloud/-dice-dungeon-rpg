@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=3000">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=3000">
-  <link rel="stylesheet" href="./style.css?v=3000">
-  <title>Dice Dungeon RPG v3.0.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=3500">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=3500">
+  <link rel="stylesheet" href="./style.css?v=3500">
+  <title>Dice Dungeon RPG v3.5.0</title>
 </head>
 <body>
 <main id="app">
@@ -24,10 +24,10 @@
       <div class="gold">🪙 <span id="bankGold">0</span>G</div>
     </header>
 
-    <div class="home-brand premium-brand" id="devTapTarget">
-      <div class="brand-sigil">🎲</div>
-      <div class="brand-copy"><b>DICE DUNGEON</b><small>ROLL • GROW • CONQUER</small></div>
-      <div class="brand-rank"><span>ADVENTURER</span><strong id="homeRankMini">CONQUEROR</strong></div>
+    <div class="home-brand premium-brand grand-brand" id="devTapTarget">
+      <div class="brand-crest"><span>🎲</span><i></i></div>
+      <div class="brand-copy"><small>PREMIUM DICE RPG</small><b>DICE DUNGEON</b></div>
+      <div class="brand-level"><small>RANK</small><strong id="homeRankMini">CONQUEROR</strong></div>
       <span class="brand-spark">✦</span>
     </div>
 
@@ -49,27 +49,27 @@
     <div class="home-menu home-menu-grid">
       <button id="dungeonEntry" class="home-menu-card home-main-card menu-dungeon">
         <span class="menu-icon">🏰</span>
-        <span class="menu-copy"><b>出撃 <em class="menu-tag">DUNGEON</em></b><small id="homeMissionSummary">1-1 ゴブリンの森</small></span>
-        <span class="menu-arrow">›</span>
+        <span class="menu-copy"><b><span class="jp-title">出撃</span> <em class="menu-tag">DUNGEON</em></b><small id="homeMissionSummary">1-1 ゴブリンの森</small></span>
+        <span class="menu-arrow">›</span><i class="menu-jewel"></i>
       </button>
       <button id="upgradeEntry" class="home-menu-card menu-upgrade">
         <span class="menu-icon">⬆️</span>
-        <span class="menu-copy"><b>強化 <em class="menu-tag">POWER UP</em></b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
+        <span class="menu-copy"><b><span class="jp-title">強化</span> <em class="menu-tag">POWER UP</em></b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small><i class="menu-jewel"></i></span>
         <span class="menu-arrow">›</span>
       </button>
       <button id="equipmentEntry" class="home-menu-card menu-equipment">
         <span class="menu-icon">⚔️</span>
-        <span class="menu-copy"><b>装備 <em class="menu-tag">GEAR</em></b><small id="equipmentSummary">武器・防具を変更</small></span>
+        <span class="menu-copy"><b><span class="jp-title">装備</span> <em class="menu-tag">GEAR</em></b><small id="equipmentSummary">武器・防具を変更</small><i class="menu-jewel"></i></span>
         <span class="menu-arrow">›</span>
       </button>
       <button id="gachaEntry" class="home-menu-card gacha-menu-card menu-gacha">
         <span class="menu-icon">🎁</span>
-        <span class="menu-copy"><b>ガチャ <em class="menu-tag hot">GACHA</em></b><small>装備を召喚</small></span>
+        <span class="menu-copy"><b><span class="jp-title">ガチャ</span> <em class="menu-tag hot">GACHA</em></b><small>装備を召喚</small><i class="menu-jewel"></i></span>
         <span class="menu-arrow">›</span>
       </button>
       <button id="recordEntry" class="home-menu-card menu-records">
         <span class="menu-icon">📖</span>
-        <span class="menu-copy"><b>戦績 <em class="menu-tag">RECORD</em></b><small>冒険記録を確認</small></span>
+        <span class="menu-copy"><b><span class="jp-title">戦績</span> <em class="menu-tag">RECORD</em></b><small>冒険記録を確認</small><i class="menu-jewel"></i></span>
         <span class="menu-arrow">›</span>
       </button>
     </div>
@@ -79,7 +79,7 @@
       <small id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</small>
     </div>
 
-    <p class="note">v3.0.0 — iPHONE NO-SCROLL</p>
+    <p class="note">v3.5.0 — iPHONE NO-SCROLL</p>
   </section>
 
   <section id="dungeonSelect" class="screen compact-screen">
@@ -458,11 +458,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=3000"></script>
-<script src="./game.js?v=3000"></script>
+<script src="./effects.js?v=3500"></script>
+<script src="./game.js?v=3500"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=3000").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=3500").catch(console.error));
 }
 </script>
 </body>

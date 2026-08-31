@@ -339,7 +339,7 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
     layer.innerHTML=`
-      <video class="exact-puchun-video" src="puchun_exact.mp4?v=3000" preload="auto" playsinline muted></video>
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=3500" preload="auto" playsinline muted></video>
       <div class="exact-grade">
         <div class="grade-rays"></div>
         <div class="grade-hex"></div>
