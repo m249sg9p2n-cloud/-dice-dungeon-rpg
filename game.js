@@ -164,7 +164,7 @@
   const GACHA = {
     normal:{cost:300, rates:[["NORMAL",55],["RARE",28],["EPIC",12],["LEGENDARY",4],["GOD",1]]},
     rare:{cost:900, rates:[["RARE",70],["EPIC",22],["LEGENDARY",7],["GOD",1]]},
-    epic:{cost:2500, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
+    epic:{cost:2600, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
   };
 
   function allEquipment(){
@@ -320,24 +320,10 @@
 
     const layer=document.createElement("div");
     layer.id="gachaPuchun";
-    layer.className=`puchun-${nextRarity.toLowerCase()}`;
+    layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
     layer.innerHTML=`
-      <div class="v14-white"></div>
-      <div class="v14-black"></div>
-      <div class="v14-cross">
-        <i class="cross-h"></i>
-        <i class="cross-v"></i>
-        <i class="cross-core"></i>
-      </div>
-      <div class="v14-small-cross">
-        <i class="small-h"></i>
-        <i class="small-v"></i>
-        <i class="small-core"></i>
-      </div>
-      <div class="v14-last-dot"></div>
-      <div class="v14-after-line"></div>
-
-      <div class="v14-grade">
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=2600" preload="auto" playsinline muted></video>
+      <div class="exact-grade">
         <div class="grade-rays"></div>
         <div class="grade-hex"></div>
         <div class="grade-ring a"></div>
@@ -346,33 +332,33 @@
         <strong>${nextRarity}</strong>
         <em>昇 格</em>
       </div>`;
-
     document.body.appendChild(layer);
 
-    // First game's successful feel: no warning, then an unmistakable white cut.
-    await wait(420);
-    layer.classList.add("white-cut");
+    const video=layer.querySelector(".exact-puchun-video");
+
+    // Exact reproduction: play the licensed 3.0s / 30fps source itself.
+    // This avoids browser-frame skipping and CSS approximation entirely.
+    try{
+      video.currentTime=0;
+      const playPromise=video.play();
+      if(playPromise) await playPromise;
+    }catch(_){}
+
+    // Original material is silent; synchronize the game's power-cut SE to its first flash.
+    await wait(30);
     FX.puchun();
-    try{if(navigator.vibrate) navigator.vibrate([10,14,30])}catch(_){}
-    await wait(78);
+    try{if(navigator.vibrate) navigator.vibrate([8,12,24])}catch(_){}
 
-    // Full black + large visible cross. Hold long enough for iPhone to actually show it.
-    layer.classList.add("big-cross");
-    await wait(185);
+    // Wait for the exact source animation to finish. Fallback protects iOS edge cases.
+    await Promise.race([
+      new Promise(resolve=>video.addEventListener("ended",resolve,{once:true})),
+      wait(3200)
+    ]);
 
-    // Shrink to an unmistakable small cross.
-    layer.classList.add("small-cross");
-    await wait(150);
-
-    // Collapse to center point with a short horizontal afterglow.
-    layer.classList.add("point");
-    await wait(155);
-
-    // Dead black, real silence.
-    layer.classList.add("dead");
+    // Keep a short true-black beat before the rarity payoff.
+    layer.classList.add("source-ended");
     await wait(nextRarity==="GOD"?360:260);
 
-    // Grade-up is a separate reward beat.
     layer.classList.add("grade-on");
     FX.gradeUp();
     try{

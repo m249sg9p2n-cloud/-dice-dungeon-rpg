@@ -3585,7 +3585,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #runResult .center-title h2{letter-spacing:.03em}
 .boss-result strong{filter:drop-shadow(0 0 11px #ffb432)}
 
-/* ========== v2.5.0 RE:BIRTH FULL QUALITY PASS ========== */
+/* ========== v2.6.0 RE:BIRTH FULL QUALITY PASS ========== */
 .legacy-panel{margin:10px 0 12px;padding:11px;border:1px solid #303a4e;border-radius:13px;background:linear-gradient(145deg,#111722,#090d14);box-shadow:inset 0 0 22px #78b7ff05}
 .legacy-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}.legacy-head span{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#8290a7}.legacy-head small{font-size:8px;color:#58647a}
 .legacy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.legacy-grid div{text-align:center;padding:6px 2px;border-radius:8px;background:#090d14;border:1px solid #202a39}.legacy-grid span{display:block;font-size:6.5px;letter-spacing:.08em;color:#66758c;font-weight:900}.legacy-grid b{font-size:13px;color:#d7e6f7}
@@ -3602,3 +3602,41 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 .result-next,.result-retry,.ghost-btn{width:100%;margin-top:8px}.secondary{min-height:48px;border-radius:12px;border:1px solid #3a475d;background:#161c27;color:#d7e4f5;font-weight:900}.ghost-btn{min-height:40px;border:0;background:transparent;color:#79879b;font-weight:800}
 .death-report{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0 10px}.death-report>div{padding:10px 5px;text-align:center;border:1px solid #3a2f35;border-radius:10px;background:#160f13}.death-report span{display:block;font-size:7px;letter-spacing:.09em;color:#8e6e78}.death-report b{font-size:14px;color:#f0d8dd}.death-message{margin:10px 0 16px;padding:11px;text-align:center;border-left:2px solid #b73c41;background:#211014}.death-message b{display:block;font-size:12px;letter-spacing:.16em;color:#ff7474}.death-message span{display:block;margin-top:4px;font-size:9px;color:#9b7b82}
 @media (max-height:760px){.battle-status-strip{margin:2px 0 4px}.battle-status-strip>div{padding:4px 7px}.next{padding:5px 8px!important}.run-trait{font-size:6px;top:4px}}
+
+
+/* =========================================================
+   v2.6.0 EXACT PUCHUN
+   The licensed source video is rendered directly so timing,
+   flare shape and CRT collapse remain frame-exact.
+   ========================================================= */
+#gachaPuchun.exact-video-puchun{
+  position:fixed;inset:0;z-index:1600;background:#000;overflow:hidden;
+  display:block;pointer-events:none;
+}
+#gachaPuchun .exact-puchun-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:fill;background:#000;display:block;
+}
+#gachaPuchun.source-ended .exact-puchun-video{display:none}
+#gachaPuchun .exact-grade{
+  position:absolute;inset:0;display:grid;place-content:center;text-align:center;
+  opacity:0;transform:scale(.72);background:#000;overflow:hidden;
+}
+#gachaPuchun .exact-grade small{
+  position:relative;z-index:4;font-size:12px;font-weight:1000;letter-spacing:.34em;color:#aeb7c8;
+}
+#gachaPuchun .exact-grade strong{
+  position:relative;z-index:4;display:block;margin:8px 0 2px;font-size:62px;line-height:.92;
+  font-weight:1000;font-style:italic;color:#fff;-webkit-text-stroke:1px #555;
+}
+#gachaPuchun .exact-grade em{
+  position:relative;z-index:4;font-size:12px;font-weight:1000;letter-spacing:.55em;color:#d7dbe5;
+}
+#gachaPuchun.grade-on .exact-grade{animation:exactGradeIn .24s cubic-bezier(.18,.9,.22,1.2) forwards}
+#gachaPuchun.puchun-rare .exact-grade strong{color:#6cbcff;-webkit-text-stroke-color:#153b64;text-shadow:0 0 15px #55aaff,0 0 34px #2866ca}
+#gachaPuchun.puchun-epic .exact-grade strong{color:#d789ff;-webkit-text-stroke-color:#4a1a67;text-shadow:0 0 15px #c35fff,0 0 36px #722bb7}
+#gachaPuchun.puchun-legendary .exact-grade strong{color:#ffc64d;-webkit-text-stroke-color:#65380f;text-shadow:0 0 15px #ffae29,0 0 42px #ff6022}
+#gachaPuchun.puchun-god .exact-grade strong{font-size:78px;color:#fff174;-webkit-text-stroke-color:#6e5310;text-shadow:0 0 18px #ffe23f,0 0 50px #ff9e23,0 0 90px #ed4e2a}
+#gachaPuchun.grade-out{animation:exactPuchunOut .18s ease-in forwards}
+@keyframes exactGradeIn{0%{opacity:0;transform:scale(.72);filter:brightness(2.2)}55%{opacity:1;transform:scale(1.08);filter:brightness(1.35)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
+@keyframes exactPuchunOut{to{opacity:0}}
