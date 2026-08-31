@@ -2,7 +2,7 @@
   "name": "Dice Dungeon RPG",
   "short_name": "Dice Dungeon",
   "description": "ダイスで戦うダンジョンRPG",
-  "start_url": "./?v=2600",
+  "start_url": "./?v=2610",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

@@ -3585,7 +3585,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #runResult .center-title h2{letter-spacing:.03em}
 .boss-result strong{filter:drop-shadow(0 0 11px #ffb432)}
 
-/* ========== v2.6.0 RE:BIRTH FULL QUALITY PASS ========== */
+/* ========== v2.6.1 RE:BIRTH FULL QUALITY PASS ========== */
 .legacy-panel{margin:10px 0 12px;padding:11px;border:1px solid #303a4e;border-radius:13px;background:linear-gradient(145deg,#111722,#090d14);box-shadow:inset 0 0 22px #78b7ff05}
 .legacy-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}.legacy-head span{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#8290a7}.legacy-head small{font-size:8px;color:#58647a}
 .legacy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.legacy-grid div{text-align:center;padding:6px 2px;border-radius:8px;background:#090d14;border:1px solid #202a39}.legacy-grid span{display:block;font-size:6.5px;letter-spacing:.08em;color:#66758c;font-weight:900}.legacy-grid b{font-size:13px;color:#d7e6f7}
@@ -3605,7 +3605,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 
 /* =========================================================
-   v2.6.0 EXACT PUCHUN
+   v2.6.1 EXACT PUCHUN
    The licensed source video is rendered directly so timing,
    flare shape and CRT collapse remain frame-exact.
    ========================================================= */
@@ -3640,3 +3640,230 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #gachaPuchun.grade-out{animation:exactPuchunOut .18s ease-in forwards}
 @keyframes exactGradeIn{0%{opacity:0;transform:scale(.72);filter:brightness(2.2)}55%{opacity:1;transform:scale(1.08);filter:brightness(1.35)}100%{opacity:1;transform:scale(1);filter:brightness(1)}}
 @keyframes exactPuchunOut{to{opacity:0}}
+
+
+/* ==========================================================
+   v2.6.1 iPHONE NO-SCROLL
+   Every game screen is locked to the visual viewport.
+   Dense information is moved behind tap navigation/pagination.
+   ========================================================== */
+html,body{
+  width:100%;height:100%;max-height:100dvh;
+  overflow:hidden!important;
+  touch-action:manipulation;
+}
+body{position:fixed;inset:0}
+#app{
+  height:100dvh!important;min-height:0!important;max-height:100dvh!important;
+  overflow:hidden!important;
+}
+.screen{
+  width:100%;height:100dvh!important;min-height:0!important;max-height:100dvh!important;
+  overflow:hidden!important;
+  padding:max(10px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom))!important;
+}
+.screen.active{display:flex!important;flex-direction:column}
+.compact-screen{gap:8px}
+.topbar{flex:0 0 48px;min-height:48px}
+.topbar h1{font-size:20px!important;margin:1px 0 0!important}
+.gold,.run-gold{padding:6px 9px!important;font-size:12px}
+.back-btn,.icon-btn{min-width:38px;min-height:38px}
+
+/* HOME is now a dashboard; dungeon/records live on tap-through screens */
+#home{gap:7px}
+#home::before{pointer-events:none}
+#home .home-brand{
+  flex:0 0 54px!important;margin:0!important;padding:8px 12px!important;min-height:54px!important;
+}
+#home .brand-sigil{font-size:24px!important}
+#home .home-brand b{font-size:15px!important}
+#home .home-brand small{font-size:8px!important}
+#home .ascension-meta{
+  flex:0 0 48px;margin:0!important;padding:5px!important;gap:5px!important;
+}
+#home .ascension-meta div{padding:4px!important}
+#home .ascension-meta span{font-size:8px!important}
+#home .ascension-meta b{font-size:12px!important}
+#home .home-overview{margin:0!important;padding:7px 9px!important}
+#home .overview-title{margin-bottom:4px!important}
+#home .stats-grid{margin-top:3px!important;gap:6px!important}
+#home .stat{padding:6px!important;border-radius:10px!important}
+#home .stat b{font-size:17px!important}
+#home .stat span{font-size:8px!important}
+.home-menu-grid{
+  flex:1 1 auto;min-height:0;
+  display:grid!important;grid-template-columns:1fr 1fr!important;
+  grid-template-rows:repeat(3,minmax(0,1fr));
+  gap:7px!important;margin:0!important;
+}
+.home-menu-grid .home-menu-card{
+  min-height:0!important;height:auto!important;margin:0!important;
+  padding:8px 9px!important;border-radius:13px!important;
+  grid-template-columns:34px 1fr 14px!important;
+}
+.home-menu-grid .home-main-card{grid-column:1 / -1}
+.home-menu-grid .menu-icon{width:30px!important;height:30px!important;font-size:18px!important}
+.home-menu-grid .menu-copy b{font-size:13px!important}
+.home-menu-grid .menu-copy small{font-size:8px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-menu-grid .menu-tag{font-size:6px!important;padding:2px 4px!important}
+.home-quick-mission{
+  flex:0 0 48px;display:grid;grid-template-columns:auto 1fr;align-items:center;
+  gap:2px 8px;padding:7px 10px;border:1px solid #5b4726;border-radius:12px;
+  background:#101218;
+}
+.home-quick-mission span{font-size:8px;font-weight:1000;color:#d7b85d}
+.home-quick-mission b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-quick-mission small{grid-column:1/-1;font-size:8px;color:#9298a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#home>.note{flex:0 0 auto;margin:0!important;font-size:8px!important}
+
+/* Dungeon select: four rows + one fixed launch button */
+#dungeonSelect .home-section-title{margin:4px 0!important;font-size:12px!important}
+#dungeonSelect .dungeon-list{
+  flex:1 1 auto;min-height:0;display:grid!important;grid-template-rows:repeat(4,minmax(0,1fr));
+  gap:7px!important;margin:0!important;overflow:hidden!important;
+}
+#dungeonSelect .dungeon-card{
+  min-height:0!important;height:auto!important;margin:0!important;padding:8px 10px!important;border-radius:13px!important;
+}
+#dungeonSelect .dungeon-code{font-size:12px!important}
+#dungeonSelect .dungeon-info b{font-size:12px!important}
+#dungeonSelect .dungeon-info small{font-size:8px!important}
+#dungeonSelect .clear-badge{font-size:8px!important}
+.dungeon-start{flex:0 0 52px;margin:0!important;min-height:52px!important}
+
+/* Records */
+#records .record-row{margin:4px 0 2px!important}
+#records .legacy-panel{flex:1 1 auto;min-height:0;margin:0!important;padding:12px!important;display:flex;flex-direction:column;justify-content:center}
+#records .legacy-grid{margin-top:10px!important;gap:8px!important}
+#records .legacy-grid>div{padding:12px 6px!important}
+#records .milestone{margin-top:12px!important}
+
+/* Upgrade */
+#upgrade{gap:9px}
+#upgrade .upgrade-intro{margin:0!important;padding:10px!important}
+#upgrade .upgrade-grid{flex:1 1 auto;min-height:0;display:grid!important;grid-template-rows:repeat(3,minmax(0,1fr));gap:8px!important;margin:0!important}
+#upgrade .upgrade-card{min-height:0!important;height:auto!important;padding:10px!important;margin:0!important}
+#upgrade .upgrade-toast{position:absolute!important;top:max(56px,calc(env(safe-area-inset-top) + 48px));left:12px;right:12px;z-index:20}
+
+/* Gacha main: only playable controls live here */
+#gacha{gap:7px}
+#gacha .gacha-banner{margin:0!important;padding:8px 10px!important;min-height:48px!important}
+#gacha .gacha-big-chest{font-size:26px!important}
+.gacha-info-entry{
+  flex:0 0 38px;display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:0 12px;border:1px solid #58466a;border-radius:11px;
+  background:#16111e;color:#dcb2f4;font-size:11px;font-weight:900;
+}
+#gacha .gacha-theater{
+  flex:1 1 auto;min-height:0!important;margin:0!important;
+  max-height:none!important;
+}
+#gacha .gacha-buttons{
+  flex:0 0 132px;display:grid!important;grid-template-columns:repeat(3,1fr)!important;
+  gap:6px!important;margin:0!important;
+}
+#gacha .gacha-pull{
+  min-height:0!important;height:100%!important;padding:8px 5px!important;border-radius:12px!important;
+}
+#gacha .gacha-pull span{font-size:9px!important}
+#gacha .gacha-pull b{font-size:15px!important}
+#gacha .gacha-pull small{font-size:7px!important;line-height:1.15!important}
+#gacha>.note{display:none!important}
+#gacha .gacha-result{
+  position:absolute;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));
+  z-index:25;max-height:42vh;overflow:hidden!important;
+}
+
+/* Gacha information */
+#gachaInfo{gap:8px}
+#gachaInfo .gacha-meta-panel{margin:3px 0!important}
+#gachaInfo .gacha-rates{margin:0!important}
+#gachaInfo .gacha-history{
+  flex:1 1 auto;min-height:0!important;max-height:none!important;overflow:hidden!important;
+  display:grid!important;grid-template-rows:repeat(5,minmax(0,1fr));gap:6px!important;
+}
+#gachaInfo .gacha-history span{min-height:0!important;padding:7px 9px!important}
+.gacha-info-note{
+  flex:0 0 auto;padding:10px 12px;border:1px solid #4a3a59;border-radius:12px;background:#111019;
+}
+.gacha-info-note b,.gacha-info-note small{display:block}
+.gacha-info-note b{font-size:11px;color:#e2b9ff}
+.gacha-info-note small{margin-top:4px;font-size:9px;color:#969aaa;line-height:1.45}
+
+/* Equipment uses explicit 4-item pages instead of scrolling */
+#equipment{gap:7px}
+#equipment .equip-tabs{margin:0!important}
+#equipment .equip-total{margin:0!important}
+#equipment .equipment-list{
+  flex:1 1 auto;min-height:0!important;overflow:hidden!important;
+  display:grid!important;grid-template-rows:repeat(4,minmax(0,1fr));gap:6px!important;margin:0!important;
+}
+#equipment .inventory-item{
+  min-height:0!important;height:auto!important;margin:0!important;padding:7px 9px!important;border-radius:11px!important;
+  display:grid!important;grid-template-columns:1fr auto;align-content:center;gap:1px 8px;
+}
+#equipment .inv-top{grid-column:1/-1}
+#equipment .inv-top b{font-size:11px!important}
+#equipment .rarity-label{font-size:7px!important}
+#equipment .inv-stats{font-size:12px!important}
+#equipment .inventory-item>small{font-size:7px!important;line-height:1.15!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#equipment .copy-count,#equipment .power-delta{font-size:7px!important}
+.equip-pager{
+  flex:0 0 36px;display:grid;grid-template-columns:54px 1fr 54px;gap:8px;align-items:center;
+}
+.equip-pager button{height:34px;border:1px solid #465063;border-radius:10px;background:#11151d;font-size:22px;font-weight:1000}
+.equip-pager button:disabled{opacity:.25}
+.equip-pager span{text-align:center;font-size:10px;font-weight:1000;color:#d7c887}
+#equipment>.note{margin:0!important;font-size:8px!important}
+.equip-empty{grid-row:1/-1;display:grid;place-items:center;color:#969baa;font-size:11px}
+
+/* Battle: strict viewport lock */
+#battle{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;padding-top:max(7px,env(safe-area-inset-top))!important;padding-bottom:max(7px,env(safe-area-inset-bottom))!important}
+.battle-head{flex-basis:40px!important;height:40px!important}
+.battle-status-strip{flex:0 0 34px!important;margin:0!important}
+.enemy-stage{min-height:0!important}
+.player-strip{flex:0 0 34px!important}
+.dice-panel{flex:0 0 clamp(205px,32dvh,270px)!important;min-height:0!important}
+.battle-foot{flex:0 0 55px!important;min-height:55px!important}
+.attack{height:47px!important}
+.formula{margin-top:4px!important}
+.forecast{height:20px!important}
+.ready-damage{margin-top:1px!important}
+
+/* Reward / boss / result / death: vertically centered, no overflow */
+#reward,#bossReward,#runResult,#gameover{justify-content:center;gap:10px}
+#reward .center-title,#bossReward .center-title,#runResult .center-title,#gameover .center-title{
+  margin:0!important;flex:0 0 auto;
+}
+#reward .center-title h2,#bossReward .center-title h2,#runResult .center-title h2,#gameover .center-title h2{margin:6px 0!important;font-size:21px!important}
+#reward .reward-progress{margin:0!important}
+#reward .reward-grid{flex:1 1 auto;min-height:0;margin:0!important;display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:8px!important}
+#reward .reward{min-height:0!important;height:auto!important;padding:10px 12px!important}
+#bossReward .boxes{margin:8px 0!important}
+#bossReward .box{height:105px!important}
+#bossReward .boss-result{margin:8px 0!important}
+#runResult .run-result-card{margin:4px 0!important;padding:10px!important}
+#runResult .clear-grade{margin:3px 0!important}
+#runResult button,#gameover button{flex:0 0 48px;min-height:48px!important;margin:0!important}
+#gameover .death-report{margin:5px 0!important}
+#gameover .death-message{margin:5px 0!important}
+
+/* Dev menu must obey the same rule */
+#devMode.screen,#devMode.screen.active{
+  position:fixed!important;inset:0!important;height:100dvh!important;overflow:hidden!important;
+}
+#devMode .dev-panel{flex:1 1 auto;min-height:0;display:grid;grid-template-rows:auto repeat(4,minmax(0,1fr)) auto;gap:8px}
+#devMode .dev-action{min-height:0!important;height:auto!important}
+
+/* Extra-short iPhones */
+@media (max-height:700px){
+  .screen{padding-top:max(6px,env(safe-area-inset-top))!important;padding-bottom:max(6px,env(safe-area-inset-bottom))!important}
+  .topbar{flex-basis:42px;min-height:42px}
+  #home{gap:5px}
+  #home .home-brand{flex-basis:46px!important;min-height:46px!important}
+  #home .ascension-meta{flex-basis:42px}
+  .home-quick-mission{flex-basis:42px;padding:5px 8px}
+  #gacha .gacha-buttons{flex-basis:112px}
+  .dice-panel{flex-basis:198px!important}
+  .battle-foot{flex-basis:50px!important;min-height:50px!important}
+}

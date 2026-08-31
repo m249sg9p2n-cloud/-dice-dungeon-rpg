@@ -150,6 +150,8 @@
   let lastClear = null;
   let pendingGacha = null;
   let gachaBusy = false;
+  let equipmentPage = 0;
+  const EQUIPMENT_PAGE_SIZE = 4;
 
   function persist(){
     localStorage.setItem(SAVE_KEY, JSON.stringify(save));
@@ -164,7 +166,7 @@
   const GACHA = {
     normal:{cost:300, rates:[["NORMAL",55],["RARE",28],["EPIC",12],["LEGENDARY",4],["GOD",1]]},
     rare:{cost:900, rates:[["RARE",70],["EPIC",22],["LEGENDARY",7],["GOD",1]]},
-    epic:{cost:2600, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
+    epic:{cost:2610, rates:[["EPIC",78],["LEGENDARY",19],["GOD",3]]}
   };
 
   function allEquipment(){
@@ -188,6 +190,7 @@
 
   function openGacha(){
     $("#gachaGold").textContent=save.gold;
+    if($("#gachaInfoGold")) $("#gachaInfoGold").textContent=save.gold;
     $("#gachaResult").classList.add("hidden");
     $("#gachaResult").innerHTML="";
     $("#gachaTheater")?.classList.add("hidden");
@@ -322,7 +325,7 @@
     layer.id="gachaPuchun";
     layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
     layer.innerHTML=`
-      <video class="exact-puchun-video" src="puchun_exact.mp4?v=2600" preload="auto" playsinline muted></video>
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=2610" preload="auto" playsinline muted></video>
       <div class="exact-grade">
         <div class="grade-rays"></div>
         <div class="grade-hex"></div>
@@ -501,7 +504,7 @@
     return `rarity-${String(rarity||"NORMAL").toLowerCase()}`;
   }
 
-  function openEquipment(slot){
+  function openEquipment(slot, page=0){
     const title=slot==="weapon" ? "武器を選択" : "防具を選択";
     $("#equipmentTitle").textContent=title;
     $("#equipment").dataset.slot=slot;
@@ -517,8 +520,12 @@
     const list=$("#equipmentList");
     list.innerHTML="";
     const owned=save.inventory?.[slot] || [];
+    const totalPages=Math.max(1,Math.ceil(owned.length/EQUIPMENT_PAGE_SIZE));
+    equipmentPage=Math.max(0,Math.min(Number(page)||0,totalPages-1));
+    const visible=owned.slice(equipmentPage*EQUIPMENT_PAGE_SIZE,(equipmentPage+1)*EQUIPMENT_PAGE_SIZE);
     const current=equippedItem(slot);
-    for(const id of owned){
+
+    for(const id of visible){
       const item=EQUIPMENT[slot]?.[id];
       if(!item) continue;
       const equipped=save.equipped?.[slot]===id;
@@ -543,6 +550,13 @@
       btn.addEventListener("click",()=>equipItem(slot,id));
       list.appendChild(btn);
     }
+
+    if(!visible.length){
+      list.innerHTML='<div class="equip-empty">この種類の装備はまだありません</div>';
+    }
+    if($("#equipPage")) $("#equipPage").textContent=`${equipmentPage+1} / ${totalPages}`;
+    if($("#equipPrev")) $("#equipPrev").disabled=equipmentPage<=0;
+    if($("#equipNext")) $("#equipNext").disabled=equipmentPage>=totalPages-1;
     show("equipment");
   }
 
@@ -552,7 +566,7 @@
     save.equipped[slot]=id;
     persist();
     renderHome();
-    openEquipment(slot);
+    openEquipment(slot,equipmentPage);
   }
 
   function upgradeCost(type){
@@ -649,6 +663,9 @@
     $("#missionTitle").textContent=`${selected.id} ${selected.name}`;
     $("#missionText").textContent=selected.mission||"全5戦を突破せよ。";
     $("#startBtn").textContent=`${selected.id}へ出撃`;
+    if($("#homeMissionSummary")) $("#homeMissionSummary").textContent=`${selected.id} ${selected.name}`;
+    if($("#dungeonGold")) $("#dungeonGold").textContent=save.gold;
+    if($("#recordGold")) $("#recordGold").textContent=save.gold;
 
     $$(".dungeon-card[data-dungeon]").forEach(card=>{
       const id=card.dataset.dungeon;
@@ -1674,6 +1691,12 @@
   $("#upgradeBack").addEventListener("click",()=>{renderHome();show("home");});
   $("#gachaEntry").addEventListener("click",openGacha);
   $("#gachaBack").addEventListener("click",()=>{renderHome();show("home");});
+  $("#gachaInfoEntry")?.addEventListener("click",()=>{renderGachaMeta(); if($("#gachaInfoGold")) $("#gachaInfoGold").textContent=save.gold; show("gachaInfo");});
+  $("#gachaInfoBack")?.addEventListener("click",()=>show("gacha"));
+  $("#dungeonEntry")?.addEventListener("click",()=>{renderHome();show("dungeonSelect");});
+  $("#dungeonBack")?.addEventListener("click",()=>{renderHome();show("home");});
+  $("#recordEntry")?.addEventListener("click",()=>{renderHome();show("records");});
+  $("#recordBack")?.addEventListener("click",()=>{renderHome();show("home");});
   $$(".gacha-pull").forEach(b=>b.addEventListener("click",()=>pullGacha(b.dataset.tier)));
   $("#gachaChest")?.addEventListener("click",gachaChestTap);
   const devTarget=$("#devTapTarget");
@@ -1693,10 +1716,12 @@
     selectedDungeonId=id;
     renderHome();
   }));
-  $("#equipmentEntry").addEventListener("click",()=>openEquipment("weapon"));
-  $("#weaponTab").addEventListener("click",()=>openEquipment("weapon"));
-  $("#armorTab").addEventListener("click",()=>openEquipment("armor"));
+  $("#equipmentEntry").addEventListener("click",()=>{equipmentPage=0;openEquipment("weapon",0);});
+  $("#weaponTab").addEventListener("click",()=>{equipmentPage=0;openEquipment("weapon",0);});
+  $("#armorTab").addEventListener("click",()=>{equipmentPage=0;openEquipment("armor",0);});
   $("#equipmentBack").addEventListener("click",()=>{renderHome();show("home");});
+  $("#equipPrev")?.addEventListener("click",()=>openEquipment($("#equipment").dataset.slot||"weapon",equipmentPage-1));
+  $("#equipNext")?.addEventListener("click",()=>openEquipment($("#equipment").dataset.slot||"weapon",equipmentPage+1));
   $("#startBtn").addEventListener("click",startRun);
   $("#attackBtn").addEventListener("click",()=>{
     if(busy) return;

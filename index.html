@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Dice Dungeon">
-  <link rel="manifest" href="./manifest.webmanifest?v=2600">
-  <link rel="apple-touch-icon" href="./icon-180.png?v=2600">
-  <link rel="stylesheet" href="./style.css?v=2600">
-  <title>Dice Dungeon RPG v2.6.0</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=2610">
+  <link rel="apple-touch-icon" href="./icon-180.png?v=2610">
+  <link rel="stylesheet" href="./style.css?v=2610">
+  <title>Dice Dungeon RPG v2.6.1</title>
 </head>
 <body>
 <main id="app">
@@ -26,10 +26,7 @@
 
     <div class="home-brand" id="devTapTarget">
       <div class="brand-sigil">🎲</div>
-      <div>
-        <b>DICE DUNGEON</b>
-        <small>ROLL • GROW • CONQUER</small>
-      </div>
+      <div><b>DICE DUNGEON</b><small>ROLL • GROW • CONQUER</small></div>
       <span class="brand-spark">✦</span>
     </div>
 
@@ -39,20 +36,8 @@
       <div><span>COLLECTION</span><b id="metaCollection">2 / 30</b></div>
     </div>
 
-    <article class="hero-card">
-      <div class="crest">🎲</div>
-      <div>
-        <div class="eyebrow">CURRENT MISSION</div>
-        <h2 id="missionTitle">1-1 ゴブリンの森</h2>
-        <p id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</p>
-      </div>
-    </article>
-
     <div class="home-overview">
-      <div class="overview-title">
-        <span>PLAYER STATUS</span>
-        <small>現在の総合ステータス</small>
-      </div>
+      <div class="overview-title"><span>PLAYER STATUS</span><small>現在の総合ステータス</small></div>
       <div class="stats-grid home-stats-clean">
         <div class="stat"><span>HP</span><b id="homeHp">75</b></div>
         <div class="stat"><span>ATK</span><b id="homeAtk">12</b></div>
@@ -60,28 +45,51 @@
       </div>
     </div>
 
-    <div class="home-menu">
+    <div class="home-menu home-menu-grid">
+      <button id="dungeonEntry" class="home-menu-card home-main-card">
+        <span class="menu-icon">🏰</span>
+        <span class="menu-copy"><b>出撃 <em class="menu-tag">DUNGEON</em></b><small id="homeMissionSummary">1-1 ゴブリンの森</small></span>
+        <span class="menu-arrow">›</span>
+      </button>
       <button id="upgradeEntry" class="home-menu-card">
         <span class="menu-icon">⬆️</span>
         <span class="menu-copy"><b>強化 <em class="menu-tag">POWER UP</em></b><small id="upgradeSummary">HP 0 / ATK 0 / DEF 0</small></span>
         <span class="menu-arrow">›</span>
       </button>
-
       <button id="equipmentEntry" class="home-menu-card">
         <span class="menu-icon">⚔️</span>
         <span class="menu-copy"><b>装備 <em class="menu-tag">GEAR</em></b><small id="equipmentSummary">武器・防具を変更</small></span>
         <span class="menu-arrow">›</span>
       </button>
-
       <button id="gachaEntry" class="home-menu-card gacha-menu-card">
         <span class="menu-icon">🎁</span>
-        <span class="menu-copy"><b>装備ガチャ <em class="menu-tag hot">GACHA</em></b><small>GOLDで新しい装備を獲得</small></span>
+        <span class="menu-copy"><b>ガチャ <em class="menu-tag hot">GACHA</em></b><small>装備を召喚</small></span>
+        <span class="menu-arrow">›</span>
+      </button>
+      <button id="recordEntry" class="home-menu-card">
+        <span class="menu-icon">📖</span>
+        <span class="menu-copy"><b>戦績 <em class="menu-tag">RECORD</em></b><small>冒険記録を確認</small></span>
         <span class="menu-arrow">›</span>
       </button>
     </div>
 
+    <div class="home-quick-mission">
+      <span>CURRENT</span><b id="missionTitle">1-1 ゴブリンの森</b>
+      <small id="missionText">4戦を突破し、5戦目のゴブリンキングを倒せ。</small>
+    </div>
+
+    <p class="note">v2.6.1 — iPHONE NO-SCROLL</p>
+  </section>
+
+  <section id="dungeonSelect" class="screen compact-screen">
+    <header class="topbar">
+      <button id="dungeonBack" class="back-btn">←</button>
+      <div><div class="eyebrow">DUNGEON SELECT</div><h1>出撃先</h1></div>
+      <div class="gold">🪙 <span id="dungeonGold">0</span>G</div>
+    </header>
+
     <div class="home-section-title">ダンジョン</div>
-    <div class="dungeon-list">
+    <div class="dungeon-list no-scroll-list">
       <button class="dungeon-card selected" data-dungeon="1-1">
         <span class="dungeon-code">1-1</span>
         <span class="dungeon-info"><b>ゴブリンの森</b><small>全5戦 / BOSS ゴブリンキング</small></span>
@@ -99,12 +107,20 @@
         <span class="dungeon-code">1-4</span><span class="dungeon-info"><b>灼熱の火山</b><small>全5戦 / BOSS 火山の暴君</small></span><span class="clear-badge dungeon-badge">🔒</span>
       </button>
     </div>
+    <button id="startBtn" class="primary dungeon-start">1-1へ出撃</button>
+  </section>
 
+  <section id="records" class="screen compact-screen">
+    <header class="topbar">
+      <button id="recordBack" class="back-btn">←</button>
+      <div><div class="eyebrow">ADVENTURE RECORD</div><h1>戦績</h1></div>
+      <div class="gold">🪙 <span id="recordGold">0</span>G</div>
+    </header>
     <div class="record-row">
       <div><span>CLEAR</span><b id="clearCount">0</b></div>
       <div><span>BEST RUN GOLD</span><b id="bestRunGold">0G</b></div>
     </div>
-    <div class="legacy-panel">
+    <div class="legacy-panel record-full">
       <div class="legacy-head"><span>ADVENTURE RECORD</span><small>積み上げた戦績</small></div>
       <div class="legacy-grid">
         <div><span>KILLS</span><b id="recordKills">0</b></div>
@@ -114,9 +130,6 @@
       </div>
       <div class="milestone"><span id="milestoneText">次の称号まで冒険を続けよう</span><i><b id="milestoneFill"></b></i></div>
     </div>
-
-    <button id="startBtn" class="primary home-start">1-1へ出撃</button>
-    <p class="note">v2.6.0 — RE:BIRTH UPDATE</p>
   </section>
 
   <section id="upgrade" class="screen">
@@ -172,20 +185,7 @@
       </div>
     </div>
 
-    <div class="gacha-meta-panel">
-      <div><span>TOTAL PULLS</span><b id="gachaPulls">0</b></div>
-      <div><span>EPIC+ PITY</span><b id="epicPity">10</b></div>
-      <div><span>GOD PITY</span><b id="godPity">50</b></div>
-    </div>
-
-    <div class="gacha-rates">
-      <span>N <b>55%</b></span>
-      <span>R <b>28%</b></span>
-      <span>E <b>12%</b></span>
-      <span>L <b>4%</b></span>
-      <span>GOD <b>1%</b></span>
-    </div>
-    <div id="gachaHistory" class="gacha-history"></div>
+    <button id="gachaInfoEntry" class="gacha-info-entry">召喚情報・確率・履歴 <span>›</span></button>
 
     <div id="gachaTheater" class="gacha-theater hidden" aria-live="polite">
       <div class="gacha-stage-glow"></div>
@@ -204,12 +204,39 @@
         <span>RARE以上確定</span><b>900G</b><small>RARE / EPIC / LEGENDARY / GOD</small>
       </button>
       <button class="gacha-pull epic-pull" data-tier="epic">
-        <span>EPIC以上確定</span><b>2600G</b><small>EPIC / LEGENDARY / GOD</small>
+        <span>EPIC以上確定</span><b>2610G</b><small>EPIC / LEGENDARY / GOD</small>
       </button>
     </div>
 
     <div id="gachaResult" class="gacha-result hidden"></div>
     <p class="note">CHESTをタップ。昇格時はプチュン → CHESTが1段階豪華に変化。</p>
+  </section>
+
+  <section id="gachaInfo" class="screen compact-screen">
+    <header class="topbar">
+      <button id="gachaInfoBack" class="back-btn">←</button>
+      <div><div class="eyebrow">GACHA INFORMATION</div><h1>召喚情報</h1></div>
+      <div class="gold">🪙 <span id="gachaInfoGold">0</span>G</div>
+    </header>
+    <div class="gacha-meta-panel">
+      <div><span>TOTAL PULLS</span><b id="gachaPulls">0</b></div>
+      <div><span>EPIC+ PITY</span><b id="epicPity">10</b></div>
+      <div><span>GOD PITY</span><b id="godPity">50</b></div>
+    </div>
+
+    <div class="gacha-rates">
+      <span>N <b>55%</b></span>
+      <span>R <b>28%</b></span>
+      <span>E <b>12%</b></span>
+      <span>L <b>4%</b></span>
+      <span>GOD <b>1%</b></span>
+    </div>
+    <div id="gachaHistory" class="gacha-history"></div>
+
+    <div class="gacha-info-note">
+      <b>天井システム</b>
+      <small>EPIC+は最大10回、GODは最大50回で到達。履歴は直近5件を表示。</small>
+    </div>
   </section>
 
   <section id="equipment" class="screen">
@@ -234,6 +261,11 @@
     </div>
 
     <div id="equipmentList" class="equipment-list"></div>
+    <div class="equip-pager">
+      <button id="equipPrev" type="button">‹</button>
+      <span id="equipPage">1 / 1</span>
+      <button id="equipNext" type="button">›</button>
+    </div>
 
     <p class="note">タップすると装備。装備効果は次の出撃から反映。</p>
   </section>
@@ -410,11 +442,11 @@
 </div>
 <button id="soundBtn" aria-label="サウンド切替">🔊</button>
 
-<script src="./effects.js?v=2600"></script>
-<script src="./game.js?v=2600"></script>
+<script src="./effects.js?v=2610"></script>
+<script src="./game.js?v=2610"></script>
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2600").catch(console.error));
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js?v=2610").catch(console.error));
 }
 </script>
 </body>
