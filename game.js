@@ -320,8 +320,10 @@
     const fin=RARITY_ORDER.indexOf(pendingGacha.finalRarity);
 
     if(cur<fin){
-      await playGachaPuchun(RARITY_ORDER[cur+1]);
+      // v4.0.2: show the black-screen letter cut-in first,
+      // then play the rarity/puchun reveal.
       await playRarityCutInV4(RARITY_ORDER[cur+1]);
+      await playGachaPuchun(RARITY_ORDER[cur+1]);
       pendingGacha.currentRarity=RARITY_ORDER[cur+1];
       setChestRarity(pendingGacha.currentRarity);
       $("#gachaPrompt").textContent="昇格成功 ─ さらに上位へ…";
@@ -341,56 +343,33 @@
 
     const layer=document.createElement("div");
     layer.id="gachaPuchun";
-    layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun`;
+    layer.className=`puchun-${nextRarity.toLowerCase()} exact-video-puchun v4-puchun-only`;
     layer.innerHTML=`
-      <video class="exact-puchun-video" src="puchun_exact.mp4?v=4000" preload="auto" playsinline muted></video>
-      <div class="exact-grade">
-        <div class="grade-rays"></div>
-        <div class="grade-hex"></div>
-        <div class="grade-ring a"></div>
-        <div class="grade-ring b"></div>
-        <small>GRADE UP</small>
-        <strong>${nextRarity}</strong>
-        <em>昇 格</em>
-      </div>`;
+      <video class="exact-puchun-video" src="puchun_exact.mp4?v=4010" preload="auto" playsinline muted></video>
+      <div class="v4-black-hold"></div>`;
     document.body.appendChild(layer);
 
     const video=layer.querySelector(".exact-puchun-video");
-
-    // Exact reproduction: play the licensed 3.0s / 30fps source itself.
-    // This avoids browser-frame skipping and CSS approximation entirely.
     try{
       video.currentTime=0;
       const playPromise=video.play();
       if(playPromise) await playPromise;
     }catch(_){}
 
-    // Original material is silent; synchronize the game's power-cut SE to its first flash.
     await wait(30);
     FX.puchun();
     try{if(navigator.vibrate) navigator.vibrate([8,12,24])}catch(_){}
 
-    // Wait for the exact source animation to finish. Fallback protects iOS edge cases.
     await Promise.race([
       new Promise(resolve=>video.addEventListener("ended",resolve,{once:true})),
       wait(3200)
     ]);
 
-    // Keep a short true-black beat before the rarity payoff.
+    // IMPORTANT v4.0.1:
+    // no legacy GRADE UP / rarity text here.
+    // Keep pure black, then hand off to the single v4 letter cut-in.
     layer.classList.add("source-ended");
-    await wait(nextRarity==="GOD"?360:260);
-
-    layer.classList.add("grade-on");
-    FX.gradeUp();
-    try{
-      if(navigator.vibrate){
-        navigator.vibrate(nextRarity==="GOD"?[24,20,70,26,95]:[20,18,60]);
-      }
-    }catch(_){}
-    await wait(nextRarity==="GOD"?1180:900);
-
-    layer.classList.add("grade-out");
-    await wait(180);
+    await wait(nextRarity==="GOD"?520:420);
     layer.remove();
   }
 

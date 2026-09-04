@@ -9,7 +9,7 @@
 
 .center-title{margin-top:12vh;text-align:center}.center-title h2{font-size:25px}.reward-grid{display:grid;gap:12px;margin-top:28px}.reward{padding:19px;border:1px solid #645028;border-radius:17px;background:linear-gradient(145deg,#17191f,#101116);text-align:left}.reward b,.reward span{display:block}.reward b{font-size:17px}.reward span{margin-top:6px;color:#aeb0b8;font-size:12px}.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:34px}.box{height:125px;border:1px solid #84652c;border-radius:18px;background:#15171c;font-size:38px}.box span{display:block;font-size:11px;color:#d9b65d;font-weight:1000}.box.opened{font-size:32px;color:#ffd15c}.boss-result{text-align:center;margin-top:28px}.boss-result strong{font-size:34px;color:#ffd267}.result-card{margin:35px auto 24px;padding:24px;width:100%;text-align:center;border:1px solid #704f22;border-radius:18px;background:#13151b}.result-card b{display:block;margin-top:8px;font-size:34px;color:#f1cb62}.danger{color:#ff5c56}
 
-#soundBtn{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:80;width:38px;height:38px;border:1px solid #514523;border-radius:12px;background:#111217cc;font-size:16px}#fxLayer{pointer-events:none;position:fixed;inset:0;z-index:70;overflow:hidden}#multFx,#damageFx,#killFx,#slashFx{position:absolute;opacity:0}#multFx{left:50%;top:49%;transform:translate(-50%,-50%) scale(.6);font-size:64px;font-weight:1000;color:#ffd052;text-shadow:0 0 20px #ffab00,0 5px 0 #694000}.show-mult{animation:multBoom .55s ease}.show-mult.x6{font-size:82px;color:#fff3a9}@keyframes multBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}72%{opacity:1;transform:translate(-50%,-50%) scale(.98)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#damageFx{left:50%;top:29%;transform:translate(-50%,-50%);font-size:58px;font-weight:1000;color:#fff;text-shadow:0 0 13px #ff491f,0 5px 0 #5d1108}.show-damage{animation:dmgPop .65s ease}@keyframes dmgPop{0%{opacity:0;transform:translate(-50%,-40%) scale(.45)}24%{opacity:1;transform:translate(-50%,-55%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-52%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}}#killFx{left:50%;top:32%;transform:translate(-50%,-50%);font-size:72px;font-weight:1000;color:#ff443d;text-shadow:0 0 22px #ff1600,0 5px 0 #64100b}.show-kill{animation:killBoom .9s ease}@keyframes killBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.22)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#slashFx{left:-10%;top:32%;width:120%;height:5px;background:#fff;box-shadow:0 0 10px #ffec9c,0 0 28px #ff6b2d;transform:rotate(-12deg) scaleX(0)}.show-slash{animation:slash .3s ease}@keyframes slash{0%{opacity:0;transform:rotate(-12deg) scaleX(0)}35%{opacity:1;transform:rotate(-12deg) scaleX(1)}100%{opacity:0;transform:rotate(-12deg) translateX(25%) scaleX(1)}}body.shake{animation:shake .34s ease}body.big-shake{animation:bigShake .48s ease}@keyframes shake{0%,100%{transform:none}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,1px)}}@keyframes bigShake{0%,100%{transform:none}18%{transform:translate(-7px,3px)}38%{transform:translate(7px,-4px)}58%{transform:translate(-5px,4px)}78%{transform:translate(4px,-2px)}}body.mult-dim #app{filter:brightness(.65)}body.mult-dim .die-mult{filter:brightness(1.5) saturate(1.2);z-index:10}
+#soundBtn{position:fixed;right:12px;top:max(12px,env(safe-area-inset-top));z-index:80;width:38px;height:38px;border:1px solid #514523;border-radius:12px;background:#111217cc;font-size:16px}#fxLayer{pointer-events:none;position:fixed;inset:0;z-index:70;overflow:hidden}#multFx,#damageFx,#killFx,#slashFx{position:absolute;opacity:0}#multFx{left:50%;top:49%;transform:translate(-50%,-50%) scale(.6);font-size:64px;font-weight:1000;color:#ffd052;text-shadow:0 0 20px #ffab00,0 5px 0 #694010}.show-mult{animation:multBoom .55s ease}.show-mult.x6{font-size:82px;color:#fff3a9}@keyframes multBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}72%{opacity:1;transform:translate(-50%,-50%) scale(.98)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#damageFx{left:50%;top:29%;transform:translate(-50%,-50%);font-size:58px;font-weight:1000;color:#fff;text-shadow:0 0 13px #ff491f,0 5px 0 #5d1108}.show-damage{animation:dmgPop .65s ease}@keyframes dmgPop{0%{opacity:0;transform:translate(-50%,-40%) scale(.45)}24%{opacity:1;transform:translate(-50%,-55%) scale(1.2)}70%{opacity:1;transform:translate(-50%,-52%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}}#killFx{left:50%;top:32%;transform:translate(-50%,-50%);font-size:72px;font-weight:1000;color:#ff443d;text-shadow:0 0 22px #ff1600,0 5px 0 #64100b}.show-kill{animation:killBoom .9s ease}@keyframes killBoom{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.22)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}#slashFx{left:-10%;top:32%;width:120%;height:5px;background:#fff;box-shadow:0 0 10px #ffec9c,0 0 28px #ff6b2d;transform:rotate(-12deg) scaleX(0)}.show-slash{animation:slash .3s ease}@keyframes slash{0%{opacity:0;transform:rotate(-12deg) scaleX(0)}35%{opacity:1;transform:rotate(-12deg) scaleX(1)}100%{opacity:0;transform:rotate(-12deg) translateX(25%) scaleX(1)}}body.shake{animation:shake .34s ease}body.big-shake{animation:bigShake .48s ease}@keyframes shake{0%,100%{transform:none}25%{transform:translate(-3px,2px)}50%{transform:translate(3px,-2px)}75%{transform:translate(-2px,1px)}}@keyframes bigShake{0%,100%{transform:none}18%{transform:translate(-7px,3px)}38%{transform:translate(7px,-4px)}58%{transform:translate(-5px,4px)}78%{transform:translate(4px,-2px)}}body.mult-dim #app{filter:brightness(.65)}body.mult-dim .die-mult{filter:brightness(1.5) saturate(1.2);z-index:10}
 
 @media(max-height:720px){.battle-head{height:40px;flex-basis:40px}.enemy-art{width:78px;height:78px;font-size:58px}.enemy-hp-bar{height:17px}.dice-panel{flex-basis:221px}.die{width:68px}.die-mult{width:78px}.battle-foot{flex-basis:58px}.attack{height:46px}.formula{margin-top:25px}}
 
@@ -3585,7 +3585,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 #runResult .center-title h2{letter-spacing:.03em}
 .boss-result strong{filter:drop-shadow(0 0 11px #ffb432)}
 
-/* ========== v4.0.0 RE:BIRTH FULL QUALITY PASS ========== */
+/* ========== v4.0.1 RE:BIRTH FULL QUALITY PASS ========== */
 .legacy-panel{margin:10px 0 12px;padding:11px;border:1px solid #303a4e;border-radius:13px;background:linear-gradient(145deg,#111722,#090d14);box-shadow:inset 0 0 22px #78b7ff05}
 .legacy-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}.legacy-head span{font-size:9px;font-weight:1000;letter-spacing:.15em;color:#8290a7}.legacy-head small{font-size:8px;color:#58647a}
 .legacy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.legacy-grid div{text-align:center;padding:6px 2px;border-radius:8px;background:#090d14;border:1px solid #202a39}.legacy-grid span{display:block;font-size:6.5px;letter-spacing:.08em;color:#66758c;font-weight:900}.legacy-grid b{font-size:13px;color:#d7e6f7}
@@ -3605,7 +3605,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 
 /* =========================================================
-   v4.0.0 EXACT PUCHUN
+   v4.0.1 EXACT PUCHUN
    The licensed source video is rendered directly so timing,
    flare shape and CRT collapse remain frame-exact.
    ========================================================= */
@@ -3643,7 +3643,7 @@ body.impact-hitstop #battle{filter:contrast(1.08) saturate(1.16)}
 
 
 /* ==========================================================
-   v4.0.0 iPHONE NO-SCROLL
+   v4.0.1 iPHONE NO-SCROLL
    Every game screen is locked to the visual viewport.
    Dense information is moved behind tap navigation/pagination.
    ========================================================== */
@@ -3870,7 +3870,7 @@ body{position:fixed;inset:0}
 
 
 /* ==========================================================
-   v4.0.0 PREMIUM ASCENSION
+   v4.0.1 PREMIUM ASCENSION
    Premium readability + richer home + cinematic gacha.
    Still strictly one iPhone viewport / zero page scrolling.
    ========================================================== */
@@ -4108,7 +4108,7 @@ body{position:fixed;inset:0}
 
 
 /* ==========================================================
-   v4.0.0 GRAND LUXURY
+   v4.0.1 GRAND LUXURY
    Dark ≠ dull. Jewel color, metallic depth, larger typography.
    100dvh / no-scroll remains non-negotiable.
    ========================================================== */
@@ -4325,3 +4325,12 @@ body,button{font-family:"Avenir Next","Hiragino Sans","Yu Gothic",system-ui,sans
 /* Gacha: brighter, more physical */
 #gacha{background:radial-gradient(circle at 50% 30%,#581f7042,transparent 35%),linear-gradient(180deg,#191021,#080910)!important}.premium-theater{border-color:#9562ae!important;box-shadow:inset 0 0 75px #984bb640,0 9px 25px #000c!important}#gachaChest.gacha-chest{width:132px!important;height:96px!important;filter:drop-shadow(0 14px 9px #000b)}#gacha .gacha-pull{min-height:58px!important;border-width:1.5px!important}#gacha .gacha-pull b{font-size:20px!important}
 @media(max-height:720px){.home-menu-grid .jp-title{font-size:18px!important}.inventory-item{min-height:70px!important;padding:7px 9px!important}.inventory-item small{font-size:10.5px!important}.forge-dock{padding:5px 7px}}
+
+/* v4.0.1 gacha cleanup: exact puchun has NO legacy rarity payoff */
+.v4-puchun-only .exact-grade,
+.v4-puchun-only .grade-rays,
+.v4-puchun-only .grade-hex,
+.v4-puchun-only .grade-ring{display:none!important}
+.v4-puchun-only .v4-black-hold{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.v4-puchun-only.source-ended .exact-puchun-video{opacity:0!important}
+.v4-puchun-only.source-ended .v4-black-hold{opacity:1!important}
